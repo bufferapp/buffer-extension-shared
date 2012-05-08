@@ -228,7 +228,7 @@
 
                 var i = document.createElement('i');
                 i.setAttribute('class', 'sm-embed'); // let Twitter set the bg color
-                i.setAttribute('style', 'top: -1px; position: relative; margin-right: 4px; width: 16px; height: 16px; top: -1px; background-image: url(' + xt.data.get('data/buffer-extension-common/img/twttr-sprite.png') + '); background-repeat: no-repeat; background-position: -5px -5px;');
+                i.setAttribute('style', 'top: -1px; position: relative; margin-right: 4px; width: 16px; height: 16px; top: -1px; background-image: url(' + xt.data.get('data/shared/img/twttr-sprite.png') + '); background-repeat: no-repeat; background-position: -5px -5px;');
 
                 $(a).append(i);
 
@@ -274,7 +274,7 @@
 
                 var i = document.createElement('i');
                 i.setAttribute('class', 'sm-embed'); // let Twitter set the bg colors
-                i.setAttribute('style', 'position: relative; top: 0px; margin-right: 4px; width: 13px; height: 13px; background-image: url(' + xt.data.get('data/buffer-extension-common/img/twttr-sprite-small.png') + '); background-repeat: no-repeat;');
+                i.setAttribute('style', 'position: relative; top: 0px; margin-right: 4px; width: 13px; height: 13px; background-image: url(' + xt.data.get('data/shared/img/twttr-sprite-small.png') + '); background-repeat: no-repeat;');
 
                 $(a).append(i);
 

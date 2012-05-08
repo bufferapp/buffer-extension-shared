@@ -1,3 +1,4 @@
+
 ;(function() {
     
     var buildElement = function buildElement (parentConfig) {
@@ -86,7 +87,7 @@
                 
                 temp.setAttribute('href', '#');
                 $(temp).text(btnConfig.text);
-                $(temp).css({"background-image": "url(" + xt.data.get("data/buffer-extension-common/img/buffer-icon-sprite.png") + ")"})
+                $(temp).css({"background-image": "url(" + xt.data.get("data/shared/img/buffer-icon-sprite.png") + ")"})
 
                 return temp;
                 
@@ -128,7 +129,7 @@
                 
                 temp.setAttribute('href', '#');
                 $(temp).text(btnConfig.text);
-                $(temp).css({"background-image": "url(" + xt.data.get("data/buffer-extension-common/img/buffer-icon-sprite.png") + ")"})
+                $(temp).css({"background-image": "url(" + xt.data.get("data/shared/img/buffer-icon-sprite.png") + ")"})
 
                 return temp;
                 
