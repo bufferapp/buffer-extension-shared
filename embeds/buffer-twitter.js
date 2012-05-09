@@ -245,7 +245,19 @@
             },
             data: function (elem) {
                 var c = $(elem).closest('.tweet');
-                return 'RT ' + c.find('.username').text().trim() + ': ' + c.find('.tweet-text').text().trim() + '';
+                var text = c.find('.js-tweet-text');
+                $(text).children('a').each(function () {
+                    if( $(this).attr('data-screen-name') ) return;
+                    if( $(this).hasClass('twitter-hashtag') ) return;
+                    var original = $(this).text();
+                    $(this).text($(this).attr("href")).attr('data-original-text', original);
+                });
+                var rt = 'RT ' + c.find('.username').text().trim() + ': ' + $(text).text() + '';
+                $(text).children('a').each(function () {
+                    if( ! $(this).attr('data-original-text') ) return;
+                    $(this).text($(this).attr('data-original-text'));
+                });
+                return rt;
             },
             clear: function (elem) {
             },
@@ -296,14 +308,14 @@
                     if( $(this).attr('data-screen-name') ) return;
                     if( $(this).hasClass('twitter-hashtag') ) return;
                     var original = $(this).text();
-                    $(this).text($(this).attr("href"));
-                    var that = this;
-                    setTimeout(function () {
-                        $(that).text(original);
-                    }, 100);
+                    $(this).text($(this).attr("href")).attr('data-original-text', original);
                 });
-                return 'RT ' + c.find('.username').text().trim() + ': ' + $(text).text() + '';
-
+                var rt = 'RT ' + c.find('.username').text().trim() + ': ' + $(text).text() + '';
+                $(text).children('a').each(function () {
+                    if( ! $(this).attr('data-original-text') ) return;
+                    $(this).text($(this).attr('data-original-text'));
+                });
+                return rt;
             },
             clear: function (elem) {
             },
