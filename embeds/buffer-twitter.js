@@ -294,6 +294,7 @@
                 var text = c.find('.js-tweet-text');
                 $(text).children('a').each(function () {
                     if( $(this).attr('data-screen-name') ) return;
+                    if( $(this).hasClass('twitter-hashtag') ) return;
                     var original = $(this).text();
                     $(this).text($(this).attr("href"));
                     var that = this;
