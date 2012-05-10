@@ -115,10 +115,9 @@
             name: "icon-collapsed",
             text: "",
             container: '.collapsed div.entry-icons',
-            after: '.star',
             className: 'buffer-small-button',
             selector: '.buffer-small-button',
-            elements: ['a', 'buffer-small-button', 'height: 17px; width: 17px; display: inline-block; position: relative; margin-left: 2px; background-position-y: 1px; background-repeat: no-repeat;'],
+            elements: ['a', 'buffer-small-button', 'left: -15px; height: 17px; width: 17px; display: inline-block; position: relative; margin-left: 2px; background-position-y: 1px; background-repeat: no-repeat;'],
             default: '',
             style:   '',
             hover:   '',
@@ -150,7 +149,7 @@
                     this.style.setProperty('margin-left', margin+'px', 'important'); // Gets round !important
                 });
 
-                $('.collapsed .star').css({'margin-right': 1});
+                //$('.collapsed .star').css({'margin-right': 1});
                 $('.entry-source-title').css({left: '3.4em'});
     
             },
