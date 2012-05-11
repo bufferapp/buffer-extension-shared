@@ -74,7 +74,10 @@
                 return false;
             },
             data: function (elem) {
-                return $(elem).parents('.tweet-button-container').siblings('.text-area').find('.twitter-anywhere-tweet-box-editor').val();
+                return {
+                    text: $(elem).parents('.tweet-button-container').siblings('.text-area').find('.twitter-anywhere-tweet-box-editor').val(),
+                    placement: 'twitter-composer'
+                }
             },
             clear: function (elem) {
                 $('.twitter-anywhere-tweet-box-editor').val(' ');
@@ -137,7 +140,10 @@
             },
             data: function (elem) {
                 var c = $(elem).parents().siblings('.twttr-dialog-reply-footer');
-                return 'RT @' + c.find('.twttr-reply-screenname').text().trim() + ': ' + c.find('.js-tweet-text').text().trim() + '';
+                return {
+                    text: 'RT @' + c.find('.twttr-reply-screenname').text().trim() + ': ' + c.find('.js-tweet-text').text().trim() + '',
+                    placement: 'twitter-retweet'
+                }
             }   
         },
         {
@@ -184,7 +190,10 @@
 
             },
             data: function (elem) {
-                return $(elem).parents('.ft').siblings('.bd').find('#status').val();
+                return {
+                    text: $(elem).parents('.ft').siblings('.bd').find('#status').val(),
+                    placement: 'twitter-tweetbutton'
+                }
             },
             clear: function (elem) {
                 window.close();
@@ -257,7 +266,10 @@
                     if( ! $(this).attr('data-original-text') ) return;
                     $(this).text($(this).attr('data-original-text'));
                 });
-                return rt;
+                return {
+                    text: rt,
+                    placement: 'twitter-permalink'
+                }
             },
             clear: function (elem) {
             },
@@ -315,7 +327,10 @@
                     if( ! $(this).attr('data-original-text') ) return;
                     $(this).text($(this).attr('data-original-text'));
                 });
-                return rt;
+                return {
+                    text: rt,
+                    placement: 'twitter-feed'
+                }
             },
             clear: function (elem) {
             },

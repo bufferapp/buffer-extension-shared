@@ -114,6 +114,26 @@ var bufferData = function (port, postData) {
             encode: function (val) {
                 return encodeURIComponent(val);
             }
+        },
+        {
+            name: "version",
+            get: function (cb) {
+                cb(postData.version);  
+            },
+            encode: function (val) {
+                return encodeURIComponent(val);
+            }
+        },
+        {
+            name: "placement",
+            get: function (cb) {
+                if( postData.placement ) cb(postData.placement);
+                else if( config.googleReader ) cb('google-reader-general');
+                else cb('general');
+            },
+            encode: function (val) {
+                return encodeURIComponent(val);
+            }
         }
     ];
     config.overlay = {
@@ -151,9 +171,14 @@ var bufferData = function (port, postData) {
     var createOverlay = function (data) {
         if( data.embed ) {
             if( typeof data.embed === "object" ) {
-                data.text = data.embed.text;
-                data.url = data.embed.url;
-                data.picture = data.embed.image;
+                for( var i in data.embed ) {
+                    if( data.embed.hasOwnProperty(i) ) {
+                        data[i] = data.embed[i];
+                    }
+                }
+                if( !data.embed.url ) {
+                    data.url = null;
+                }
                 data.embed = null;
             } else {
                 data.text = data.embed;

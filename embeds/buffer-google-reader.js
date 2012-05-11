@@ -65,7 +65,8 @@
                 var target = $(elem).closest(".entry").find(".entry-container a.entry-title-link");
                 return {
                     text: target.text(),
-                    url: target.attr('href')
+                    url: target.attr('href'),
+                    placement: 'google-reader-share'
                 };
             }
         },
@@ -106,7 +107,8 @@
                 var target = $(elem).closest(".entry").find(".entry-container a.entry-title-link");
                 return {
                     text: target.text(),
-                    url: target.attr('href')
+                    url: target.attr('href'),
+                    placement: 'google-reader-icon'
                 };
                 
             }
@@ -158,7 +160,8 @@
                 var target = $(elem).closest(".entry").find(".entry-main");
                 return {
                     text: target.find('.entry-title').text(),
-                    url: target.find('.entry-original').attr('href')
+                    url: target.find('.entry-original').attr('href'),
+                    placement: 'google-reader-icon'
                 };
                 
             }

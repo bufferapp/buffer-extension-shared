@@ -15,8 +15,9 @@
 	            
 	            return {
 	                text: title,
-	                url: link
-                };
+	                url: link,
+                  placement: 'hn-add'
+              };
 	        }
         }
 	];

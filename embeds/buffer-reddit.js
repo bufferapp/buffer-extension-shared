@@ -17,7 +17,8 @@
 	            return {
 	                text: title,
 	                url: link,
-	                image: image
+	                image: image,
+                  placement: 'reddit-add'
               };
 	        }
       }

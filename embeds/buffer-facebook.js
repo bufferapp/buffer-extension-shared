@@ -94,7 +94,10 @@
                 
             },
             data: function (elem) {
-                return $(elem).closest('.uiMetaComposerMessageBox').find('textarea.textInput').val();
+                return {
+                    text: $(elem).closest('.uiMetaComposerMessageBox').find('textarea.textInput').val(),
+                    placement: 'facebook-composer'
+                }
             },
             clear: function (elem) {
                 $(elem).closest('.uiMetaComposerMessageBox').find('textarea.textInput').val('');
@@ -152,9 +155,15 @@
                 if( text === "Write something" ) text = undefined;
                 if( share.url ) {
                     if( text ) share.text = text;
-                    return share;
+                    return {
+                        text: share,
+                        placement: 'facebook-share'
+                    }
                 } else {
-                    return text;
+                    return {
+                        text: text,
+                        placement: 'facebook-share'
+                    }
                 }
             },
             clear: function (elem) {
