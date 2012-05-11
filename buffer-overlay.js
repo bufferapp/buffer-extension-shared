@@ -53,7 +53,8 @@ var bufferData = function (port, postData) {
     var config = {};
     config.local = false;
     config.googleReader = false;
-    if( window.location.href.indexOf("google") != -1 && window.location.href.indexOf("reader") != -1 ) config.googleReader = true;
+    var segments = window.location.pathname.split('/');
+    if( window.location.host.indexOf("google") != -1 && segments[1] == "reader" ) config.googleReader = true;
     config.attributes = [
         {
             name: "url",
