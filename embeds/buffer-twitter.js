@@ -193,7 +193,7 @@
                 return {
                     text: $(elem).parents('.ft').siblings('.bd').find('#status').val(),
                     placement: 'twitter-tweetbutton'
-                }
+                };
             },
             clear: function (elem) {
                 window.close();
@@ -211,7 +211,7 @@
                 };
                 $(target).on('keyup focus blur change paste cut', function (e) {
                     activate();
-                });             
+                });
                 activate();
             }
         },
@@ -274,6 +274,11 @@
             clear: function (elem) {
             },
             activator: function (elem, btnConfig) {
+
+                if( $(elem).closest('.in-reply-to').length > 0 ) {
+                    $(elem).find('i').css({'background-position-y': '-30px'});
+                }
+
             }
         },
         {
@@ -330,11 +335,15 @@
                 return {
                     text: rt,
                     placement: 'twitter-feed'
-                }
+                };
             },
             clear: function (elem) {
             },
             activator: function (elem, btnConfig) {
+
+                if( $(elem).closest('.in-reply-to').length > 0 ) {
+                    $(elem).find('i').css({'background-position-y': '-30px'});
+                }
             }
         }
     ];
@@ -382,7 +391,7 @@
                     clearcb = function () {}; // prevent clear from being called again, until the button is clicked again
                 });
                 
-            })
+            });
 
         }
 
