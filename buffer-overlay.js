@@ -176,7 +176,7 @@ var bufferData = function (port, postData) {
                         data[i] = data.embed[i];
                     }
                 }
-                if( !data.embed.url ) {
+                if( data.embed.text && !data.embed.url ) {
                     data.url = null;
                 }
                 data.embed = null;
