@@ -106,7 +106,7 @@
         {
             name: "share",
             text: "Buffer",
-            container: 'div.dialogFooter',
+            container: 'div.uiOverlayFooter',
             before: '.uiButtonConfirm',
             className: 'buffer-facebook-button',
             selector: '.buffer-facebook-button',
