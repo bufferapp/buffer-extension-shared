@@ -173,7 +173,11 @@ var bufferData = function (port, postData) {
             if( typeof data.embed === "object" ) {
                 for( var i in data.embed ) {
                     if( data.embed.hasOwnProperty(i) ) {
-                        data[i] = data.embed[i];
+                        if( i === "image" ) {
+                            data.picture = data.embed[i];
+                        } else {
+                            data[i] = data.embed[i];
+                        }
                     }
                 }
                 if( data.embed.text && !data.embed.url ) {

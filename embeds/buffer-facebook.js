@@ -31,7 +31,7 @@
         share.url = url;
         var small_img = $(parent).find('.uiPhotoThumb img').attr('src');
         if( small_img ) {
-            var img = small_img.replace(/s[0-9]+x[0-9]+\//, '')
+            var img = small_img.replace(/s[0-9]+x[0-9]+\//, '');
             share.image = img;
             share.url = $(parent).find('.uiPhotoThumb').attr('href');
         }
@@ -150,20 +150,18 @@
                 
             },
             data: function (elem) {
-                var parent = $(elem).closest('.uiDialog');
-                var text = $(parent).find('div.uiMentionsInput textarea').val();
+                var parent = $(elem).closest('.modalWrapper');
+                var text = $(parent).find('div.textInput textarea').val();
                 if( text === "Write something" ) text = undefined;
                 if( share.url ) {
                     if( text ) share.text = text;
-                    return {
-                        text: share,
-                        placement: 'facebook-share'
-                    }
+                    share.placement = 'facebook-share';
+                    return share;
                 } else {
                     return {
                         text: text,
                         placement: 'facebook-share'
-                    }
+                    };
                 }
             },
             clear: function (elem) {
@@ -218,7 +216,7 @@
                         clearcb = function () {}; // prevent clear from being called again, until the button is clicked again
                     });
                     
-                })
+                });
 
             }
 
