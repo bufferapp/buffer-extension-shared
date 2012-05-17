@@ -22,27 +22,43 @@
     // Listen for share button clicks
     var share = {};
     $('body').on('click', 'a.share_action_link', function (e) {
-        var parent = $(this).closest('.genericStreamStory');
+        var $parent = $(this).closest('.genericStreamStory, .fbTimelineUnit');
 
-		// reset share object
+		// reset share object on every 'share' button click
 		share = {};
-        share.via = $(parent).find('.actorName').text();
-        share.text = $(parent).find('.messageBody').text();
+
+		// find the name of the person that shared the attachment
+		share.via = $('.passiveName', $parent).first().text() || $('.actorName', $parent).first().text();
+
+		// find the message for this attachment, or if none use the attachment caption
+		// .tlTxFe is used on new timeline
+		share.text = $('.messageBody, .tlTxFe', $parent).first().text() || $('.caption', $parent).text();
+
+		var thumb = $('.uiPhotoThumb img, .photoUnit img', $parent).attr('src');
+		var url = $('.uiAttachmentTitle a, a.externalShareUnit', $parent).attr('href');
 
 		// find picture status
-		var small_img = $(parent).find('.uiPhotoThumb img').attr('src');
-		var url = $(parent).find('.uiAttachmentTitle a').attr('href');
-       
-        if( small_img ) {
-            var img = small_img.replace(/s[0-9]+x[0-9]+\//, '');
-            share.image = img;
-            //share.url = $(parent).find('.uiPhotoThumb').attr('href');
-        } 
+		if( thumb ) {
+			// convert the thumbnail link to a link to the fullsize image
+			share.picture = thumb.replace(/s[0-9]+x[0-9]+\//, '');
+
+			// we pass the source of the image for the 'found at' text
+			share.url = $('a.uiPhotoThumb, a.photo', $parent).attr('href');
+
+			share.placement = 'facebook-share-picture';
+		}
 
 		// find link status
 		else if (url) {
 			if( url[0] == "/" ) url = "https://facebook.com" + url;
-	        share.url = url;
+			share.url = url;
+			share.placement = 'facebook-share-link';
+		}
+		
+		// standard text status
+		else
+		{
+			share.placement = 'facebook-share-status';
 		}
     });
     
@@ -159,19 +175,18 @@
                 
             },
             data: function (elem) {
-                var parent = $(elem).closest('.modalWrapper');
-                var text = $(parent).find('div.textInput textarea').val();
+	
+                var $parent = $(elem).closest('.modalWrapper');
+
+				// if the user has written a message, allow this to override the default text
+                var text = $('div.textInput textarea', $parent).val();
                 if( text === "Write something" ) text = undefined;
-                if( share.url ) {
-                    if( text ) share.text = text;
-                    share.placement = 'facebook-share';
-                    return share;
-                } else {
-                    return {
-                        text: text,
-                        placement: 'facebook-share'
-                    };
-                }
+                if( text ) share.text = text;
+
+				// fallback placement when we don't know if the attachment is a picture, link or status
+				if( !share.placement ) share.placement = 'facebook-share';
+
+				return share;
             },
             clear: function (elem) {
                 share = {};
