@@ -20,21 +20,30 @@
     };
 
     // Listen for share button clicks
-
     var share = {};
     $('body').on('click', 'a.share_action_link', function (e) {
         var parent = $(this).closest('.genericStreamStory');
+
+		// reset share object
+		share = {};
         share.via = $(parent).find('.actorName').text();
         share.text = $(parent).find('.messageBody').text();
-        var url = $(parent).find('.uiStreamSource a').attr('href');
-        if( url[0] == "/" ) url = "https://facebook.com" + url;
-        share.url = url;
-        var small_img = $(parent).find('.uiPhotoThumb img').attr('src');
+
+		// find picture status
+		var small_img = $(parent).find('.uiPhotoThumb img').attr('src');
+		var url = $(parent).find('.uiAttachmentTitle a').attr('href');
+       
         if( small_img ) {
             var img = small_img.replace(/s[0-9]+x[0-9]+\//, '');
             share.image = img;
-            share.url = $(parent).find('.uiPhotoThumb').attr('href');
-        }
+            //share.url = $(parent).find('.uiPhotoThumb').attr('href');
+        } 
+
+		// find link status
+		else if (url) {
+			if( url[0] == "/" ) url = "https://facebook.com" + url;
+	        share.url = url;
+		}
     });
     
     var config = {};
