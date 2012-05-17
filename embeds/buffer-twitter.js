@@ -342,7 +342,7 @@
             activator: function (elem, btnConfig) {
 
                 if( $(elem).closest('.in-reply-to').length > 0 ) {
-                    $(elem).find('i').css({'background-position-y': '-30px'});
+                    $(elem).find('i').css({'background-position-y': '-21px'});
                 }
             }
         }
