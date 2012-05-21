@@ -41,6 +41,10 @@ var bufferOverlay = function(data, config, doneCallback) {
 		    doneCallback(overlaydata);
 	    }, 0);
 	});
+
+    bufferpm.bind("buffer_details", function() {
+        bufferpm("buffer_details", BufferDetails());
+    });
     
 };
 
