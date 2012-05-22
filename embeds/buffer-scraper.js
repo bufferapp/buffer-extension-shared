@@ -20,11 +20,23 @@ BufferDetails = (function () {
       return (str + '').replace(re, '');
     }
 
+    function getParameterByName(name) {
+      name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+      var regexS = "[\\?&]" + name + "=([^&#]*)";
+      var regex = new RegExp(regexS);
+      var results = regex.exec(window.location.search);
+      if(results == null)
+        return undefined;
+      else
+        return decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
     // Info
     var scraper = {};
     scraper.base = document.location.origin;
     scraper.path = document.location.pathname;
     scraper.url = document.location.href;
+    scraper.scanned = 0;
 
     var config = {};
     config.banned = [
@@ -130,6 +142,8 @@ BufferDetails = (function () {
         var i = 0, l=images.length, result, img;
         for(; i < l; i++) {
 
+            scraper.scanned += 1;
+
             img = images[i];
 
             // Have we seen this image already?
@@ -160,6 +174,33 @@ BufferDetails = (function () {
 
     };
 
+    var getVideoSource = function () {
+
+        var v;
+        
+        // Youtube
+        if( scraper.base.match(/youtube.com/i) ) {
+            v = getParameterByName('v');
+            if( v ) {
+                return 'http://www.youtube.com/v/' + v + '?autoplay=1';
+            }
+        }
+
+        // Vimeo
+        if( scraper.url.match(/vimeo.com\/(\d+)$/i) ) {
+            v = scraper.path.split('/')[1];
+            return 'https://secure.vimeo.com/moogaloop.swf?clip_id=' + v + '&autoplay=1';
+        }
+
+        // Soundcloud
+        if( scraper.base.match(/soundcloud.com/i) ) {
+            return 'https://player.soundcloud.com/player.swf?url=' + encodeURIComponent(scraper.url) + '&color=3b5998&auto_play=true&show_artwork=false';
+        }
+
+        return false;
+
+    };
+
     var getDescription = function () {
         var text = $('p').first().text().substring(0, 200);
         return $('meta[property="og:description"]').text() || $('meta[name=description]').prop('content') || (text.length > 0 ? text + '...' : false) || '';
@@ -167,12 +208,22 @@ BufferDetails = (function () {
 
     var getDetails = function () {
 
-        return {
+        var start = (new Date()).getTime();
+
+        var data = {
             original: scraper.url,
             title: $('meta[property="og:title"]').prop('content') || document.title || $('h1').first().text() || '',
             description: getDescription(),
-            images: getImages()
+            images: getImages(),
+            source: getVideoSource()
         };
+
+        data.details = {
+            process: ((new Date()).getTime() - start) + 'ms',
+            scanned: scraper.scanned
+        };
+
+        return data;
 
     };
 
