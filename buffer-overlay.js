@@ -41,10 +41,6 @@ var bufferOverlay = function(data, config, doneCallback) {
 		    doneCallback(overlaydata);
 	    }, 0);
 	});
-
-    bufferpm.bind("buffer_details", function() {
-        bufferpm("buffer_details", BufferDetails());
-    });
     
 };
 
@@ -55,7 +51,7 @@ var bufferData = function (port, postData) {
     }
     
     var config = {};
-    config.local = false;
+    config.local = true;
     config.googleReader = false;
     var segments = window.location.pathname.split('/');
     if( window.location.host.indexOf("google") != -1 && segments[1] == "reader" ) config.googleReader = true;

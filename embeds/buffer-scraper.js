@@ -1,5 +1,4 @@
-var BufferDetails;
-BufferDetails = (function () {
+;(function () {
 
     // Utility functions
     function rtrim (str, charlist) {
@@ -227,6 +226,11 @@ BufferDetails = (function () {
 
     };
 
-    return getDetails;
+    // Wait for a request for data
+    console.log("SCRAPER INJECTED.");
+    xt.port.on("buffer_details_request", function() {
+        console.log("SCRAPER HAS DETAILS REQUST");
+        xt.port.emit("buffer_details", getDetails());
+    });
     
 }());
