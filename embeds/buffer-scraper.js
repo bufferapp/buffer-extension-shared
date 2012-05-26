@@ -91,6 +91,7 @@
         var src, ext, height = $(img).width(), width = $(img).height(), aspect;
 
         src = $(img).attr('src');
+		if (!src) return false;
 
         ext = src.split('.').pop(); // This could break with query string... kitten.jpg?size=large
 
@@ -230,6 +231,7 @@
     console.log("SCRAPER INJECTED.");
     xt.port.on("buffer_details_request", function() {
         console.log("SCRAPER HAS DETAILS REQUST");
+
         xt.port.emit("buffer_details", getDetails());
     });
     
