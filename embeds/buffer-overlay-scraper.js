@@ -1,7 +1,6 @@
 ;(function () {
 
   xt.port.on('buffer_details', function (details) {
-    console.log("OVERLAY HAS DATA!!!!!!");
 
 	var temp = document.createElement('div');
 	temp.setAttribute('id', 'page-scraper');
@@ -10,5 +9,4 @@
   });
 
   xt.port.emit("buffer_details_request");
-
 }());
