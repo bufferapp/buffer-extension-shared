@@ -260,6 +260,7 @@
                 $(text).children('a').each(function () {
                     // Don't modify the screenames and the hastags
                     if( $(this).attr('data-screen-name') ) return;
+                    if( $(this).hasClass('twitter-atreply') ) return;
                     if( $(this).hasClass('twitter-hashtag') ) return;
                     // swap the text with the actual link
                     var original = $(this).text();
@@ -333,6 +334,7 @@
                 $(text).children('a').each(function () {
                     // Don't modify the screenames and the hastags
                     if( $(this).attr('data-screen-name') ) return;
+                    if( $(this).hasClass('twitter-atreply') ) return;
                     if( $(this).hasClass('twitter-hashtag') ) return;
                     // swap the text with the actual link
                     var original = $(this).text();
