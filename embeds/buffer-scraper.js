@@ -229,7 +229,6 @@
 
     // Wait for a request for data
     xt.port.on("buffer_details_request", function() {
-
         xt.port.emit("buffer_details", getDetails());
     });
 }());
