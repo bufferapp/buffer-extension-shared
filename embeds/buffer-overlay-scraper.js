@@ -6,8 +6,6 @@
     // Listen for information
     xt.port.on('buffer_details', function (details) {
 
-      console.log("Overlay has details", details);
-
       // Create an element in the overlay page with the
       // details scraped externally
       var temp = document.createElement('div');
