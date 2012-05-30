@@ -23,8 +23,8 @@ var bufferOverlay = function(data, config, doneCallback) {
     
     var temp = document.createElement('iframe');
     
-    temp.allowtransparency = 'true';
-	temp.scrolling = 'no';
+	temp.setAttribute('allowtransparency', 'true');
+	temp.setAttribute('scrolling', 'no');
 	temp.id = 'buffer_overlay';
 	temp.name = 'buffer_overlay';
 	temp.style.cssText = config.overlay.getCSS();
