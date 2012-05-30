@@ -168,8 +168,6 @@
             return pow(pow(b.width, 2) + pow(b.height, 2), 1/2) - pow(pow(a.width, 2) + pow(a.height, 2), 1/2);
         });
 
-        console.log(filtered);
-
         return filtered.slice(0, config.need);
 
     };
@@ -228,10 +226,7 @@
     };
 
     // Wait for a request for data
-    console.log("SCRAPER INJECTED.");
     xt.port.on("buffer_details_request", function() {
-        console.log("SCRAPER HAS DETAILS REQUST");
-
         xt.port.emit("buffer_details", getDetails());
     });
     
