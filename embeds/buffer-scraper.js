@@ -32,7 +32,7 @@
 
     // Info
     var scraper = {};
-    scraper.base = document.location.origin;
+    scraper.base = window.location.protocol + "//" + window.location.hostname + "/";
     scraper.path = document.location.pathname;
     scraper.url = document.location.href;
     scraper.scanned = 0;
@@ -226,7 +226,9 @@
     };
 
     // Wait for a request for data
+    console.log("buffer-scraper injected");
     xt.port.on("buffer_details_request", function() {
+        console.log("buffer-scraper has recieved buffer_details_request");
         xt.port.emit("buffer_details", getDetails());
     });
 }());
