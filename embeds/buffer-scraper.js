@@ -231,4 +231,7 @@
         console.log("buffer-scraper has recieved buffer_details_request");
         xt.port.emit("buffer_details", getDetails());
     });
+    // Tell the background page which port to use
+    // to get data from the scraper
+    xt.port.emit("buffer_register_scraper");
 }());
