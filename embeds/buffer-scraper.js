@@ -226,9 +226,7 @@
     };
 
     // Wait for a request for data
-    console.log("buffer-scraper injected");
     xt.port.on("buffer_details_request", function() {
-        console.log("buffer-scraper has recieved buffer_details_request");
         xt.port.emit("buffer_details", getDetails());
     });
     // Tell the background page which port to use
