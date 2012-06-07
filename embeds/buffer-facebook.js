@@ -131,7 +131,7 @@
         {
             name: "share",
             text: "Buffer",
-            container: 'div.uiOverlayFooter',
+            container: 'form[action="/ajax/sharer/submit/"] div.uiOverlayFooter',
             before: '.uiButtonConfirm',
             className: 'buffer-facebook-button',
             selector: '.buffer-facebook-button',
@@ -179,7 +179,7 @@
                 var $parent = $(elem).closest('.modalWrapper');
 
 				// if the user has written a message, allow this to override the default text
-                var text = $('div.textInput textarea', $parent).val();
+                var text = $('textarea[name="message_text"]', $parent).val();
                 if( text === "Write something" ) text = undefined;
                 if( text ) share.text = text;
 
