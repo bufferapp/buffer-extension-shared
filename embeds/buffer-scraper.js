@@ -55,11 +55,11 @@
 
             // relative to site root
             if( src.substring(0,1) === "/" ) {
-                src = scraper.url + src;
+                src = scraper.base + src;
             }
-            // no slash, relative to base
+            // no slash, relative to url
             else {
-                src = scraper.base + scraper.path + '/' + src;
+                src = scraper.url + '/' + src;
             }
 
         }
@@ -227,6 +227,7 @@
 
     // Wait for a request for data
     xt.port.on("buffer_details_request", function() {
+        console.log(getDetails());
         xt.port.emit("buffer_details", getDetails());
     });
     // Tell the background page which port to use
