@@ -229,7 +229,6 @@
     xt.port.on("buffer_details_request", function() {
         xt.port.emit("buffer_details", getDetails());
     });
-    // Tell the background page which port to use
-    // to get data from the scraper
-    xt.port.emit("buffer_register_scraper");
+    // Register the scraper with the background page
+    xt.port.emit("buffer_register_page_scraper");
 }());

@@ -30,7 +30,20 @@
 	// iframe configuration
 	config.iframe = {
 		id: "buffer_overlay",
-		css: "position:aboslute;top:0;left:0;height:0;width:0;z-index:9999;"
+		css: {
+			hide: {
+				position: "absolute",
+				top: 0,
+				left: 0,
+				height: 0,
+				width:0,
+				"z-index": 9999
+			},
+			show: {
+				height: "100%",
+				width: "100%"
+			}
+		}
 	};
 
 	// Create and iframe and load the overlay page, but hide it!
@@ -38,10 +51,20 @@
 		id: config.iframe.id,
 		src: config.endpoint,
 		allowtransparency: 'true',
-		scrolling: 'no',
-		style: config.iframe.css
-	}).appendTo('body');
+		scrolling: 'no'
+	}).css(config.iframe.css.hide).appendTo('body');
 
-	console.log(overlay);
+	// Wait for buffer_click to show the overlay
+	xt.port.on("buffer_click", function () {
+		$(overlay).css(config.iframe.css.show);
+	});
+	// Wait for buffer_done to remove the overlay
+	xt.port.on("buffer_done", function () {
+		$(overlay).css(config.iframe.css.hide);
+	});
+	// Register the preloaded overlay port with the extension
+	xt.port.emit("buffer_register_overlay");
+
+	console.log("preloaded overlay");
 
 }(jQuery));
