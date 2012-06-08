@@ -142,9 +142,9 @@
 
             },
             data: function (elem) {
-                var c = $(elem).closest('.retweet-tweet-dialog');
+                var c = $(elem).closest('.retweet-tweet-dialog, #retweet-dialog');
                 return {
-                    text: 'RT @' + c.find('.stream-item-header .username').text().trim() + ': ' + c.find('.js-tweet-text').text().trim() + '',
+                    text: 'RT @' + c.find('.stream-item-header .username, .twttr-reply-screenname').text().trim() + ': ' + c.find('.js-tweet-text').text().trim() + '',
                     placement: 'twitter-retweet'
                 }
             }   
