@@ -4,7 +4,7 @@
  * Loads in an overlay on every page load, and only passes data to it
  * when a buffer_click event is triggered
  *
- * This file requires jQuery > 1.7 to be present
+ * This file requires jQuery to be present
  */
 (function ($) {
 
@@ -46,7 +46,6 @@
 		}
 	};
 
-	// Create and iframe and load the overlay page, but hide it!
 	var overlay = $('<iframe/>', {
 		id: config.iframe.id,
 		src: config.endpoint,

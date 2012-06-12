@@ -20,7 +20,7 @@
   }
 
   // Register overlay scraper
-  xt.port.emit("buffer_register_overlay_scraper")
+  xt.port.emit("buffer_register_overlay_scraper");
 
   console.log("overlay scraper in place");
 
