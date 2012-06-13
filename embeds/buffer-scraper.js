@@ -227,7 +227,7 @@
 
 	// Wait for a request for data
 	xt.port.on("buffer_details_request", function() {
-		xt.port.emit("buffer_details", getDetails());
+		xt.port.emit("buffer_scraped", getDetails());
 	});
 	// Register the scraper with the background page
 	xt.port.emit("buffer_register_page_scraper");

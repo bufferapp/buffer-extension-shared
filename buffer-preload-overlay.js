@@ -32,16 +32,17 @@
 		id: "buffer_overlay",
 		css: {
 			hide: {
-				position: "absolute",
+				position: "fixed",
 				top: 0,
 				left: 0,
 				height: 0,
-				width:0,
-				"z-index": 9999
+				width: '100%',
+				"z-index": 9999,
+				display: 'block',
+				border: 'none'
 			},
 			show: {
-				height: "100%",
-				width: "100%"
+				height: "100%"
 			}
 		}
 	};
@@ -55,14 +56,14 @@
 
 	// Wait for buffer_click to show the overlay
 	xt.port.on("buffer_click", function () {
-		$(overlay).css(config.iframe.css.show);
+		$(overlay).animate(config.iframe.css.show);
 	});
-	// Wait for buffer_done to remove the overlay
-	xt.port.on("buffer_done", function () {
+	// Bind close listener
+	bufferpm.bind("buffermessage", function(overlaydata) {
 		$(overlay).css(config.iframe.css.hide);
 	});
 	// Register the preloaded overlay port with the extension
-	xt.port.emit("buffer_register_overlay");
+	xt.port.emit("buffer_register_overlay", {time: (new Date()).getTime()});
 
 	console.log("preloaded overlay");
 

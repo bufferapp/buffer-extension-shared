@@ -4,15 +4,15 @@
   if( document.location.host.match(/bufferapp.com/i) && xt.iframe ) {
 
     // Listen for information
-    xt.port.on('buffer_details', function (data) {
+    xt.port.on('buffer_data', function (data) {
 
-      console.log('SCRAPER HAS DATA!!', data);
+      console.log('SCRAPER HAS DATA!', data);
 
       // Create an element in the overlay page with the
       // details scraped externally
       $('<div/>', {
         'id': 'page-scraper',
-        'data-details': escape(JSON.stringify(data))
+        'data-details': encodeURIComponent(JSON.stringify(data))
       }).appendTo('body');
 
     });
