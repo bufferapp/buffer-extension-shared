@@ -15,7 +15,7 @@
 
 	// Configuration
 	var config = {};
-	config.local = false;
+	config.local = true;
 	// Point this at a local or production endpoint
 	config.endpoint = (function () {
 		var prefix;
@@ -24,7 +24,7 @@
 		} else {
 			prefix = document.location.protocol + '//';
 		}
-		return prefix + 'bufferapp.com/add/';
+		return prefix + 'bufferapp.com/overlay/';
 	}());
 
 	// iframe configuration
