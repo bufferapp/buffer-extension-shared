@@ -10,10 +10,14 @@
 
       // Create an element in the overlay page with the
       // details scraped externally
-      $('<div/>', {
+      var temp = $('<div/>', {
         'id': 'page-scraper',
         'data-details': encodeURIComponent(JSON.stringify(data))
       }).appendTo('body');
+
+      // Trigger an event to let the overlay know the content is there
+      console.log('Firing buffer_details');
+      $(temp).trigger('buffer_details');
 
     });
 

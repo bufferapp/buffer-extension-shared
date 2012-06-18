@@ -22,7 +22,7 @@
     // Listen for share button clicks
     var share = {};
     $('body').on('click', 'a.share_action_link', function (e) {
-        var $parent = $(this).closest('.genericStreamStory, .fbTimelineUnit');
+        var $parent = $(this).closest('.genericStreamStory, .fbTimelineUnit, .fbxPhotoContentContainer');
 
 		// reset share object on every 'share' button click
 		share = {};
@@ -34,7 +34,7 @@
 		// .tlTxFe is used on new timeline
 		share.text = $('.messageBody, .tlTxFe', $parent).first().text() || $('.caption', $parent).text();
 
-		var thumb = $('.uiPhotoThumb img, .photoUnit img', $parent).attr('src');
+		var thumb = $('.uiPhotoThumb img, .photoUnit img, .fbPhotoImage', $parent).attr('src');
 		var url = $('.uiAttachmentTitle a, a.externalShareUnit', $parent).attr('href');
 
 		// find picture status
