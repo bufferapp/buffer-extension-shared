@@ -236,11 +236,11 @@
 
                 var a = document.createElement('a');
                 a.setAttribute('class', btnConfig.className + " with-icn");
-                a.setAttribute('href', '#')
+                a.setAttribute('href', '#');
 
                 var i = document.createElement('i');
                 i.setAttribute('class', 'sm-embed'); // let Twitter set the bg color
-                i.setAttribute('style', 'top: -1px; position: relative; margin-right: 4px; width: 16px; height: 16px; top: -1px; background-image: url(' + xt.data.get('data/shared/img/twttr-sprite.png') + ')!important; background-repeat: no-repeat; background-position: -5px -5px;');
+                i.setAttribute('style', 'top: -2px; position: relative; margin-right: 4px; width: 16px; height: 16px; background-image: url(' + xt.data.get('data/shared/img/twttr-sprite.png') + ')!important; background-repeat: no-repeat; background-position: -5px -5px;');
 
                 $(a).append(i);
 
