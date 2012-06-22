@@ -168,7 +168,7 @@
         }
     ];
 
-    ;(function bufferEmbed() {
+    var bufferEmbed = function bufferEmbed() {
 
         var insertButtons = function () {
 
@@ -218,7 +218,7 @@
                         
                     }
                     
-                })
+                });
 
             }
 
@@ -228,6 +228,17 @@
         
         setTimeout(bufferEmbed, config.time.reload);
 
+    };
+
+    // Wait for xt.options to be set
+    ;(function check() {
+        // If reddit is switched on, add the buttons
+        if( xt.options && xt.options['buffer.op.reader'] === 'reader') {
+            bufferEmbed();
+        } else {
+            setTimeout(check, 50);
+        }
     }());
+
     
 }());
