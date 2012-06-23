@@ -67,7 +67,6 @@
 			share.placement = 'facebook-share-status';
 		}
 
-        console.log("share", share);
     });
     
     var config = {};
