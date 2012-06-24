@@ -195,7 +195,9 @@ var bufferData = function (port, postData) {
         });
     };
 
-    getData(createOverlay);
+    if( $('#buffer_overlay').length === 0 ) {
+        getData(createOverlay);
+    }
     
 };
 
