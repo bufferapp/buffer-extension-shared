@@ -104,7 +104,7 @@
             },
             data: function (elem) {
                 
-                var target = $(elem).closest(".entry").find(".entry-container a.entry-title-link");
+                var target = $(elem).closest(".entry").find(".entry-container a.entry-title-link").first();
                 return {
                     text: target.text(),
                     url: target.attr('href'),
@@ -159,8 +159,8 @@
                 
                 var target = $(elem).closest(".entry").find(".entry-main");
                 return {
-                    text: target.find('.entry-title').text(),
-                    url: target.find('.entry-original').attr('href'),
+                    text: target.find('.entry-title').first().text(),
+                    url: target.find('.entry-original').first().attr('href'),
                     placement: 'google-reader-icon'
                 };
                 
