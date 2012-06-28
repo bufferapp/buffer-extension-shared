@@ -22,7 +22,7 @@
     // Listen for share button clicks
     var share = {};
     $('body').on('click', 'a.share_action_link, a:contains("Share")', function (e) {
-        var $parent = $(this).closest('.genericStreamStory, .fbTimelineUnit, .UIStandardFrame_Content');
+        var $parent = $(this).closest('.genericStreamStory, .fbTimelineUnit, .UIStandardFrame_Content, .fbPhotoSnowlift');
 
 		// reset share object on every 'share' button click
 		share = {};
@@ -32,15 +32,15 @@
 
 		// find the message for this attachment, or if none use the attachment caption
 		// .tlTxFe is used on new timeline
-		share.text = $('.messageBody, .tlTxFe', $parent).first().text() || $('.caption', $parent).text();
+		share.text = $('.messageBody, .tlTxFe, .caption, .fbPhotosPhotoCaption', $parent).first().text();
 
-		var thumb = $('.uiPhotoThumb img, .photoUnit img, .fbPhotoImage', $parent).attr('src');
+		var thumb = $('.uiPhotoThumb img, .photoUnit img, .fbPhotoImage, .spotlight', $parent).attr('src');
 		var url = $('.uiAttachmentTitle a, a.externalShareUnit', $parent).attr('href');
 
 		// find picture status
 		if( thumb ) {
 			// convert the thumbnail link to a link to the fullsize image
-			share.picture = thumb.replace(/[sp][0-9]+x[0-9]+\//, '');
+			share.picture = thumb.replace(/s[0-9]+x[0-9]+\//, '');
 
 			// we pass the source of the image for the 'found at' text
 			share.url = $('a.uiPhotoThumb, a.photo', $parent).attr('href');
