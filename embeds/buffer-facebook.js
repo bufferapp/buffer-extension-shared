@@ -40,7 +40,7 @@
 		// find picture status
 		if( thumb ) {
 			// convert the thumbnail link to a link to the fullsize image
-            thumb = thumb.replace(/c[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\//, '');
+            thumb = thumb.replace(/c([0-9]+\.)+[0-9]+\//, '');
 			share.picture = thumb.replace(/[sp][0-9]+x[0-9]+\//, '');
 
 			// we pass the source of the image for the 'found at' text
