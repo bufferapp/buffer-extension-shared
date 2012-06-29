@@ -104,7 +104,7 @@
             },
             data: function (elem) {
                 
-                var target = $(elem).closest(".entry").find(".entry-container a.entry-title-link");
+                var target = $(elem).closest(".entry").find(".entry-container a.entry-title-link").first();
                 return {
                     text: target.text(),
                     url: target.attr('href'),
@@ -159,8 +159,8 @@
                 
                 var target = $(elem).closest(".entry").find(".entry-main");
                 return {
-                    text: target.find('.entry-title').text(),
-                    url: target.find('.entry-original').attr('href'),
+                    text: target.find('.entry-title').first().text(),
+                    url: target.find('.entry-original').first().attr('href'),
                     placement: 'google-reader-icon'
                 };
                 
@@ -168,7 +168,7 @@
         }
     ];
 
-    ;(function bufferEmbed() {
+    var bufferEmbed = function bufferEmbed() {
 
         var insertButtons = function () {
 
@@ -218,7 +218,7 @@
                         
                     }
                     
-                })
+                });
 
             }
 
@@ -228,6 +228,17 @@
         
         setTimeout(bufferEmbed, config.time.reload);
 
+    };
+
+    // Wait for xt.options to be set
+    ;(function check() {
+        // If reddit is switched on, add the buttons
+        if( xt.options && xt.options['buffer.op.reader'] === 'reader') {
+            bufferEmbed();
+        } else {
+            setTimeout(check, 50);
+        }
     }());
+
     
 }());

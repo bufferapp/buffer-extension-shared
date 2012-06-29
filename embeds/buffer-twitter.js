@@ -416,13 +416,23 @@
 
     };
 
-  ;(function bufferTwitter() {
-    var source = "chrome";
+    var twitterLoop = function bufferTwitter() {
+        var source = "chrome";
+        insertButtons();
+        setTimeout(bufferTwitter, 500);
+    };
 
-    insertButtons();
+    // Wait for xt.options to be set
+    ;(function check() {
+        // If twitter is switched on, start the main loop
+        if( xt.options && xt.options['buffer.op.twitter'] === 'twitter') {
+            twitterLoop();
+        } else {
+            setTimeout(check, 50);
+        }
+    }());
+    
 
-    setTimeout(bufferTwitter, 500);
 
-  }());
     
 }());
