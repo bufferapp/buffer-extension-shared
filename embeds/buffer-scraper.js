@@ -43,31 +43,6 @@
     ];
     config.need = 8;
 
-    var formatSrc = function (src) {
-
-        // add protocol to relative urls
-        if( src.substring(0, 2) === "//" ) {
-            src = document.location.protocol + src;
-        }
-
-        // prepend site if missing
-        if( ! src.match(/^https?:\/\//g) ) {
-
-            // relative to site root
-            if( src.substring(0,1) === "/" ) {
-                src = scraper.base + src;
-            }
-            // no slash, relative to url
-            else {
-                src = scraper.url + '/' + src;
-            }
-
-        }
-
-        return src;
-
-    };
-
     var calcGCD = function(size) {
         var a = size.x, b = size.y;
         var remander = 0;
@@ -90,12 +65,11 @@
 
         var src, ext, height = $(img).width(), width = $(img).height(), aspect;
 
-        src = $(img).attr('src');
+        src = $(img).get(0).src;
+
 		if (!src) return false;
 
-        ext = src.split('.').pop(); // This could break with query string... kitten.jpg?size=large
-
-        src = formatSrc(src);
+        ext = src.split('.').pop();
 
         // valid extension?
         if( ! ext.match(/(jpg|jpeg|gif|png)/i) ) { return false; }
@@ -115,12 +89,6 @@
     
     // Retrieve & filter images from current page
     var getImages = function () {
-
-        // Old-skool base tag
-        var base = $('base');
-        if( base.length > 0 ) {
-            scraper.base = rtrim($('base').first().attr('href'), '/') + '/';
-        }
         
         // All images
         var images = $('img'), filtered = [], srcs = {};
