@@ -417,7 +417,6 @@
     };
 
     var twitterLoop = function bufferTwitter() {
-        var source = "chrome";
         insertButtons();
         setTimeout(bufferTwitter, 500);
     };
