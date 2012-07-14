@@ -1,6 +1,6 @@
 ;(function() {
 
-    $('head').append('<style> .tweet .action-buffer-container i, .tweet.opened-tweet .action-buffer-container i, .tweet.opened-tweet.hover .action-buffer-container i  { background-position: -3px -3px; } .tweet.hover .action-buffer-container i { background-position: -3px -21px; }');
+    $('head').append('<style> .tweet .action-buffer-container i, .tweet.opened-tweet .action-buffer-container i, .tweet.opened-tweet.hover .action-buffer-container i  { background-position: -3px -3px !important; } .tweet.hover .action-buffer-container i, .tweet:hover .action-buffer-container i { background-position: -3px -21px !important; }');
 
     var buildElement = function buildElement (parentConfig) {
         
@@ -221,7 +221,7 @@
         {
             name: "buffer-permalink-action",
             text: "Buffer",
-            container: '.permalink div.stream-item-footer .tweet-actions',
+            container: '.permalink-tweet div.stream-item-footer .tweet-actions',
             after: '.action-fav-container',
             default: '',
             className: 'buffer-action',
@@ -240,7 +240,7 @@
 
                 var i = document.createElement('i');
                 i.setAttribute('class', 'sm-embed'); // let Twitter set the bg color
-                i.setAttribute('style', 'top: -2px; position: relative; margin-right: 4px; width: 16px; height: 16px; background-image: url(' + xt.data.get('data/shared/img/twttr-sprite.png') + ')!important; background-repeat: no-repeat; background-position: -5px -5px;');
+                i.setAttribute('style', 'top: -2px; position: relative; margin-right: 4px; width: 16px; height: 16px; background-image: url(' + xt.data.get('data/shared/img/twttr-sprite.png') + ')!important; background-repeat: no-repeat; background-position: -5px -5px !important;');
 
                 $(a).append(i);
 
@@ -295,7 +295,7 @@
         {
             name: "buffer-action",
             text: "Buffer",
-            container: '.stream div.stream-item-footer .tweet-actions',
+            container: '.stream div.stream-item-footer .tweet-actions, .permalink .simple-tweet div.stream-item-footer .tweet-actions',
             after: '.action-fav-container',
             default: '',
             className: 'buffer-action',
