@@ -1,6 +1,6 @@
 ;(function() {
 
-    $('head').append('<style> .tweet .action-buffer-container i, .tweet.opened-tweet .action-buffer-container i, .tweet.opened-tweet.hover .action-buffer-container i  { background-position: -3px -3px !important; } .tweet.hover .action-buffer-container i, .tweet:hover .action-buffer-container i { background-position: -3px -21px !important; }');
+    $('head').append('<style> .tweet .action-buffer-container i, .tweet.opened-tweet .action-buffer-container i, .tweet.opened-tweet.hover .action-buffer-container i  { background-position: -3px -3px !important; } .tweet .action-buffer-container i { background-position: -3px -21px !important; }');
 
     var buildElement = function buildElement (parentConfig) {
         
@@ -86,7 +86,7 @@
             },
             activator: function (elem, btnConfig) {
                 var target = $(elem).parents('.tweet-button-container').siblings('.text-area').find('.twitter-anywhere-tweet-box-editor');
-                if( target.length < 1) target = $(elem).parents('.tweet-button').siblings('.tweet-content').find('.tweet-box');
+                if( target.length < 1 ) target = $(elem).parents('.tweet-button').siblings('.tweet-content').find('.tweet-box').first();
                 $(target).on('keyup focus blur change paste cut', function (e) {
                     var val = $(this).val();
                     var counter = $(elem).siblings('.tweet-counter').text() || $(elem).siblings('.tweet-counter').val();
