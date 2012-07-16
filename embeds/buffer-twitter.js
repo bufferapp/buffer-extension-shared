@@ -310,7 +310,7 @@
 
                 var a = document.createElement('a');
                 a.setAttribute('class', btnConfig.className + " with-icn");
-                a.setAttribute('href', '#')
+                a.setAttribute('href', '#');
 
                 var i = document.createElement('i');
                 i.setAttribute('class', 'sm-embed'); // let Twitter set the bg colors
@@ -416,8 +416,16 @@
 
     };
 
+    /**
+     * Remove extra buttons that are not needed or wanted
+     */
+    var removeExtras = function () {
+        $('.replies .buffer-tweet-button').remove();
+    };
+
     var twitterLoop = function bufferTwitter() {
         insertButtons();
+        removeExtras();
         setTimeout(bufferTwitter, 500);
     };
 
@@ -430,8 +438,6 @@
             setTimeout(check, 50);
         }
     }());
-    
-
 
     
 }());
