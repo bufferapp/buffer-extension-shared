@@ -63,16 +63,11 @@
     // Filter out unwanted images
     var filterImage = function (img) {
 
-        var src, ext, height = $(img).width(), width = $(img).height(), aspect;
+        var src, height = $(img).width(), width = $(img).height(), aspect;
 
         src = $(img).get(0).src;
 
 		if (!src) return false;
-
-        ext = src.split('.').pop();
-
-        // valid extension?
-        if( ! ext.match(/(jpg|jpeg|gif|png)/i) ) { return false; }
 
         aspect = calcAspect({x: width, y: height});
 
