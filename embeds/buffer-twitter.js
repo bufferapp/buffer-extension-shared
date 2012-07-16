@@ -86,7 +86,6 @@
             },
             activator: function (elem, btnConfig) {
                 var target = $(elem).parents('.tweet-button-container').siblings('.text-area').find('.twitter-anywhere-tweet-box-editor');
-                if( target.length < 1) target = $(elem).parents('.tweet-button').siblings('.tweet-content').find('.tweet-box');
                 if( target.length < 1 ) target = $(elem).parents('.tweet-button').siblings('.tweet-content').find('.tweet-box').first();
                 $(target).on('keyup focus blur change paste cut', function (e) {
                     var val = $(this).val();
