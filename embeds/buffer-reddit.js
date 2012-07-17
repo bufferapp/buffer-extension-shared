@@ -12,8 +12,8 @@
 				var title = $(article).text().trim();
 				var link = $(article).attr('href').trim();
 				
-				var image = $(elem).closest('.entry').siblings('.thumbnail').attr('href');
-				
+				var image = $(elem).closest('.thing').find('.thumbnail img').attr('src');
+
 				return {
 					text: title,
 					url: link,
