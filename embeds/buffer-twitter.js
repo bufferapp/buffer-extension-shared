@@ -270,7 +270,7 @@
                     $(this).text($(this).attr("href")).attr('data-original-text', original);
                 });
                 // Build the RT text
-                var rt = 'RT ' + c.find('.username').first().text().trim() + ': ' + $(text).text() + '';
+                var rt = 'RT ' + c.find('.username').first().text().trim() + ': ' + $(text).text().trim() + '';
                 // Put the right links back
                 $(text).children('a').each(function () {
                     if( ! $(this).attr('data-original-text') ) return;
@@ -344,7 +344,7 @@
                     $(this).text($(this).attr("href")).attr('data-original-text', original);
                 });
                 // Build the RT text
-                var rt = 'RT ' + c.find('.username').first().text().trim() + ': ' + $(text).text() + '';
+                var rt = 'RT ' + c.find('.username').first().text().trim() + ': ' + $(text).text().trim() + '';
                 // Put the right links back
                 $(text).children('a').each(function () {
                     if( ! $(this).attr('data-original-text') ) return;
