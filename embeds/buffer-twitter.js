@@ -144,7 +144,7 @@
             data: function (elem) {
                 var c = $(elem).closest('.retweet-tweet-dialog, #retweet-dialog, #retweet-tweet-dialog');
                 return {
-                    text: 'RT @' + c.find('.stream-item-header .username, .stream-item-header .fullname, .twttr-reply-screenname').first().text().trim() + ': ' + c.find('.js-tweet-text').text().trim() + '',
+                    text: 'RT @' + c.find('.stream-item-header .username, .twttr-reply-screenname').first().text().trim().replace(/^@/, '') + ': ' + c.find('.js-tweet-text').text().trim() + '',
                     placement: 'twitter-retweet'
                 }
             }   
