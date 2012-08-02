@@ -1,8 +1,11 @@
+// Build that overlay!
+// Triggered by code working from the button up...
 var bufferOverlay = function(data, config, doneCallback) {
     
     if( ! doneCallback ) doneCallback = function () {};
     if( ! config ) return;
     
+    // Put together a query string for the iframe
     var buildSrc = function() {
         var src = config.overlay.endpoint;
         if( data.local ) src = config.overlay.localendpoint;
@@ -15,7 +18,7 @@ var bufferOverlay = function(data, config, doneCallback) {
             if( first ) { src += '?'; first = false; }
             count += 1;
             if( count > 1 ) src += '&';
-            src += a.name + '=' + a.encode(data[a.name])
+            src += a.name + '=' + a.encode(data[a.name]);
         }
         
         return src;
@@ -23,27 +26,32 @@ var bufferOverlay = function(data, config, doneCallback) {
     
     var temp = document.createElement('iframe');
     
-	temp.setAttribute('allowtransparency', 'true');
-	temp.setAttribute('scrolling', 'no');
-	temp.id = 'buffer_overlay';
-	temp.name = 'buffer_overlay';
-	temp.style.cssText = config.overlay.getCSS();
-	
-	temp.src = buildSrc();
-	
-	document.body.appendChild(temp);
+    temp.allowtransparency = 'true';
+    temp.scrolling = 'no';
+    temp.id = 'buffer_overlay';
+    temp.name = 'buffer_overlay';
+    temp.style.cssText = config.overlay.getCSS();
+    
+    temp.src = buildSrc();
+    
+    document.body.appendChild(temp);
     
     // Bind close listener
-	bufferpm.bind("buffermessage", function(overlaydata) {
-		document.body.removeChild(temp);
-		bufferpm.unbind("buffermessage");
-		setTimeout(function () {
-		    doneCallback(overlaydata);
-	    }, 0);
-	});
+    // Listen for when the overlay has closed itself
+    bufferpm.bind("buffermessage", function(overlaydata) {
+        document.body.removeChild(temp);
+        bufferpm.unbind("buffermessage");
+        setTimeout(function () {
+            doneCallback(overlaydata);
+        }, 0);
+    });
     
 };
 
+// bufferData is triggered by the buffer_click listener in
+// the buffer-browser-embed file, where it's passed a port
+// to communicate with the extension and data sent from the
+// background page.
 var bufferData = function (port, postData) {
 
     if (window.top !== window) {
@@ -55,6 +63,8 @@ var bufferData = function (port, postData) {
     config.googleReader = false;
     var segments = window.location.pathname.split('/');
     if( window.location.host.indexOf("google") != -1 && segments[1] == "reader" ) config.googleReader = true;
+
+    // Specification for gathering data for the overlay
     config.attributes = [
         {
             name: "url",
@@ -74,12 +84,12 @@ var bufferData = function (port, postData) {
         {
             name: "text",
             get: function (cb) {
-                if( document.getSelection() != false ) {
-                    cb('"' + document.getSelection().toString() + '"');
-                } else if( config.googleReader ) {
+                if( config.googleReader ) {
                     var text = $("#current-entry .entry-container a.entry-title-link").text();
                     if( ! text ) text = $('.entry').first().find(".entry-container a.entry-title-link").text();
                     cb(text);
+                } else if(document.getSelection() != false) {
+                    cb('"' + document.getSelection().toString() + '"');
                 } else {
                     cb(document.title);
                 }
@@ -142,6 +152,7 @@ var bufferData = function (port, postData) {
         getCSS: function () { return "border:none;height:100%;width:100%;position:fixed;z-index:99999999;top:0;left:0;display:block;"; }
     };
 
+    // Method for handling the async firing of the cb
     var executeAfter = function(done, count, data, cb) {
         if(done === count) {
             setTimeout(function(){
@@ -150,6 +161,9 @@ var bufferData = function (port, postData) {
         }
     };
 
+    // Asynchronously gather data about the page and from embedded sources,
+    // like Twitter or Facebook. Currently the async is a bit over the top,
+    // and not used, but if we need aysnc down the line, it's there.
     var getData = function (cb) {
         var count = config.attributes.length;
         var done = 0;
@@ -168,16 +182,14 @@ var bufferData = function (port, postData) {
         }
     };
 
+    // Transform the data somewhat, and then create an overlay.
+    // When it's done, fire buffer_done back to the extension
     var createOverlay = function (data) {
         if( data.embed ) {
             if( typeof data.embed === "object" ) {
                 for( var i in data.embed ) {
                     if( data.embed.hasOwnProperty(i) ) {
-                        if( i === "image" ) {
-                            data.picture = data.embed[i];
-                        } else {
-                            data[i] = data.embed[i];
-                        }
+                        data[i] = data.embed[i];
                     }
                 }
                 if( data.embed.text && !data.embed.url ) {
@@ -195,9 +207,10 @@ var bufferData = function (port, postData) {
         });
     };
 
-    if( $('#buffer_overlay').length === 0 ) {
-        getData(createOverlay);
-    }
+    // It all starts here.
+    // createOverlay is the callback that should fire after getData has
+    // gathered all the neccessaries
+    getData(createOverlay);
     
 };
 
