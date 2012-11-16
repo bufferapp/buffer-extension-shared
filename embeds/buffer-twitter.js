@@ -1,6 +1,6 @@
 ;(function() {
 
-    $('head').append('<style> .tweet .action-buffer-container i, .tweet.opened-tweet .action-buffer-container i, .tweet.opened-tweet.hover .action-buffer-container i  { background-position: -3px -3px; } .tweet.hover .action-buffer-container i { background-position: -3px -21px; }');
+    $('head').append('<style> .tweet .action-buffer-container i, .tweet.opened-tweet .action-buffer-container i, .tweet.opened-tweet.hover .action-buffer-container i  { background-position: -3px -3px !important; } .tweet .action-buffer-container i { background-position: -3px -21px !important; }');
 
     var buildElement = function buildElement (parentConfig) {
         
@@ -29,8 +29,8 @@
         {
             name: "composer",
             text: "Buffer",
-            container: 'div.tweet-button-sub-container',
-            after: 'input.tweet-counter',
+            container: 'div.tweet-button-sub-container, div.tweet-button',
+            after: '.tweet-counter',
             default: '',
             className: 'buffer-tweet-button btn disabled',
             selector: '.buffer-tweet-button',
@@ -74,19 +74,21 @@
                 return false;
             },
             data: function (elem) {
+                var text = $(elem).parents('.toolbar').siblings('.tweet-content').find('.tweet-box').val();
+
                 return {
-                    text: $(elem).parents('.tweet-button-container').siblings('.text-area').find('.twitter-anywhere-tweet-box-editor').val(),
+                    text: text,
                     placement: 'twitter-composer'
-                }
+                };
             },
             clear: function (elem) {
-                $('.twitter-anywhere-tweet-box-editor').val(' ');
+                $('.twitter-anywhere-tweet-box-editor, .tweet-box').val(' ');
             },
             activator: function (elem, btnConfig) {
-                var target = $(elem).parents('.tweet-button-container').siblings('.text-area').find('.twitter-anywhere-tweet-box-editor');
+                var target = $(elem).parents('.toolbar').siblings('.tweet-content').find('.tweet-box').first();
                 $(target).on('keyup focus blur change paste cut', function (e) {
                     var val = $(this).val();
-                    var counter = $(elem).siblings('.tweet-counter').val();
+                    var counter = $(elem).siblings('.tweet-counter').text() || $(elem).siblings('.tweet-counter').val();
                     if ( val.length > 0 && counter > -1 && val !== "Compose new Tweet...") {
                         $(elem).removeClass('disabled').attr('style', btnConfig.style);
                     } else {
@@ -98,8 +100,8 @@
         {
             name: "retweet",
             text: "Buffer Retweet",
-            container: '#retweet-dialog div.twttr-prompt',
-            after: 'div.js-prompt-ok',
+            container: '#retweet-tweet-dialog div.modal-footer, #retweet-dialog .twttr-prompt',
+            after: '.cancel-action, .js-prompt-ok',
             className: 'buffer-tweet-button btn',
             selector: '.buffer-tweet-button',
             default: 'background: #4C9E46; background: -webkit-linear-gradient(bottom, #4C9E46 25%, #54B14E 63%); -moz-linear-gradient(bottom, #4C9E46 25%, #54B14E 63%); border: 1px solid #40873B; color: white !important; text-shadow: rgba(0, 0, 0, 0.246094) 0px -1px 0px; font-weight: bold;',
@@ -139,9 +141,9 @@
 
             },
             data: function (elem) {
-                var c = $(elem).parents().siblings('.twttr-dialog-reply-footer');
+                var c = $(elem).closest('.retweet-tweet-dialog, #retweet-dialog, #retweet-tweet-dialog');
                 return {
-                    text: 'RT @' + c.find('.twttr-reply-screenname').text().trim() + ': ' + c.find('.js-tweet-text').text().trim() + '',
+                    text: 'RT @' + c.find('.stream-item-header .username, .twttr-reply-screenname').first().text().trim().replace(/^@/, '') + ': ' + c.find('.js-tweet-text').text().trim() + '',
                     placement: 'twitter-retweet'
                 }
             }   
@@ -218,7 +220,7 @@
         {
             name: "buffer-permalink-action",
             text: "Buffer",
-            container: '.permalink div.stream-item-footer .tweet-actions',
+            container: '.permalink-tweet div.stream-item-footer .tweet-actions',
             after: '.action-fav-container',
             default: '',
             className: 'buffer-action',
@@ -233,11 +235,11 @@
 
                 var a = document.createElement('a');
                 a.setAttribute('class', btnConfig.className + " with-icn");
-                a.setAttribute('href', '#')
+                a.setAttribute('href', '#');
 
                 var i = document.createElement('i');
                 i.setAttribute('class', 'sm-embed'); // let Twitter set the bg color
-                i.setAttribute('style', 'top: -1px; position: relative; margin-right: 4px; width: 16px; height: 16px; top: -1px; background-image: url(' + xt.data.get('data/shared/img/twttr-sprite.png') + '); background-repeat: no-repeat; background-position: -5px -5px;');
+                i.setAttribute('style', 'top: -2px; position: relative; margin-right: 4px; width: 16px; height: 16px; background-image: url(' + xt.data.get('data/shared/img/twttr-sprite.png') + ')!important; background-repeat: no-repeat; background-position: -5px -5px !important;');
 
                 $(a).append(i);
 
@@ -267,7 +269,7 @@
                     $(this).text($(this).attr("href")).attr('data-original-text', original);
                 });
                 // Build the RT text
-                var rt = 'RT ' + c.find('.username').first().text().trim() + ': ' + $(text).text() + '';
+                var rt = 'RT ' + c.find('.username').first().text().trim() + ': ' + $(text).text().trim() + '';
                 // Put the right links back
                 $(text).children('a').each(function () {
                     if( ! $(this).attr('data-original-text') ) return;
@@ -292,7 +294,7 @@
         {
             name: "buffer-action",
             text: "Buffer",
-            container: '.stream div.stream-item-footer .tweet-actions',
+            container: '.stream div.stream-item-footer .tweet-actions, .permalink .simple-tweet div.stream-item-footer .tweet-actions',
             after: '.action-fav-container',
             default: '',
             className: 'buffer-action',
@@ -307,11 +309,11 @@
 
                 var a = document.createElement('a');
                 a.setAttribute('class', btnConfig.className + " with-icn");
-                a.setAttribute('href', '#')
+                a.setAttribute('href', '#');
 
                 var i = document.createElement('i');
                 i.setAttribute('class', 'sm-embed'); // let Twitter set the bg colors
-                i.setAttribute('style', 'position: relative; top: 0px; margin-right: 4px; width: 13px; height: 13px; background-image: url(' + xt.data.get('data/shared/img/twttr-sprite-small.png') + '); background-repeat: no-repeat;');
+                i.setAttribute('style', 'position: relative; top: 0px; margin-right: 4px; width: 13px; height: 13px; background-image: url(' + xt.data.get('data/shared/img/twttr-sprite-small.png') + ')!important; background-repeat: no-repeat;');
 
                 $(a).append(i);
 
@@ -341,7 +343,7 @@
                     $(this).text($(this).attr("href")).attr('data-original-text', original);
                 });
                 // Build the RT text
-                var rt = 'RT ' + c.find('.username').first().text().trim() + ': ' + $(text).text() + '';
+                var rt = 'RT ' + c.find('.username').first().text().trim() + ': ' + $(text).text().trim() + '';
                 // Put the right links back
                 $(text).children('a').each(function () {
                     if( ! $(this).attr('data-original-text') ) return;
@@ -413,13 +415,28 @@
 
     };
 
-  ;(function bufferTwitter() {
-    var source = "chrome";
+    /**
+     * Remove extra buttons that are not needed or wanted
+     */
+    var removeExtras = function () {
+        $('.replies .buffer-tweet-button').remove();
+    };
 
-    insertButtons();
+    var twitterLoop = function bufferTwitter() {
+        insertButtons();
+        removeExtras();
+        setTimeout(bufferTwitter, 500);
+    };
 
-    setTimeout(bufferTwitter, 500);
+    // Wait for xt.options to be set
+    ;(function check() {
+        // If twitter is switched on, start the main loop
+        if( xt.options && xt.options['buffer.op.twitter'] === 'twitter') {
+            twitterLoop();
+        } else {
+            setTimeout(check, 50);
+        }
+    }());
 
-  }());
     
 }());
