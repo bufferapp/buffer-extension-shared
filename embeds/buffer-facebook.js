@@ -194,62 +194,69 @@
         }
     ];
 
-    ;(function bufferEmbed() {
+    var insertButtons = function () {
 
-        var insertButtons = function () {
+        var i, l=config.buttons.length;
+        for ( i=0 ; i < l; i++ ) {
 
-            var i, l=config.buttons.length;
-            for ( i=0 ; i < l; i++ ) {
-
-                var btnConfig = config.buttons[i];
+            var btnConfig = config.buttons[i];
+            
+            $(btnConfig.container).each(function () {
                 
-                $(btnConfig.container).each(function () {
-                    
-                    var container = $(this);
-                    
-                    if ( $(container).hasClass('buffer-inserted') ) return;
+                var container = $(this);
+                
+                if ( $(container).hasClass('buffer-inserted') ) return;
 
-                    $(container).addClass('buffer-inserted');
+                $(container).addClass('buffer-inserted');
 
-                    var btn = btnConfig.create(btnConfig);
+                var btn = btnConfig.create(btnConfig);
 
-                    // EXT
-                    if ( btnConfig.after ) $(container).find(btnConfig.after).after(btn);
-                    else if ( btnConfig.before ) $(container).find(btnConfig.before).before(btn);
-                    else $(container).append(btn);
+                // EXT
+                if ( btnConfig.after ) $(container).find(btnConfig.after).after(btn);
+                else if ( btnConfig.before ) $(container).find(btnConfig.before).before(btn);
+                else $(container).append(btn);
 
-                    if ( !! btnConfig.activator ) btnConfig.activator(btn, btnConfig);
-                    
-                    if ( !! btnConfig.lastly ) btnConfig.lastly(btn, btnConfig);
-                    
-                    var getData = btnConfig.data;
-                    var clearData = btnConfig.clear;
-                    
-                    var clearcb = function () {};
+                if ( !! btnConfig.activator ) btnConfig.activator(btn, btnConfig);
+                
+                if ( !! btnConfig.lastly ) btnConfig.lastly(btn, btnConfig);
+                
+                var getData = btnConfig.data;
+                var clearData = btnConfig.clear;
+                
+                var clearcb = function () {};
 
-                    $(btn).click(function (e) {
-                        clearcb = function () { // allow clear to be called for this button
-                            if ( !! clearData ) clearData(btn);
-                        };
-                        xt.port.emit("buffer_click", getData(btn));
-                        e.preventDefault();
-                    });
-                    
-                    xt.port.on("buffer_embed_clear", function () {
-                        clearcb();
-                        clearcb = function () {}; // prevent clear from being called again, until the button is clicked again
-                    });
-                    
+                $(btn).click(function (e) {
+                    clearcb = function () { // allow clear to be called for this button
+                        if ( !! clearData ) clearData(btn);
+                    };
+                    xt.port.emit("buffer_click", getData(btn));
+                    e.preventDefault();
                 });
+                
+                xt.port.on("buffer_embed_clear", function () {
+                    clearcb();
+                    clearcb = function () {}; // prevent clear from being called again, until the button is clicked again
+                });
+                
+            });
 
-            }
+        }
 
-        };
+    };
 
+    var facebookLoop = function facebookLoop() {
         insertButtons();
-        
-        setTimeout(bufferEmbed, config.time.reload);
+        setTimeout(facebookLoop, 500);
+    };
 
+    // Wait for xt.options to be set
+    ;(function check() {
+        // If twitter is switched on, start the main loop
+        if( xt.options && xt.options['buffer.op.facebook'] === 'facebook') {
+            facebookLoop();
+        } else {
+            setTimeout(check, 2000);
+        }
     }());
     
 }());
