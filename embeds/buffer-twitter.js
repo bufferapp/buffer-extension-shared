@@ -434,7 +434,7 @@
         if( xt.options && xt.options['buffer.op.twitter'] === 'twitter') {
             twitterLoop();
         } else {
-            setTimeout(check, 50);
+            setTimeout(check, 2000);
         }
     }());
 
