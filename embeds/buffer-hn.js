@@ -67,6 +67,19 @@
 
 	};
 	
-	insertButtons();
+	var hnLoop = function hnLoop() {
+        insertButtons();
+        setTimeout(hnLoop, 500);
+    };
+
+    // Wait for xt.options to be set
+    ;(function check() {
+        // If twitter is switched on, start the main loop
+        if( xt.options && xt.options['buffer.op.hacker'] === 'hacker') {
+            hnLoop();
+        } else {
+            setTimeout(check, 2000);
+        }
+    }());
 
 }());
