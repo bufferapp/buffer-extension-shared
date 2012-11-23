@@ -21,45 +21,52 @@
 
     // Listen for share button clicks
     var share = {};
-    $('body').on('click', 'a.share_action_link', function (e) {
-        var $parent = $(this).closest('.genericStreamStory, .fbTimelineUnit');
+    $('body').on('click', 'a.share_action_link, a:contains("Share")', function (e) {
+        var parent = $(this).closest('.genericStreamStory, .fbTimelineUnit, .UIStandardFrame_Content, .fbPhotoSnowlift');
 
-		// reset share object on every 'share' button click
-		share = {};
+        // reset share object on every 'share' button click
+        share = {};
 
-		// find the name of the person that shared the attachment
-		share.via = $('.passiveName', $parent).first().text() || $('.actorName', $parent).first().text();
+        // find the name of the person that shared the attachment
+        share.via = $('.passiveName, .actorName, .unitHeader, #fbPhotoPageAuthorName a', parent).first().text();
 
-		// find the message for this attachment, or if none use the attachment caption
-		// .tlTxFe is used on new timeline
-		share.text = $('.messageBody, .tlTxFe', $parent).first().text() || $('.caption', $parent).text();
+        // find the message for this attachment, or if none use the attachment caption
+        // .tlTxFe is used on new timeline
+        share.text = $('.messageBody, .tlTxFe, .caption, .fbPhotosPhotoCaption', parent).first().text();
 
-		var thumb = $('.uiPhotoThumb img, .photoUnit img', $parent).attr('src');
-		var url = $('.uiAttachmentTitle a, a.externalShareUnit', $parent).attr('href');
+        var thumb = $('.uiPhotoThumb img, .photoUnit img, .fbPhotoImage, .spotlight', parent).attr('src');
+        var url = $('a.shareMediaLink, .uiAttachmentTitle a, a.externalShareUnit', parent).attr('href');
 
-		// find picture status
-		if( thumb ) {
-			// convert the thumbnail link to a link to the fullsize image
-			share.picture = thumb.replace(/s[0-9]+x[0-9]+\//, '');
+        // find picture status
+        if( thumb ) {
+            // convert the thumbnail link to a link to the fullsize image
+            thumb = thumb.replace(/c([0-9]+\.)+[0-9]+\//, '');
+            share.picture = thumb.replace(/[sp][0-9]+x[0-9]+\//, '');
 
-			// we pass the source of the image for the 'found at' text
-			share.url = $('a.uiPhotoThumb, a.photo', $parent).attr('href');
+            // find a link to the photo within facebook
+            share.url = $('a.uiPhotoThumb, a.photo', parent).attr('href');
 
-			share.placement = 'facebook-share-picture';
-		}
+            // if sharing from an album, share.url will not be set, so
+            // we grab the page url
+            if( ! share.url ) {
+                share.url = document.location.toString();
+            }
 
-		// find link status
-		else if (url) {
-			if( url[0] == "/" ) url = "https://facebook.com" + url;
-			share.url = url;
-			share.placement = 'facebook-share-link';
-		}
-		
-		// standard text status
-		else
-		{
-			share.placement = 'facebook-share-status';
-		}
+            share.placement = 'facebook-share-picture';
+        }
+
+        // find link status
+        else if (url) {
+            if( url[0] == "/" ) url = "https://facebook.com" + url;
+            share.url = url;
+            share.placement = 'facebook-share-link';
+        }
+        
+        // standard text status
+        else {
+            share.placement = 'facebook-share-status';
+        }
+
     });
     
     var config = {};
@@ -131,7 +138,7 @@
         {
             name: "share",
             text: "Buffer",
-            container: 'div.uiOverlayFooter',
+            container: 'form[action="/ajax/sharer/submit/"] div.uiOverlayFooter',
             before: '.uiButtonConfirm',
             className: 'buffer-facebook-button',
             selector: '.buffer-facebook-button',
@@ -175,18 +182,18 @@
                 
             },
             data: function (elem) {
-	
+    
                 var $parent = $(elem).closest('.modalWrapper');
 
-				// if the user has written a message, allow this to override the default text
-                var text = $('div.textInput textarea', $parent).val();
+                // if the user has written a message, allow this to override the default text
+                var text = $('textarea[name="message_text"]', $parent).val();
                 if( text === "Write something" ) text = undefined;
                 if( text ) share.text = text;
 
-				// fallback placement when we don't know if the attachment is a picture, link or status
-				if( !share.placement ) share.placement = 'facebook-share';
+                // fallback placement when we don't know if the attachment is a picture, link or status
+                if( !share.placement ) share.placement = 'facebook-share';
 
-				return share;
+                return share;
             },
             clear: function (elem) {
                 share = {};
@@ -244,16 +251,11 @@
 
     };
 
-    var facebookLoop = function facebookLoop() {
-        insertButtons();
-        setTimeout(facebookLoop, 500);
-    };
-
     // Wait for xt.options to be set
     ;(function check() {
-        // If twitter is switched on, start the main loop
+        // If facebook is switched on, add the buttons
         if( xt.options && xt.options['buffer.op.facebook'] === 'facebook') {
-            facebookLoop();
+            insertButtons();
         } else {
             setTimeout(check, 2000);
         }

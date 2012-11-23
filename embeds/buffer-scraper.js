@@ -32,7 +32,7 @@
 
     // Info
     var scraper = {};
-    scraper.base = document.location.origin;
+    scraper.base = window.location.protocol + "//" + window.location.hostname + "/";
     scraper.path = document.location.pathname;
     scraper.url = document.location.href;
     scraper.scanned = 0;
@@ -42,31 +42,6 @@
         'http://ds.issuemediagroup.com'
     ];
     config.need = 8;
-
-    var formatSrc = function (src) {
-
-        // add protocol to relative urls
-        if( src.substring(0, 2) === "//" ) {
-            src = document.location.protocol + src;
-        }
-
-        // prepend site if missing
-        if( ! src.match(/^https?:\/\//g) ) {
-
-            // relative to site root
-            if( src.substring(0,1) === "/" ) {
-                src = scraper.url + src;
-            }
-            // no slash, relative to base
-            else {
-                src = scraper.base + scraper.path + '/' + src;
-            }
-
-        }
-
-        return src;
-
-    };
 
     var calcGCD = function(size) {
         var a = size.x, b = size.y;
@@ -88,17 +63,11 @@
     // Filter out unwanted images
     var filterImage = function (img) {
 
-        var src, ext, height = $(img).width(), width = $(img).height(), aspect;
+        var src, height = $(img).width(), width = $(img).height(), aspect;
 
-        src = $(img).attr('src');
+        src = $(img).get(0).src;
+
 		if (!src) return false;
-
-        ext = src.split('.').pop(); // This could break with query string... kitten.jpg?size=large
-
-        src = formatSrc(src);
-
-        // valid extension?
-        if( ! ext.match(/(jpg|jpeg|gif|png)/i) ) { return false; }
 
         aspect = calcAspect({x: width, y: height});
 
@@ -115,12 +84,6 @@
     
     // Retrieve & filter images from current page
     var getImages = function () {
-
-        // Old-skool base tag
-        var base = $('base');
-        if( base.length > 0 ) {
-            scraper.base = rtrim($('base').first().attr('href'), '/') + '/';
-        }
         
         // All images
         var images = $('img'), filtered = [], srcs = {};
@@ -229,4 +192,7 @@
     xt.port.on("buffer_details_request", function() {
         xt.port.emit("buffer_details", getDetails());
     });
+    // Tell the background page which port to use
+    // to get data from the scraper
+    xt.port.emit("buffer_register_scraper");
 }());
