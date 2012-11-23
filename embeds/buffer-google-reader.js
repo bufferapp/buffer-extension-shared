@@ -222,13 +222,18 @@
 
     };
 
+    var googleReaderLoop = function googleReaderLoop() {
+        insertButtons();
+        setTimeout(googleReaderLoop, 500);
+    };
+
     // Wait for xt.options to be set
     ;(function check() {
         // If reader is switched on, add the buttons
         if( xt.options && xt.options['buffer.op.reader'] === 'reader') {
-            insertButtons();
+            googleReaderLoop();
         } else {
-            setTimeout(check, 2000);
+            setTimeout(check, 200);
         }
     }());
 
