@@ -70,6 +70,19 @@
 
 	};
 	
-	insertButtons();
+	var redditLoop = function redditLoop() {
+        insertButtons();
+        setTimeout(redditLoop, 500);
+    };
+
+    // Wait for xt.options to be set
+    ;(function check() {
+        // If twitter is switched on, start the main loop
+        if( xt.options && xt.options['buffer.op.reddit'] === 'reddit') {
+            redditLoop();
+        } else {
+            setTimeout(check, 2000);
+        }
+    }());
 
 }());
