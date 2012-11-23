@@ -168,66 +168,73 @@
         }
     ];
 
-    ;(function bufferEmbed() {
+    var insertButtons = function () {
 
-        var insertButtons = function () {
+        var i, l=config.buttons.length;
+        for ( i=0 ; i < l; i++ ) {
 
-            var i, l=config.buttons.length;
-            for ( i=0 ; i < l; i++ ) {
-
-                var btnConfig = config.buttons[i];
+            var btnConfig = config.buttons[i];
+            
+            $(btnConfig.container).each(function () {
                 
-                $(btnConfig.container).each(function () {
-                    
-                    var container = $(this);
-                    
-                    if ( $(container).hasClass('buffer-inserted') ) return;
+                var container = $(this);
+                
+                if ( $(container).hasClass('buffer-inserted') ) return;
 
-                    $(container).addClass('buffer-inserted');
+                $(container).addClass('buffer-inserted');
 
-                    var btn = btnConfig.create(btnConfig);
+                var btn = btnConfig.create(btnConfig);
 
-                    if ( btnConfig.after ) $(container).find(btnConfig.after).after(btn);
-                    else $(container).append(btn);
+                if ( btnConfig.after ) $(container).find(btnConfig.after).after(btn);
+                else $(container).append(btn);
 
-                    if ( !! btnConfig.activator ) btnConfig.activator(btn, btnConfig);
+                if ( !! btnConfig.activator ) btnConfig.activator(btn, btnConfig);
+                
+                if ( !! btnConfig.lastly ) btnConfig.lastly(btn, btnConfig);
+                
+                var getData = btnConfig.data;
+                var clearData = btnConfig.clear;
+                
+                var clearcb = function () {};
+                
+                // disallow must be true to disable click handlers
+                if( btnConfig.disallowClear !== true ) {
+                
+                    $(btn).click(function (e) {
+                        clearcb = function () { // allow clear to be called for this button
+                            if ( !! clearData ) clearData(btn);
+                        };
+                        xt.port.emit("buffer_click", getData(btn));
+                        e.preventDefault();
+                        e.stopPropagation();
+                    });
+                
+                    xt.port.on("buffer_embed_clear", function () {
+                        clearcb();
+                        clearcb = function () {}; // prevent clear from being called again, until the button is clicked again
+                    });
                     
-                    if ( !! btnConfig.lastly ) btnConfig.lastly(btn, btnConfig);
-                    
-                    var getData = btnConfig.data;
-                    var clearData = btnConfig.clear;
-                    
-                    var clearcb = function () {};
-                    
-                    // disallow must be true to disable click handlers
-                    if( btnConfig.disallowClear !== true ) {
-                    
-                        $(btn).click(function (e) {
-                            clearcb = function () { // allow clear to be called for this button
-                                if ( !! clearData ) clearData(btn);
-                            };
-                            xt.port.emit("buffer_click", getData(btn));
-                            e.preventDefault();
-                            e.stopPropagation();
-                        });
-                    
-                        xt.port.on("buffer_embed_clear", function () {
-                            clearcb();
-                            clearcb = function () {}; // prevent clear from being called again, until the button is clicked again
-                        });
-                        
-                    }
-                    
-                })
+                }
+                
+            })
 
-            }
+        }
 
-        };
+    };
 
+    var googleReaderLoop = function googleReaderLoop() {
         insertButtons();
-        
-        setTimeout(bufferEmbed, config.time.reload);
+        setTimeout(googleReaderLoop, 500);
+    };
 
+    // Wait for xt.options to be set
+    ;(function check() {
+        // If twitter is switched on, start the main loop
+        if( xt.options && xt.options['buffer.op.reader'] === 'reader') {
+            googleReaderLoop();
+        } else {
+            setTimeout(check, 2000);
+        }
     }());
     
 }());
