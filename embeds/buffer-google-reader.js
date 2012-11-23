@@ -216,7 +216,7 @@
                     
                 }
                 
-            })
+            });
 
         }
 
@@ -224,7 +224,7 @@
 
     // Wait for xt.options to be set
     ;(function check() {
-        // If reddit is switched on, add the buttons
+        // If reader is switched on, add the buttons
         if( xt.options && xt.options['buffer.op.reader'] === 'reader') {
             insertButtons();
         } else {

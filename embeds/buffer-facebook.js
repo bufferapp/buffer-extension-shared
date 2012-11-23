@@ -251,14 +251,20 @@
 
     };
 
+    var facebookLoop = function facebookLoop() {
+        insertButtons();
+        setTimeout(facebookLoop, 500);
+    };
+
     // Wait for xt.options to be set
     ;(function check() {
         // If facebook is switched on, add the buttons
         if( xt.options && xt.options['buffer.op.facebook'] === 'facebook') {
-            insertButtons();
+            facebookLoop();
         } else {
             setTimeout(check, 2000);
         }
     }());
+    
     
 }());

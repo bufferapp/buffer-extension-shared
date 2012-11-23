@@ -74,12 +74,7 @@
                 return false;
             },
             data: function (elem) {
-<<<<<<< HEAD
                 var text = $(elem).parents('.toolbar').siblings('.tweet-content').find('.tweet-box').val();
-=======
-                var text = $(elem).parents('.tweet-button-container').siblings('.text-area').find('.twitter-anywhere-tweet-box-editor').val() || $(elem).parents('.tweet-button').siblings('.tweet-content').find('.tweet-box').val();
->>>>>>> fad746b0c909f67529d7bbe64dcf9d1b2ef38a58
-
                 return {
                     text: text,
                     placement: 'twitter-composer'
@@ -89,12 +84,7 @@
                 $('.twitter-anywhere-tweet-box-editor, .tweet-box').val(' ');
             },
             activator: function (elem, btnConfig) {
-<<<<<<< HEAD
                 var target = $(elem).parents('.toolbar').siblings('.tweet-content').find('.tweet-box').first();
-=======
-                var target = $(elem).parents('.tweet-button-container').siblings('.text-area').find('.twitter-anywhere-tweet-box-editor');
-                if( target.length < 1 ) target = $(elem).parents('.tweet-button').siblings('.tweet-content').find('.tweet-box').first();
->>>>>>> fad746b0c909f67529d7bbe64dcf9d1b2ef38a58
                 $(target).on('keyup focus blur change paste cut', function (e) {
                     var val = $(this).val();
                     var counter = $(elem).siblings('.tweet-counter').text() || $(elem).siblings('.tweet-counter').val();
@@ -431,10 +421,10 @@
         $('.replies .buffer-tweet-button').remove();
     };
 
-    var twitterLoop = function bufferTwitter() {
+    var twitterLoop = function twitterLoop() {
         insertButtons();
         removeExtras();
-        setTimeout(bufferTwitter, 500);
+        setTimeout(twitterLoop, 500);
     };
 
     // Wait for xt.options to be set
