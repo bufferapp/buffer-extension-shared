@@ -78,7 +78,7 @@
         {
             name: "status",
             text: "Buffer",
-            container: '#pagelet_composer ._118',
+            container: '#pagelet_composer > div > div',
             after: '.uiListItem:first-child',
             className: 'buffer-facebook-button',
             selector: '.buffer-facebook-button',
@@ -127,12 +127,12 @@
             },
             data: function (elem) {
                 return {
-                    text: $(elem).parents('._2yg').find('textarea.textInput').val(),
+                    text: $(elem).parents('form').find('textarea.textInput').val(),
                     placement: 'facebook-composer'
                 }
             },
             clear: function (elem) {
-                $(elem).parents('._2yg').find('textarea.textInput').val('');
+                $(elem).parents('form').find('textarea.textInput').val('');
             }
         },
         {
@@ -143,8 +143,8 @@
             className: 'buffer-facebook-button',
             selector: '.buffer-facebook-button',
             elements: ['a', 'buffer-facebook-button uiOverlayButton uiButton uiButtonLarge'],
-            default: 'background: hsl(116, 39%, 45%); background: -webkit-linear-gradient(bottom, hsl(116, 39%, 45%) 95%, hsl(116, 39%, 60%) 96%); background: -moz-linear-gradient(bottom, hsl(116, 39%, 45%) 95%, hsl(116, 39%, 60%) 96%); border: 1px solid #40873B; color: white !important;padding: 3px 6px 4px;',
-            style:   'background: hsl(116, 39%, 45%); background: -webkit-linear-gradient(bottom, hsl(116, 39%, 45%) 95%, hsl(116, 39%, 60%) 96%); background: -moz-linear-gradient(bottom, hsl(116, 39%, 45%) 95%, hsl(116, 39%, 60%) 96%); border: 1px solid #40873B; color: white !important;padding: 3px 6px 4px;',
+            default: 'background: hsl(116, 39%, 45%); background: -webkit-linear-gradient(bottom, hsl(116, 39%, 45%) 95%, hsl(116, 39%, 60%) 96%); background: -moz-linear-gradient(bottom, hsl(116, 39%, 45%) 95%, hsl(116, 39%, 60%) 96%); border: 1px solid #40873B; color: white !important;padding: 3px 6px 1px;',
+            style:   'background: hsl(116, 39%, 45%); background: -webkit-linear-gradient(bottom, hsl(116, 39%, 45%) 95%, hsl(116, 39%, 60%) 96%); background: -moz-linear-gradient(bottom, hsl(116, 39%, 45%) 95%, hsl(116, 39%, 60%) 96%); border: 1px solid #40873B; color: white !important;padding: 3px 6px 1px;',
             hover:   'background: hsl(116, 39%, 42%); background: -webkit-linear-gradient(bottom, hsl(116, 39%, 42%) 95%, hsl(116, 39%, 55%) 96%); background: -moz-linear-gradient(bottom, hsl(116, 39%, 42%) 95%, hsl(116, 39%, 55%) 96%); text-decoration: none;',
             active:  'background: hsl(116, 39%, 40%); text-decoration: none;',
             create: function (btnConfig) {
