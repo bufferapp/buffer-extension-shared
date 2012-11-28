@@ -78,8 +78,8 @@
         {
             name: "status",
             text: "Buffer",
-            container: 'ul.uiComposerBarRightArea',
-            after: '.privacyWidget',
+            container: '#pagelet_composer ._118',
+            after: '.uiListItem:first-child',
             className: 'buffer-facebook-button',
             selector: '.buffer-facebook-button',
             elements:
@@ -127,12 +127,12 @@
             },
             data: function (elem) {
                 return {
-                    text: $(elem).closest('.uiMetaComposerMessageBox').find('textarea.textInput').val(),
+                    text: $(elem).parents('._2yg').find('textarea.textInput').val(),
                     placement: 'facebook-composer'
                 }
             },
             clear: function (elem) {
-                $(elem).closest('.uiMetaComposerMessageBox').find('textarea.textInput').val('');
+                $(elem).parents('._2yg').find('textarea.textInput').val('');
             }
         },
         {
@@ -201,70 +201,72 @@
         }
     ];
 
-    var insertButtons = function () {
+    var bufferEmbed = function bufferEmbed() {
 
-        var i, l=config.buttons.length;
-        for ( i=0 ; i < l; i++ ) {
+        var insertButtons = function () {
 
-            var btnConfig = config.buttons[i];
-            
-            $(btnConfig.container).each(function () {
+            var i, l=config.buttons.length;
+            for ( i=0 ; i < l; i++ ) {
+
+                var btnConfig = config.buttons[i];
                 
-                var container = $(this);
-                
-                if ( $(container).hasClass('buffer-inserted') ) return;
+                $(btnConfig.container).each(function () {
+                    
+                    var container = $(this);
+                    
+                    if ( $(container).hasClass('buffer-inserted') ) return;
 
-                $(container).addClass('buffer-inserted');
+                    $(container).addClass('buffer-inserted');
 
-                var btn = btnConfig.create(btnConfig);
+                    var btn = btnConfig.create(btnConfig);
 
-                // EXT
-                if ( btnConfig.after ) $(container).find(btnConfig.after).after(btn);
-                else if ( btnConfig.before ) $(container).find(btnConfig.before).before(btn);
-                else $(container).append(btn);
+                    // EXT
+                    if ( btnConfig.after ) $(container).find(btnConfig.after).after(btn);
+                    else if ( btnConfig.before ) $(container).find(btnConfig.before).before(btn);
+                    else $(container).append(btn);
 
-                if ( !! btnConfig.activator ) btnConfig.activator(btn, btnConfig);
-                
-                if ( !! btnConfig.lastly ) btnConfig.lastly(btn, btnConfig);
-                
-                var getData = btnConfig.data;
-                var clearData = btnConfig.clear;
-                
-                var clearcb = function () {};
+                    if ( !! btnConfig.activator ) btnConfig.activator(btn, btnConfig);
+                    
+                    if ( !! btnConfig.lastly ) btnConfig.lastly(btn, btnConfig);
+                    
+                    var getData = btnConfig.data;
+                    var clearData = btnConfig.clear;
+                    
+                    var clearcb = function () {};
 
-                $(btn).click(function (e) {
-                    clearcb = function () { // allow clear to be called for this button
-                        if ( !! clearData ) clearData(btn);
-                    };
-                    xt.port.emit("buffer_click", getData(btn));
-                    e.preventDefault();
+                    $(btn).click(function (e) {
+                        clearcb = function () { // allow clear to be called for this button
+                            if ( !! clearData ) clearData(btn);
+                        };
+                        xt.port.emit("buffer_click", getData(btn));
+                        e.preventDefault();
+                    });
+                    
+                    xt.port.on("buffer_embed_clear", function () {
+                        clearcb();
+                        clearcb = function () {}; // prevent clear from being called again, until the button is clicked again
+                    });
+                    
                 });
-                
-                xt.port.on("buffer_embed_clear", function () {
-                    clearcb();
-                    clearcb = function () {}; // prevent clear from being called again, until the button is clicked again
-                });
-                
-            });
 
-        }
+            }
 
-    };
+        };
 
-    var facebookLoop = function facebookLoop() {
         insertButtons();
-        setTimeout(facebookLoop, 500);
+        
+        setTimeout(bufferEmbed, config.time.reload);
+
     };
 
     // Wait for xt.options to be set
     ;(function check() {
         // If facebook is switched on, add the buttons
         if( xt.options && xt.options['buffer.op.facebook'] === 'facebook') {
-            facebookLoop();
+            bufferEmbed();
         } else {
-            setTimeout(check, 2000);
+            setTimeout(check, 50);
         }
     }());
-    
     
 }());
