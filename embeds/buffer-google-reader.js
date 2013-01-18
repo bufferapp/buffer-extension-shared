@@ -17,6 +17,18 @@
         return temp;
         
     };
+
+    var getSelectedText = function getSelectedText () {
+        var txt = '';
+        if (window.getSelection)
+            txt = window.getSelection();
+        else if (document.getSelection)
+            txt = document.getSelection();
+        else if (document.selection)
+            txt = document.selection.createRange().text;
+        else return;
+        return txt;
+    };
     
     var config = {};
     config.time = {
@@ -63,8 +75,10 @@
             },
             data: function (elem) {
                 var target = $(elem).closest(".entry").find(".entry-container a.entry-title-link");
+                var update_text = getSelectedText().toString();
+                if(update_text.length == 0) update_text = target.text();
                 return {
-                    text: target.text(),
+                    text: update_text,
                     url: target.attr('href'),
                     placement: 'google-reader-share'
                 };
@@ -103,10 +117,13 @@
     
             },
             data: function (elem) {
-                
+
                 var target = $(elem).closest(".entry").find(".entry-container a.entry-title-link").first();
+                var update_text = getSelectedText().toString();
+                if(update_text.length == 0) update_text = target.text();
+
                 return {
-                    text: target.text(),
+                    text: update_text,
                     url: target.attr('href'),
                     placement: 'google-reader-icon'
                 };
@@ -158,8 +175,10 @@
             data: function (elem) {
                 
                 var target = $(elem).closest(".entry").find(".entry-main");
+                var update_text = getSelectedText().toString();
+                if(update_text.length == 0) update_text = target.find('.entry-title').first().text();
                 return {
-                    text: target.find('.entry-title').first().text(),
+                    text: update_text,
                     url: target.find('.entry-original').first().attr('href'),
                     placement: 'google-reader-icon'
                 };
