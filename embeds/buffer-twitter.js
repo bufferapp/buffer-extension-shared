@@ -74,7 +74,7 @@
                 return false;
             },
             data: function (elem) {
-                var text = $(elem).parents('.toolbar').siblings('.tweet-content').find('.tweet-box').val();
+                var text = $(elem).parents('.toolbar').siblings('.tweet-content').find('.tweet-box').text();
                 return {
                     text: text,
                     placement: 'twitter-composer'
@@ -84,9 +84,9 @@
                 $('.twitter-anywhere-tweet-box-editor, .tweet-box').val(' ');
             },
             activator: function (elem, btnConfig) {
-                var target = $(elem).parents('.toolbar').siblings('.tweet-content').find('.tweet-box').first();
+                var target = $(elem).parents('.toolbar').siblings('.tweet-content').find('.tweet-box');
                 $(target).on('keyup focus blur change paste cut', function (e) {
-                    var val = $(this).val();
+                    var val = $(this).text();
                     var counter = $(elem).siblings('.tweet-counter').text() || $(elem).siblings('.tweet-counter').val();
                     if ( val.length > 0 && counter > -1 && val !== "Compose new Tweet...") {
                         $(elem).removeClass('disabled').attr('style', btnConfig.style);
