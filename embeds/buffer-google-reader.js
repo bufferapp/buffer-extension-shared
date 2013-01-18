@@ -87,11 +87,11 @@
         {
             name: "icon",
             text: "",
-            container: 'span.entry-icons-placeholder',
-            after: '.entry-icons',
+            container: 'span.entry-icons-placeholder .entry-icons',
+            after: '.item-star',
             className: 'buffer-small-button',
             selector: '.buffer-small-button',
-            elements: ['a', 'buffer-small-button', 'height: 17px; width: 17px; display: inline-block; position: relative; margin-left: 2px; background-position-y: 1px; background-repeat: no-repeat;'],
+            elements: ['a', 'buffer-small-button', 'height: 17px; width: 17px; display: inline-block; position: relative; left: -8px; margin-right: 10px; background-position-y: 1px; background-repeat: no-repeat;'],
             default: '',
             style:   '',
             hover:   '',
@@ -99,7 +99,7 @@
             create: function (btnConfig) {
                 
                 var temp = buildElement(btnConfig.elements);
-                
+                $(this.container).css('width', 'auto');
                 temp.setAttribute('href', '#');
                 $(temp).text(btnConfig.text);
                 $(temp).css({"background-image": "url(" + xt.data.get("data/shared/img/buffer-icon-sprite.png") + ")"})
