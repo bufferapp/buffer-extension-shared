@@ -149,7 +149,7 @@ var bufferData = function (port, postData) {
     config.overlay = {
         endpoint: (config.local ? 'http:' : document.location.protocol) + '//bufferapp.com/add/',
         localendpoint: (config.local ? 'http:' : document.location.protocol) + '//local.bufferapp.com/add/',
-        getCSS: function () { return "border:none;height:100%;width:100%;position:fixed;z-index:99999999;top:0;left:0;display:block !important;"; }
+        getCSS: function () { return "border:none;height:100%;width:100%;position:fixed;z-index:99999999;top:0;left:0;display:block!important;max-width:100%!important;max-height:100%!important;padding:0!important;"; }
     };
 
     // Method for handling the async firing of the cb
