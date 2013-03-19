@@ -27,6 +27,75 @@
     };
     config.buttons = [
         {
+            name: "twitter-button",
+            text: "Buffer",
+            container: 'div.ft',
+            after: '#char-count',
+            default: 'margin-right: 8px; background: #eee; background: -webkit-linear-gradient(bottom, #eee 25%, #f8f8f8 63%); background: -moz-linear-gradient(bottom, #eee 25%, #f8f8f8 63%); border: 1px solid #999; color: #444 !important; text-shadow: rgba(0, 0, 0, 0.246094) 0px -1px 0px;',
+            className: 'button',
+            selector: '.button',
+            style: 'margin-right: 8px; background: #4C9E46; background: -webkit-linear-gradient(bottom, #4C9E46 25%, #54B14E 63%); background: -moz-linear-gradient(bottom, #4C9E46 25%, #54B14E 63%); border: 1px solid #40873B; color: white !important; text-shadow: rgba(0, 0, 0, 0.246094) 0px -1px 0px;',
+            hover: 'background: #40873B; background: -webkit-linear-gradient(bottom, #40873B 25%, #4FA749 63%); background: -moz-linear-gradient(bottom, #40873B 25%, #4FA749 63%);',
+            active: 'box-shadow: inset 0 5px 10px -6px rgba(0,0,0,.5); background: #40873B; background: -webkit-linear-gradient(bottom, #40873B 25%, #4FA749 63%); background: -moz-linear-gradient(bottom, #40873B 25%, #4FA749 63%);',
+            create: function (btnConfig) {
+
+                var a = document.createElement('a');
+                a.setAttribute('class', btnConfig.className);
+                a.setAttribute('style', btnConfig.default);
+                a.setAttribute('href', '#');
+                $(a).text(btnConfig.text);
+
+                $(a).hover(function () {
+                    if( $(this).hasClass("disabled") ) {
+                        $(this).attr('style', btnConfig.default);
+                        return;
+                    }
+                    $(this).attr('style', btnConfig.style + btnConfig.hover);
+                }, function() {
+                    if( $(this).hasClass("disabled") ) return;
+                    $(this).attr('style', btnConfig.style);
+                });
+                
+                $(a).mousedown(function () {
+                    if( $(this).hasClass("disabled") ) return;
+                    $(this).attr('style', btnConfig.style + btnConfig.active);
+                });
+                
+                $(a).mouseup(function () {
+                    if( $(this).hasClass("disabled") ) return;
+                    $(this).attr('style', btnConfig.style + btnConfig.hover);
+                });
+
+                return a;
+
+            },
+            data: function (elem) {
+                return {
+                    text: $(elem).parents('.ft').siblings('.bd').find('#status').val(),
+                    placement: 'twitter-tweetbutton'
+                };
+            },
+            clear: function (elem) {
+                window.close();
+            },
+            activator: function (elem, btnConfig) {
+                var target = $(elem).parents('.ft').siblings('.bd').find('#status');
+                var activate = function () {
+                    var val = $(target).val();
+                    var counter = $(elem).siblings('#char-count').val();
+                    if ( val.length > 0 && counter > -1) {
+                        $(elem).removeClass('disabled').attr('style', btnConfig.style);
+                    } else {
+                        $(elem).addClass('disabled').attr('style', btnConfig.default);
+                    }
+                };
+                $(target).on('keyup focus blur change paste cut', function (e) {
+                    activate();
+                });
+                activate();
+            }
+        },    
+        {
             name: "composer",
             text: "Buffer",
             container: 'div.tweet-button-sub-container, div.tweet-button',
@@ -146,75 +215,6 @@
                     placement: 'twitter-retweet'
                 }
             }   
-        },
-        {
-            name: "twitter-button",
-            text: "Buffer",
-            container: 'div.ft',
-            after: '#char-count',
-            default: 'margin-right: 8px; background: #eee; background: -webkit-linear-gradient(bottom, #eee 25%, #f8f8f8 63%); background: -moz-linear-gradient(bottom, #eee 25%, #f8f8f8 63%); border: 1px solid #999; color: #444 !important; text-shadow: rgba(0, 0, 0, 0.246094) 0px -1px 0px;',
-            className: 'button',
-            selector: '.button',
-            style: 'margin-right: 8px; background: #4C9E46; background: -webkit-linear-gradient(bottom, #4C9E46 25%, #54B14E 63%); background: -moz-linear-gradient(bottom, #4C9E46 25%, #54B14E 63%); border: 1px solid #40873B; color: white !important; text-shadow: rgba(0, 0, 0, 0.246094) 0px -1px 0px;',
-            hover: 'background: #40873B; background: -webkit-linear-gradient(bottom, #40873B 25%, #4FA749 63%); background: -moz-linear-gradient(bottom, #40873B 25%, #4FA749 63%);',
-            active: 'box-shadow: inset 0 5px 10px -6px rgba(0,0,0,.5); background: #40873B; background: -webkit-linear-gradient(bottom, #40873B 25%, #4FA749 63%); background: -moz-linear-gradient(bottom, #40873B 25%, #4FA749 63%);',
-            create: function (btnConfig) {
-
-                var a = document.createElement('a');
-                a.setAttribute('class', btnConfig.className);
-                a.setAttribute('style', btnConfig.default);
-                a.setAttribute('href', '#');
-                $(a).text(btnConfig.text);
-
-                $(a).hover(function () {
-                    if( $(this).hasClass("disabled") ) {
-                        $(this).attr('style', btnConfig.default);
-                        return;
-                    }
-                    $(this).attr('style', btnConfig.style + btnConfig.hover);
-                }, function() {
-                    if( $(this).hasClass("disabled") ) return;
-                    $(this).attr('style', btnConfig.style);
-                });
-                
-                $(a).mousedown(function () {
-                    if( $(this).hasClass("disabled") ) return;
-                    $(this).attr('style', btnConfig.style + btnConfig.active);
-                });
-                
-                $(a).mouseup(function () {
-                    if( $(this).hasClass("disabled") ) return;
-                    $(this).attr('style', btnConfig.style + btnConfig.hover);
-                });
-
-                return a;
-
-            },
-            data: function (elem) {
-                return {
-                    text: $(elem).parents('.ft').siblings('.bd').find('#status').val(),
-                    placement: 'twitter-tweetbutton'
-                };
-            },
-            clear: function (elem) {
-                window.close();
-            },
-            activator: function (elem, btnConfig) {
-                var target = $(elem).parents('.ft').siblings('.bd').find('#status');
-                var activate = function () {
-                    var val = $(target).val();
-                    var counter = $(elem).siblings('#char-count').val();
-                    if ( val.length > 0 && counter > -1) {
-                        $(elem).removeClass('disabled').attr('style', btnConfig.style);
-                    } else {
-                        $(elem).addClass('disabled').attr('style', btnConfig.default);
-                    }
-                };
-                $(target).on('keyup focus blur change paste cut', function (e) {
-                    activate();
-                });
-                activate();
-            }
         },
         {
             name: "buffer-permalink-action",
@@ -430,7 +430,10 @@
     // Wait for xt.options to be set
     ;(function check() {
         // If twitter is switched on, start the main loop
-        if( xt.options && xt.options['buffer.op.twitter'] === 'twitter') {
+        if ( !xt.options) {
+            setTimeout(check, 0);
+        }
+        else if( xt.options['buffer.op.twitter'] === 'twitter') {
             twitterLoop();
         } else {
             setTimeout(check, 2000);
