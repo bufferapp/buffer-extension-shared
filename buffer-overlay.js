@@ -44,6 +44,7 @@ var bufferOverlay = function(data, config, doneCallback) {
         setTimeout(function () {
             doneCallback(overlaydata);
         }, 0);
+        window.focus();
     });
     
 };
