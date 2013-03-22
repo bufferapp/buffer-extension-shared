@@ -212,7 +212,8 @@
                 var c = $(elem).closest('.retweet-tweet-dialog, #retweet-dialog, #retweet-tweet-dialog');
                 return {
                     text: 'RT @' + c.find('.stream-item-header .username, .twttr-reply-screenname').first().text().trim().replace(/^@/, '') + ': ' + c.find('.js-tweet-text').text().trim() + '',
-                    placement: 'twitter-retweet'
+                    placement: 'twitter-retweet',
+                    retweeted_tweet_id: c.find('.tweet').first().data('item-id'),
                 }
             }   
         },
