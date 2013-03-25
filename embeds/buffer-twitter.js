@@ -210,10 +210,12 @@
             },
             data: function (elem) {
                 var c = $(elem).closest('.retweet-tweet-dialog, #retweet-dialog, #retweet-tweet-dialog');
+                var tweet = c.find('.tweet').first();
                 return {
                     text: 'RT @' + c.find('.stream-item-header .username, .twttr-reply-screenname').first().text().trim().replace(/^@/, '') + ': ' + c.find('.js-tweet-text').text().trim() + '',
                     placement: 'twitter-retweet',
-                    retweeted_tweet_id: c.find('.tweet').first().data('item-id'),
+                    retweeted_tweet_id: tweet.data('item-id'),
+                    retweeted_user_id: tweet.data('user-id')
                 }
             }   
         },
