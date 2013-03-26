@@ -60,7 +60,7 @@ var bufferData = function (port, postData) {
     }
     
     var config = {};
-    config.local = true;
+    config.local = false;
     config.googleReader = false;
     var segments = window.location.pathname.split('/');
     if( window.location.host.indexOf("google") != -1 && segments[1] == "reader" ) config.googleReader = true;
