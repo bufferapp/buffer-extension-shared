@@ -118,6 +118,15 @@ var bufferData = function (port, postData) {
             }
         },
         {
+            name: "retweeted_user_name",
+            get: function (cb) {
+                cb(postData.retweeted_user_name);
+            },
+            encode: function (val) {
+                return encodeURIComponent(val);
+            }
+        },
+        {
             name: "picture",
             get: function (cb) {
                 cb(postData.image);
