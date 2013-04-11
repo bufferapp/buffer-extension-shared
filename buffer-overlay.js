@@ -60,7 +60,7 @@ var bufferData = function (port, postData) {
     }
     
     var config = {};
-    config.local = false;
+    config.local = true;
     config.googleReader = false;
     var segments = window.location.pathname.split('/');
     if( window.location.host.indexOf("google") != -1 && segments[1] == "reader" ) config.googleReader = true;
@@ -121,6 +121,15 @@ var bufferData = function (port, postData) {
             name: "retweeted_user_name",
             get: function (cb) {
                 cb(postData.retweeted_user_name);
+            },
+            encode: function (val) {
+                return encodeURIComponent(val);
+            }
+        },
+        {
+            name: "retweeted_user_display_name",
+            get: function (cb) {
+                cb(postData.retweeted_user_display_name);
             },
             encode: function (val) {
                 return encodeURIComponent(val);
