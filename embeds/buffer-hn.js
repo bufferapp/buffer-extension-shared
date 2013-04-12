@@ -1,7 +1,7 @@
 ;(function() {
     
     var config = {};
-    config.base = "http://news.ycombinator.org/",
+    config.base = "https://news.ycombinator.com/",
     config.buttons = [
         {
             text: "add to buffer",
