@@ -25,6 +25,7 @@
             delay: 2000
         }
     };
+    var should_be_native_retweet = true;
     config.buttons = [
         {
             name: "twitter-button",
@@ -210,9 +211,21 @@
             },
             data: function (elem) {
                 var c = $(elem).closest('.retweet-tweet-dialog, #retweet-dialog, #retweet-tweet-dialog');
-                return {
-                    text: 'RT @' + c.find('.stream-item-header .username, .twttr-reply-screenname').first().text().trim().replace(/^@/, '') + ': ' + c.find('.js-tweet-text').text().trim() + '',
-                    placement: 'twitter-retweet'
+                var tweet = c.find('.tweet').first();
+                if (should_be_native_retweet) {
+                    return {
+                        text: 'RT @' + c.find('.stream-item-header .username, .twttr-reply-screenname').first().text().trim().replace(/^@/, '') + ': ' + c.find('.js-tweet-text').text().trim() + '',
+                        placement: 'twitter-retweet',
+                        retweeted_tweet_id: tweet.data('feedback-key').replace('stream_status_', ''),
+                        retweeted_user_id: tweet.data('user-id'),
+                        retweeted_user_name: tweet.data('screen-name'),
+                        retweeted_user_display_name: tweet.data('name')
+                    }
+                } else { // not a native retweet
+                    return {
+                        text: 'RT @' + c.find('.stream-item-header .username, .twttr-reply-screenname').first().text().trim().replace(/^@/, '') + ': ' + c.find('.js-tweet-text').text().trim() + '',
+                        placement: 'twitter-retweet',
+                    }
                 }
             }   
         },
@@ -275,9 +288,21 @@
                     $(this).text($(this).attr('data-original-text'));
                 });
                 // Send back the data
-                return {
-                    text: rt,
-                    placement: 'twitter-permalink'
+                if (should_be_native_retweet) {
+                    return {
+                        text: rt,
+                        placement: 'twitter-permalink',
+                        // grab info for retweeting
+                        retweeted_tweet_id: c.data('feedback-key').replace('stream_status_', ''),
+                        retweeted_user_id: c.data('user-id'),
+                        retweeted_user_name: c.data('screen-name'),
+                        retweeted_user_display_name: c.data('name')
+                    }
+                } else {
+                    return {
+                        text: rt,
+                        placement: 'twitter-permalink'
+                    }
                 }
             },
             clear: function (elem) {
