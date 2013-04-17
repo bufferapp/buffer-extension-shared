@@ -374,10 +374,22 @@
                     $(this).text($(this).attr('data-original-text'));
                 });
                 // Send back the data
-                return {
-                    text: rt,
-                    placement: 'twitter-feed'
-                };
+                if (should_be_native_retweet) {
+                    return {
+                        text: rt,
+                        placement: 'twitter-permalink',
+                        // grab info for retweeting
+                        retweeted_tweet_id: c.data('feedback-key').replace('stream_status_', ''),
+                        retweeted_user_id: c.data('user-id'),
+                        retweeted_user_name: c.data('screen-name'),
+                        retweeted_user_display_name: c.data('name')
+                    }
+                } else {
+                    return {
+                        text: rt,
+                        placement: 'twitter-feed'
+                    };
+                }
             },
             clear: function (elem) {
             },

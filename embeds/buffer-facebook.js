@@ -78,12 +78,12 @@
         {
             name: "status",
             text: "Buffer",
-            container: '#pagelet_composer > div > div',
-            after: '.uiListItem:first-child',
+            container: '#pagelet_composer > div > div > form > div > div + div + div > div',
+            after: 'ul.uiList > li:first',
             className: 'buffer-facebook-button',
             selector: '.buffer-facebook-button',
             elements:
-                    ['li', 'pls uiListItem uiListHorizontalItemBorder uiListHorizontalItem', '',
+                    ['li', 'pls uiList uiListHorizontalItemBorder uiListHorizontalItem', '',
                         ['label', '', '',
                             ['a', 'buffer-facebook-button']
                         ]
@@ -93,7 +93,6 @@
             hover:   'background: hsl(116, 39%, 42%); background: -webkit-linear-gradient(bottom, hsl(116, 39%, 42%) 95%, hsl(116, 39%, 55%) 96%); background: -moz-linear-gradient(bottom, hsl(116, 39%, 42%) 95%, hsl(116, 39%, 55%) 96%); text-decoration: none;',
             active:  'background: hsl(116, 39%, 40%); text-decoration: none;',
             create: function (btnConfig) {
-                
                 var temp = buildElement(btnConfig.elements);
                 
                 var a = $(temp).find(btnConfig.selector)[0];
