@@ -43,7 +43,7 @@ var bufferOverlay = function(data, config, doneCallback) {
     var footerHoverCss = document.createElement('style');
     footerHoverCss.type="text/css";
     footerHoverCss.innerHTML = "#buffer_widget_footer a{color: #5f5f5f!important;opacity: 0.8;-moz-opacity: 0.8;-webkit-opacity: 0.8;-o-opacity: 0.8;} #buffer_widget_footer a:hover{color: #4f4f4f!important;opacity: 1;-moz-opacity: 1;-webkit-opacity: 1;-o-opacity: 1;}";
-    document.head.appendChild(footerHoverCss);
+    document.body.appendChild(footerHoverCss);
 
     document.body.appendChild(temp);
     
