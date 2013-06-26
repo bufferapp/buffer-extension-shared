@@ -25,7 +25,7 @@ var bufferOverlay = function(data, config, doneCallback) {
     };
 
 	var src = buildSrc(); 
-	if(!config.tpc) {
+	if(xt.options['buffer.op.tpc-disabled']) {
 		window.open(src, null, 'height=600,width=850');
 	}
 	else {
@@ -80,7 +80,6 @@ var bufferData = function (port, postData) {
     var config = {};
     config.local = false;
     config.googleReader = false;
-    config.tpc = postData.tpc; 
     var segments = window.location.pathname.split('/');
     if( window.location.host.indexOf("google") != -1 && segments[1] == "reader" ) config.googleReader = true;
 

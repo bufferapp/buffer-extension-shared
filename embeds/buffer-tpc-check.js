@@ -15,7 +15,7 @@
 
 		//if the 3rd party cookies check is disabled, store it
 		bufferpm.bind("buffer_3pc_disabled", function(){
-			xt.port.emit("buffer_tpc_disabled");
+			xt.options['buffer.op.tpc-disabled'] = true
 			return false;
 		});
 
