@@ -16,7 +16,6 @@
 
 		//if the 3rd party cookies check is disabled, store it
 		bufferpm.bind("buffer_3pc_disabled", function(){
-			console.log('tpm');
 			bufferpm.tpc_disabled = true; 
 			return false;
 		});
