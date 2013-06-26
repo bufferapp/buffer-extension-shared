@@ -82,7 +82,7 @@ var NO_JQUERY = {};
                  return;
              }
              if (!o.type) {
-                 console.warn("postmessage type required");
+                 /*console.warn("postmessage type required");*/
                  return;
              }
              var msg = {data:o.data, type:o.type};
@@ -204,11 +204,11 @@ var NO_JQUERY = {};
                  var msg = JSON.parse(e.data);
              }
              catch (ex) {
-                 console.warn("postmessage data invalid json: ", ex);
+                 /*console.warn("postmessage data invalid json: ", ex);*/
                  return;
              }
              if (!msg.type) {
-                 console.warn("postmessage message type required");
+                 /*console.warn("postmessage message type required");*/
                  return;
              }
              var cbs = bufferpm.data("callbacks.postmessage") || {},
