@@ -25,7 +25,7 @@ var bufferOverlay = function(data, config, doneCallback) {
     };
 
 	var src = buildSrc(); 
-	if(bufferpm.tpc_disabled) {
+	if(!data.tpc) {
 		window.open(src, null, 'height=600,width=850');
 	}
 	else {

@@ -6,7 +6,6 @@
 ;(function () {
 
 	;(function check() {
-		bufferpm.tpc_disabled = false; 
 		//if the 3rd party cookies check is done, remove the iframe
 		bufferpm.bind("buffer_3pc_done", function(){
 			elem = document.getElementById('buffer_tpc_check');
@@ -16,7 +15,7 @@
 
 		//if the 3rd party cookies check is disabled, store it
 		bufferpm.bind("buffer_3pc_disabled", function(){
-			bufferpm.tpc_disabled = true; 
+			xt.port.emit("buffer_tpc_disabled");
 			return false;
 		});
 
