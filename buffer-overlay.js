@@ -79,22 +79,14 @@ var bufferData = function (port, postData) {
     
     var config = {};
     config.local = false;
-    config.googleReader = false;
     var segments = window.location.pathname.split('/');
-    if( window.location.host.indexOf("google") != -1 && segments[1] == "reader" ) config.googleReader = true;
 
     // Specification for gathering data for the overlay
     config.attributes = [
         {
             name: "url",
             get: function (cb) {
-                if( ! config.googleReader ) {
-                    cb(window.location.href);
-                } else {
-                    var href = $("#current-entry .entry-container a.entry-title-link").attr('href');
-                    if( ! href ) href = $('.entry').first().find(".entry-container a.entry-title-link").attr('href');
-                    cb(href);
-                }
+                cb(window.location.href);
             },
             encode: function (val) {
                 return encodeURIComponent(val);
@@ -103,11 +95,7 @@ var bufferData = function (port, postData) {
         {
             name: "text",
             get: function (cb) {
-                if( config.googleReader ) {
-                    var text = $("#current-entry .entry-container a.entry-title-link").text();
-                    if( ! text ) text = $('.entry').first().find(".entry-container a.entry-title-link").text();
-                    cb(text);
-                } else if(document.getSelection() != false) {
+                if(document.getSelection() != false) {
                     cb('"' + document.getSelection().toString() + '"');
                 } else {
                     cb(document.title);
@@ -193,7 +181,6 @@ var bufferData = function (port, postData) {
             name: "placement",
             get: function (cb) {
                 if( postData.placement ) cb(postData.placement);
-                else if( config.googleReader ) cb('google-reader-general');
                 else cb('general');
             },
             encode: function (val) {
