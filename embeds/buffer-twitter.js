@@ -216,7 +216,7 @@
                     return {
                         text: 'RT @' + c.find('.stream-item-header .username, .twttr-reply-screenname').first().text().trim().replace(/^@/, '') + ': ' + c.find('.js-tweet-text').text().trim() + '',
                         placement: 'twitter-retweet',
-                        retweeted_tweet_id: tweet.data('tweet-id'),
+                        retweeted_tweet_id: tweet.data('feedback-key').replace('stream_status_', ''),
                         retweeted_user_id: tweet.data('user-id'),
                         retweeted_user_name: tweet.data('screen-name'),
                         retweeted_user_display_name: tweet.data('name')
@@ -293,7 +293,7 @@
                         text: rt,
                         placement: 'twitter-permalink',
                         // grab info for retweeting
-                        retweeted_tweet_id: c.data('tweet-id'),
+                        retweeted_tweet_id: c.data('feedback-key').replace('stream_status_', ''),
                         retweeted_user_id: c.data('user-id'),
                         retweeted_user_name: c.data('screen-name'),
                         retweeted_user_display_name: c.data('name')
@@ -379,7 +379,7 @@
                         text: rt,
                         placement: 'twitter-permalink',
                         // grab info for retweeting
-                        retweeted_tweet_id: c.data('tweet-id'),
+                        retweeted_tweet_id: c.data('feedback-key').replace('stream_status_', ''),
                         retweeted_user_id: c.data('user-id'),
                         retweeted_user_name: c.data('screen-name'),
                         retweeted_user_display_name: c.data('name')
