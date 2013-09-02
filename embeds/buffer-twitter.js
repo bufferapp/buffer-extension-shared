@@ -456,6 +456,7 @@
      */
     var removeExtras = function () {
         $('.replies .buffer-tweet-button').remove();
+        $('.inline-replies-tweetbox .buffer-tweet-button').remove();
     };
 
     var twitterLoop = function twitterLoop() {
