@@ -182,11 +182,12 @@
             },
             data: function (elem) {
     
-                var $parent = $(elem).closest('.modalWrapper');
+                var $parent = $(elem).parents('.uiOverlayFooter').parent().parent().find('.mentionsTextarea');
 
                 // if the user has written a message, allow this to override the default text
-                var text = $('textarea[name="message_text"]', $parent).val();
-                if( text === "Write something" ) text = undefined;
+                
+                var text = $parent.val();
+                if( text === "Write something..." ) text = undefined;
                 if( text ) share.text = text;
 
                 // fallback placement when we don't know if the attachment is a picture, link or status
