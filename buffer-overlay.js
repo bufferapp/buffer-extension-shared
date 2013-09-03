@@ -79,14 +79,23 @@ var bufferData = function (port, postData) {
     
     var config = {};
     config.local = false;
+    config.pocketWeb = false;
     var segments = window.location.pathname.split('/');
+    if( window.location.host.indexOf("getpocket") != -1 && segments[2] == "read" ) config.pocketWeb = true;
 
     // Specification for gathering data for the overlay
     config.attributes = [
         {
             name: "url",
             get: function (cb) {
-                cb(window.location.href);
+                if(config.pocketWeb){
+                    var li = document.getElementsByClassName('original')[0];
+                    var link = li.getElementsByTagName('a')[0].href;
+                    cb(link);
+                }
+                else{
+                    cb(window.location.href);
+                }
             },
             encode: function (val) {
                 return encodeURIComponent(val);
@@ -97,8 +106,16 @@ var bufferData = function (port, postData) {
             get: function (cb) {
                 if(document.getSelection() != false) {
                     cb('"' + document.getSelection().toString() + '"');
-                } else {
-                    cb(document.title);
+                } 
+                else{
+                    if(config.pocketWeb){
+                        var header = document.getElementsByClassName('reader_head')[0];
+                        var title = header.getElementsByTagName('h1')[0].innerHTML;
+                        cb(title);
+                    }
+                    else{
+                        cb(document.title);
+                    }
                 }
             },
             encode: function (val) {
