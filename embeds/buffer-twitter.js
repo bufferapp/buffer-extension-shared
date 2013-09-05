@@ -39,6 +39,10 @@
             hover: 'background: #40873B; background: -webkit-linear-gradient(bottom, #40873B 25%, #4FA749 63%); background: -moz-linear-gradient(bottom, #40873B 25%, #4FA749 63%);',
             active: 'box-shadow: inset 0 5px 10px -6px rgba(0,0,0,.5); background: #40873B; background: -webkit-linear-gradient(bottom, #40873B 25%, #4FA749 63%); background: -moz-linear-gradient(bottom, #40873B 25%, #4FA749 63%);',
             create: function (btnConfig) {
+                var width = window.outerWidth+150;
+                window.resizeTo(width,700);
+                //console.log(window.outerWidth, window.outerHeight);
+                window.moveTo(screen.availWidth/2-width/2, screen.availHeight/2+700/2);
 
                 var a = document.createElement('a');
                 a.setAttribute('class', btnConfig.className);
