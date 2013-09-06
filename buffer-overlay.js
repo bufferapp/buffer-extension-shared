@@ -1,5 +1,5 @@
 // Build that overlay!
-// Triggered by code working from the button up...
+// Triggered by code working from the button up
 var bufferOverlay = function(data, config, doneCallback) {
     
     if( ! doneCallback ) doneCallback = function () {};
