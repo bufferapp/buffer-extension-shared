@@ -153,7 +153,10 @@
                 };
             },
             clear: function (elem) {
-                $('.twitter-anywhere-tweet-box-editor, .tweet-box').val(' ');
+                var context = $(elem).parents('.toolbar').siblings('.tweet-content');
+                var target = $(context).find('.tweet-box');
+                $(context).parent().addClass('condensed');
+                $(target).text('');
             },
             activator: function (elem, btnConfig) {
                 var target = $(elem).parents('.toolbar').siblings('.tweet-content').find('.tweet-box');

@@ -78,7 +78,7 @@ var bufferData = function (port, postData) {
     }
     
     var config = {};
-    config.local = false;
+    config.local = true;
     config.pocketWeb = false;
     var segments = window.location.pathname.split('/');
     if( window.location.host.indexOf("getpocket") != -1 && segments[2] == "read" ) config.pocketWeb = true;
