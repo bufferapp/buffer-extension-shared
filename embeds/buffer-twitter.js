@@ -1,6 +1,6 @@
 ;(function() {
 
-    $('head').append('<style> .tweet .action-buffer-container i, .tweet.opened-tweet .action-buffer-container i, .tweet.opened-tweet.hover .action-buffer-container i  { background-position: -3px -3px !important; } .tweet .action-buffer-container i { background-position: -3px -21px !important; }');
+    $('head').append('<style> .tweet .action-buffer-container i, .tweet.opened-tweet .action-buffer-container i, .tweet.opened-tweet.hover .action-buffer-container i  { background-position: -3px -3px !important; } .tweet:hover .action-buffer-container i {background-position: -3px  -21px !important;}');
 
     var buildElement = function buildElement (parentConfig) {
         
@@ -342,7 +342,7 @@
 
                 var i = document.createElement('i');
                 i.setAttribute('class', 'sm-reply'); // let Twitter set the bg colors
-                i.setAttribute('style', 'position: relative; top: 0px; margin-right: 4px; width: 13px; height: 13px; background-image: url(' + xt.data.get('data/shared/img/twttr-sprite-small.png') + ')!important; background-repeat: no-repeat;');
+                i.setAttribute('style', 'position: relative; top: 0px; margin-right: 4px; background-image: url(' + xt.data.get('data/shared/img/twttr-sprite-small.png') + ')!important; background-repeat: no-repeat;');
 
                 $(a).append(i);
 
