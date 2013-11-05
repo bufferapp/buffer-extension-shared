@@ -1,6 +1,6 @@
 ;(function() {
 
-    $('head').append('<style> .tweet .action-buffer-container i, .tweet.opened-tweet .action-buffer-container i, .tweet.opened-tweet.hover .action-buffer-container i  { background-position: -3px -3px !important; } .tweet:hover .action-buffer-container i {background-position: -3px  -21px !important;}');
+    $('head').append('<style> .tweet .action-buffer-container span, .tweet.opened-tweet .action-buffer-container span, .tweet.opened-tweet.hover .action-buffer-container span  { background-position: -3px -3px !important; } .tweet:hover .action-buffer-container span {background-position: -3px  -21px !important;} .gallery-tweet .tweet .action-buffer-container span {background-position: -3px  -38px !important; margin-top: -1px;} div.stream-item-footer > ul.tweet-actions > li.action-buffer-container i {margin-top: 0px ;} #profile_popup-body > ol > li > div > div.content > div.stream-item-footer > ul.tweet-actions > li.action-buffer-container {display: none;}');
 
     var buildElement = function buildElement (parentConfig) {
         
@@ -255,7 +255,7 @@
                 a.setAttribute('href', '#');
 
                 var i = document.createElement('i');
-                i.setAttribute('class', 'sm-embed'); // let Twitter set the bg color
+                i.setAttribute('class', 'sm-reply'); // let Twitter set the bg color
                 i.setAttribute('style', 'top: -2px; position: relative; margin-right: 4px; width: 16px; height: 16px; background-image: url(' + xt.data.get('data/shared/img/twttr-sprite.png') + ')!important; background-repeat: no-repeat; background-position: -5px -5px !important;');
 
                 $(a).append(i);
@@ -323,7 +323,7 @@
         {
             name: "buffer-action",
             text: "Buffer",
-            container: '.stream div.stream-item-footer .tweet-actions, .permalink .simple-tweet div.stream-item-footer .tweet-actions',
+            container: '.tweet-actions',
             after: '.action-fav-container',
             default: '',
             className: 'buffer-action',
@@ -340,8 +340,8 @@
                 a.setAttribute('class', btnConfig.className + " with-icn");
                 a.setAttribute('href', '#');
 
-                var i = document.createElement('i');
-                i.setAttribute('class', 'sm-reply'); // let Twitter set the bg colors
+                var i = document.createElement('span');
+                i.setAttribute('class', 'icon sm-reply'); // let Twitter set the bg colors
                 i.setAttribute('style', 'position: relative; top: 0px; margin-right: 4px; background-image: url(' + xt.data.get('data/shared/img/twttr-sprite-small.png') + ')!important; background-repeat: no-repeat;');
 
                 $(a).append(i);
