@@ -153,10 +153,24 @@
                 };
             },
             clear: function (elem) {
+                // Homebox
                 var context = $(elem).parents('.toolbar').siblings('.tweet-content');
                 var target = $(context).find('.tweet-box');
-                $(context).parent().addClass('condensed');
-                $(target).text('');
+
+                if($(elem).parents('.home-tweet-box').length > 0){
+                    // If its the home box condense the box after buffer
+                    $(context).parent().addClass('condensed');
+                    $(target).text('');
+                }
+                else{
+                    $(target).text('');
+                }
+               
+                // Modal Close
+                // Closes the modal box
+                $("#global-tweet-dialog .js-close").click();
+                
+
             },
             activator: function (elem, btnConfig) {
                 var target = $(elem).parents('.toolbar').siblings('.tweet-content').find('.tweet-box');
