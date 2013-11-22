@@ -21,6 +21,7 @@
 
     // Listen for share button clicks
     var share = {};
+    var getDataFromModal = false;
     $('body').on('click', 'a.share_action_link, a:contains("Share")', function (e) {
         var parent = $(this).closest('.genericStreamStory, .fbTimelineUnit, .UIStandardFrame_Content, .fbPhotoSnowlift');
 
@@ -65,6 +66,29 @@
         // standard text status
         else {
             share.placement = 'facebook-share-status';
+        }
+
+        // Woops we failed in getting the data we needed because FB has changed or this is the main feed.
+        // Now we just try and grab the url/photo because this needs to be fetched from here.
+        // After this we use the modal's data when pressing the "Buffer" button. It's bit more reliable source of info
+
+        if(JSON.stringify(share)=='{"via":"","text":"","placement":"facebook-share-status"}'){
+            var context = $(e.currentTarget).parents('._5pax');
+
+            var image = context.find('img._46-i')[0];
+            if(image){
+                image = image.src.replace(/c([0-9]+\.)+[0-9]+\//, '');
+                share.picture = image.replace(/[sp][0-9]+x[0-9]+\//, '');
+
+                var anchor = context.find('a._5pc0._5dec')[0];
+                if(anchor) share.url = anchor.href;
+            }
+            else{
+                var anchor = context.find('a._5rwn')[0];
+                if(anchor) share.url = anchor.href;
+            }
+
+            getDataFromModal = true;
         }
 
     });
@@ -181,18 +205,58 @@
                 
             },
             data: function (elem) {
-    
-                var $parent = $(elem).parents('.uiOverlayFooter').parent().parent().find('.mentionsTextarea');
+                // This occurs when the item is shared from the main news feed and/or no share data is/was found. So now we try
+                // and grab from the data from the FB share modal instead.
+                if(getDataFromModal){
 
-                // if the user has written a message, allow this to override the default text
-                
-                var text = $parent.val();
-                if( text === "Write something..." ) text = undefined;
-                if( text ) share.text = text;
+                    var $parent = $(elem).parents('.uiOverlayFooter').parent().parent().find('.mentionsTextarea');
+                    var text = $parent.val();
+                    if( text === "Write something..." ) text = undefined;
+                    if( text ) share.text = text;
+
+                    var photoshare = $('.UIShareStage_Image img').attr('src');
+                    var thumb = $('input[name="attachment[params][images][0]');
+                    
+                    //console.log("PHOTOSHARE", photoshare);
+                    //console.log("THUMB", thumb);
+
+                    if(thumb.length > 0){                        
+                        if($('.UIShareStage_Title')[0].innerText === "Status Update"){
+                            //Only add text from status update
+                            share.text = $('.UIShareStage_Summary')[0].innerText;
+                            //if(share.text === "Write something..." ) text = undefined;
+                            share.placement = 'facebook-share-status';
+                        }
+                        else{
+                            share.placement = 'facebook-share-link';
+                        }
+                    }
+                    else if(photoshare){
+                        // Is this maybe a status update share?
+                        if($('.UIShareStage_Title')[0].innerText === "Status Update"){
+                            //Only add text from status update
+                            share.text = $('.UIShareStage_Summary')[0].innerText;
+                            share.placement = 'facebook-share-status';
+                        }
+                        else{
+                            //Nope it's a photo. So let's share a photo.
+                            share.placement = 'facebook-share-picture';
+                        }
+                    }
+                }
+                else{
+                    var $parent = $(elem).parents('.uiOverlayFooter').parent().parent().find('.mentionsTextarea');
+
+                    // if the user has written a message, allow this to override the default text
+                    
+                    var text = $parent.val();
+                    if( text === "Write something..." ) text = undefined;
+                    if( text ) share.text = text;
+                }
 
                 // fallback placement when we don't know if the attachment is a picture, link or status
                 if( !share.placement ) share.placement = 'facebook-share';
-
+                console.log("Share:", share);
                 return share;
             },
             clear: function (elem) {
