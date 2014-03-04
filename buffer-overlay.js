@@ -139,24 +139,6 @@ var bufferOverlay = function(data, config, doneCallback) {
         }, 0);
         window.focus();
     });
-
-
-
-    bufferpm.bind("bufferFooterAddButton", function(buttonData) {
-        
-        var li = document.createElement('li');
-        li.style.cssText = "list-style-type: none; background:none; width: auto; display: inline-block; margin-right: 8px;";
-        li.innerHTML = [
-            '<a href="' + buttonData.href + '" target="_blank" class="buffer_widget_button_white" style="' + footerButtonWhiteCSS + '-webkit-animation: bufferFadeIn 200ms 1;">',
-                buttonData.textContent,
-            '</a>',
-        ].join('');
-
-        var ul = document.getElementById('buffer_widget_footer_list');
-
-        ul.insertBefore(li, ul.childNodes[0]);
-
-    });
     
 };
 
