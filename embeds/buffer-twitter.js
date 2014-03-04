@@ -1,6 +1,21 @@
 ;(function() {
 
-    $('head').append('<style> .tweet .action-buffer-container span, .tweet.opened-tweet .action-buffer-container span, .tweet.opened-tweet.hover .action-buffer-container span  { background-position: -3px -3px !important; } .tweet:hover .action-buffer-container span {background-position: -3px  -21px !important;} .gallery-tweet .tweet .action-buffer-container span {background-position: -3px  -38px !important; margin-top: -1px;} div.stream-item-footer > ul.tweet-actions > li.action-buffer-container i {margin-top: 0px ;} #profile_popup-body > ol > li > div > div.content > div.stream-item-footer > ul.tweet-actions > li.action-buffer-container {display: none;}');
+    $('head').append([
+        '<style>',
+            '.tweet .action-buffer-container span.icon, .tweet.opened-tweet .action-buffer-container span.icon, .tweet.opened-tweet.hover .action-buffer-container span.icon  {',
+                'background-position: -3px -3px !important;} ',
+            '.tweet:hover .action-buffer-container span.icon {',
+                'background-position: -3px  -21px !important;} ',
+            '.gallery-tweet .tweet .action-buffer-container span {',
+                'background-position: -3px  -38px !important; margin-top: -1px;} ',
+            '.tweet:hover .action-buffer-container span.Icon {',
+                'background-position: -5px -28px !important;} ',
+            '.tweet .action-buffer-container span.Icon:hover {',
+                'background-color: #8899a6 !important;} ',
+            'div.stream-item-footer > ul.tweet-actions > li.action-buffer-container i {margin-top: 0px ;} ',
+            '#profile_popup-body > ol > li > div > div.content > div.stream-item-footer > ul.tweet-actions > li.action-buffer-container {display: none;}',
+        '</style>'
+    ].join(''));
 
     var buildElement = function buildElement (parentConfig) {
         
@@ -103,12 +118,12 @@
             text: "Buffer",
             container: 'div.tweet-button-sub-container, div.tweet-button',
             after: '.tweet-counter',
-            default: '',
+            default: 'min-height: 20px; padding-top: 9px;',
             className: 'buffer-tweet-button btn disabled',
             selector: '.buffer-tweet-button',
-            style: 'background: #4C9E46; background: -webkit-linear-gradient(bottom, #4C9E46 25%, #54B14E 63%); background: -moz-linear-gradient(bottom, #4C9E46 25%, #54B14E 63%); border: 1px solid #40873B; color: white !important; text-shadow: rgba(0, 0, 0, 0.246094) 0px -1px 0px; font-weight: bold;',
-            hover: 'background: #40873B; background: -webkit-linear-gradient(bottom, #40873B 25%, #4FA749 63%); background: -moz-linear-gradient(bottom, #40873B 25%, #4FA749 63%);',
-            active: 'box-shadow: inset 0 5px 10px -6px rgba(0,0,0,.5); background: #40873B; background: -webkit-linear-gradient(bottom, #40873B 25%, #4FA749 63%); background: -moz-linear-gradient(bottom, #40873B 25%, #4FA749 63%);',
+            style: 'min-height: 20px; padding-top: 9px; background: #4C9E46; border: 1px solid #40873B; color: white !important; text-shadow: rgba(0, 0, 0, 0.246094) 0px -1px 0px; font-weight: bold; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);',
+            hover: 'background: #40873B;  background-image: -webkit-linear-gradient(rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15)); background-image: -moz-linear-gradient(rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15)); background-image: linear-gradient(rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15));',
+            active: 'box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3); background: #40873B; text-decoration: none;',
             create: function (btnConfig) {
 
                 var a = document.createElement('a');
@@ -192,10 +207,10 @@
             after: '.cancel-action, .js-prompt-ok',
             className: 'buffer-tweet-button btn',
             selector: '.buffer-tweet-button',
-            default: 'background: #4C9E46; background: -webkit-linear-gradient(bottom, #4C9E46 25%, #54B14E 63%); -moz-linear-gradient(bottom, #4C9E46 25%, #54B14E 63%); border: 1px solid #40873B; color: white !important; text-shadow: rgba(0, 0, 0, 0.246094) 0px -1px 0px; font-weight: bold;',
-            style: 'background: #4C9E46; background: -webkit-linear-gradient(bottom, #4C9E46 25%, #54B14E 63%); -moz-linear-gradient(bottom, #4C9E46 25%, #54B14E 63%); border: 1px solid #40873B; color: white !important; text-shadow: rgba(0, 0, 0, 0.246094) 0px -1px 0px; font-weight: bold;',
-            hover: 'background: #40873B; background: -webkit-linear-gradient(bottom, #40873B 25%, #4FA749 63%); -moz-linear-gradient(bottom, #40873B 25%, #4FA749 63%);',
-            active: 'box-shadow: inset 0 5px 8px -6px rgba(0,0,0,.5); background: #40873B; background: -webkit-linear-gradient(bottom, #40873B 25%, #4FA749 63%); background: -moz-linear-gradient(bottom, #40873B 25%, #4FA749 63%);',
+            default: 'margin-left: 4px; background: #4C9E46; border: 1px solid #40873B; color: white !important; text-shadow: rgba(0, 0, 0, 0.246094) 0px -1px 0px; font-weight: bold; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);',
+            style: 'margin-left: 4px; background: #4C9E46; border: 1px solid #40873B; color: white !important; text-shadow: rgba(0, 0, 0, 0.246094) 0px -1px 0px; font-weight: bold; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);',
+            hover: 'background: #40873B; background-image: -webkit-linear-gradient(rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15)); background-image: -moz-linear-gradient(rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15)); background-image: linear-gradient(rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15));',
+            active: 'box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3); background: #40873B; text-decoration: none;',
             create: function (btnConfig) {
 
                 var a = document.createElement('a');
@@ -239,12 +254,12 @@
                         retweeted_user_id: tweet.data('user-id'),
                         retweeted_user_name: tweet.data('screen-name'),
                         retweeted_user_display_name: tweet.data('name')
-                    }
+                    };
                 } else { // not a native retweet
                     return {
                         text: 'RT @' + c.find('.stream-item-header .username, .twttr-reply-screenname').first().text().trim().replace(/^@/, '') + ': ' + c.find('.js-tweet-text').text().trim() + '',
                         placement: 'twitter-retweet',
-                    }
+                    };
                 }
             }   
         },
@@ -402,7 +417,89 @@
                         retweeted_user_id: c.data('user-id'),
                         retweeted_user_name: c.data('screen-name'),
                         retweeted_user_display_name: c.data('name')
-                    }
+                    };
+                } else {
+                    return {
+                        text: rt,
+                        placement: 'twitter-feed'
+                    };
+                }
+            },
+            clear: function (elem) {
+            },
+            activator: function (elem, btnConfig) {
+
+                if( $(elem).closest('.in-reply-to').length > 0 ) {
+                    $(elem).find('i').css({'background-position-y': '-21px'});
+                }
+            }
+        },
+        {   
+            // Twitter is testing new stream action button placement - March 2014
+            name: "buffer-action-2014",
+            text: "Add to Buffer",
+            container: '.tweet-actions-sidebar',
+            after: '.action-rt-container',
+            default: '',
+            className: 'js-tooltip',
+            selector: '.buffer-action',
+            style: '',
+            hover: '',
+            active: '',
+            create: function (btnConfig) {
+
+                var li = document.createElement('li');
+                li.className = "action-buffer-container";
+                // Normal is 10px, this adds space for display: inline-block hidden space
+                li.style.marginLeft = '12px'; 
+
+                var a = document.createElement('a');
+                a.setAttribute('class', btnConfig.className);
+                a.setAttribute('href', '#');
+                a.setAttribute('data-original-title', btnConfig.text); // Tooltip text
+
+                var i = document.createElement('span');
+                i.setAttribute('class', 'Icon');
+                i.setAttribute('style', 'position: relative; top: 1px; width: 16px; height: 18px; margin-right: 5px; background-image: url(' + xt.data.get('data/shared/img/twttr-sprite.png') + ')!important; background-color: #ccd6dd; background-position: -5px -3px; background-repeat: no-repeat;');
+
+                $(a).append(i);
+
+                $(li).append(a);
+
+                return li;
+            },
+            data: function (elem) {
+                var c = $(elem).closest('.tweet');
+                // Grab the tweet text
+                var text = c.find('.js-tweet-text').first();
+                // Iterate through all links in the text
+                $(text).children('a').each(function () {
+                    // Don't modify the screenames and the hastags
+                    if( $(this).attr('data-screen-name') ) return;
+                    if( $(this).hasClass('twitter-atreply') ) return;
+                    if( $(this).hasClass('twitter-hashtag') ) return;
+                    // swap the text with the actual link
+                    var original = $(this).text();
+                    $(this).text($(this).attr("href")).attr('data-original-text', original);
+                });
+                // Build the RT text
+                var rt = 'RT ' + c.find('.username').first().text().trim() + ': ' + $(text).text().trim() + '';
+                // Put the right links back
+                $(text).children('a').each(function () {
+                    if( ! $(this).attr('data-original-text') ) return;
+                    $(this).text($(this).attr('data-original-text'));
+                });
+                // Send back the data
+                if (should_be_native_retweet) {
+                    return {
+                        text: rt,
+                        placement: 'twitter-permalink',
+                        // grab info for retweeting
+                        retweeted_tweet_id: c.data('feedback-key').replace('stream_status_', ''),
+                        retweeted_user_id: c.data('user-id'),
+                        retweeted_user_name: c.data('screen-name'),
+                        retweeted_user_display_name: c.data('name')
+                    };
                 } else {
                     return {
                         text: rt,
@@ -419,6 +516,7 @@
                 }
             }
         }
+
     ];
 
     var insertButtons = function () {

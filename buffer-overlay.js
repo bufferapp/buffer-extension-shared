@@ -179,7 +179,7 @@ var bufferData = function (port, postData) {
         {
             name: "text",
             get: function (cb) {
-                if(document.getSelection() !== false) {
+                if(document.getSelection().toString().length) {
                     cb('"' + document.getSelection().toString() + '"');
                 } 
                 else{
