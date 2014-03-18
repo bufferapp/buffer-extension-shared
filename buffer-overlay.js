@@ -354,7 +354,7 @@ var bufferData = function (port, postData) {
 
     // It all starts here.
     // createOverlay is the callback that should fire after getData has
-    // gathered all the neccessaries
+    // gathered all the necessaries
     getData(createOverlay);
     
 };

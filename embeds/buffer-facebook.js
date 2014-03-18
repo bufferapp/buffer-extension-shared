@@ -23,7 +23,9 @@
     var share = {};
     var getDataFromModal = false;
     $('body').on('click', 'a.share_action_link, a:contains("Share")', function (e) {
-        var parent = $(this).closest('.genericStreamStory, .fbTimelineUnit, .UIStandardFrame_Content, .fbPhotoSnowlift');
+        var parent = $(this).closest('.genericStreamStory, .fbTimelineUnit, .UIStandardFrame_Content, .fbPhotoSnowlift, .userContentWrapper');
+        // Notes:
+        //   .userContentWrapper - new FB news feed, 3/2014
 
         // reset share object on every 'share' button click
         share = {};
@@ -36,7 +38,21 @@
         share.text = $('.messageBody, .tlTxFe, .caption, .fbPhotosPhotoCaption', parent).first().text();
 
         var thumb = $('.uiPhotoThumb img, .photoUnit img, .fbPhotoImage, .spotlight', parent).attr('src');
-        var url = $('a.shareMediaLink, .uiAttachmentTitle a, a.externalShareUnit', parent).attr('href');
+        var $anchor = $('a.shareMediaLink, .uiAttachmentTitle a, a.externalShareUnit, a.shareLink, .shareLink a:not([href="#"]), ._52c6', parent);
+        // Notes: 
+        //   a.shareLink - page timelines, 3/2014
+        //   .shareLink a:not([href="#"]) - small embeds on user timeline, ex. YouTube, 3/2014
+        //   ._52c6 - new newsfeed links, 3/2014
+
+        // If we can't find it, try this alternate, slower search looking for external links
+        if ($anchor.length === 0) {
+            // We exclude the update's written text that may contain possible links = .userContent
+            // and we exclude any possible links to an app that was used to post this, ex. Buffer
+            $anchor = $('div:not(.userContent) a[target="_blank"]:not([data-appname])', parent);
+        }
+
+        var url = $anchor.attr('href');
+
 
         // find picture status
         if( thumb ) {
@@ -76,15 +92,16 @@
             var context = $(e.currentTarget).parents('._5pax');
 
             var image = context.find('img._46-i')[0];
+            var anchor;
             if(image){
                 image = image.src.replace(/c([0-9]+\.)+[0-9]+\//, '');
                 share.picture = image.replace(/[sp][0-9]+x[0-9]+\//, '');
 
-                var anchor = context.find('a._5pc0._5dec')[0];
+                anchor = context.find('a._5pc0._5dec')[0];
                 if(anchor) share.url = anchor.href;
             }
-            else{
-                var anchor = context.find('a._5rwn')[0];
+            else {
+                anchor = context.find('a._5rwn')[0];
                 if(anchor) share.url = anchor.href;
             }
 
@@ -152,7 +169,7 @@
                 return {
                     text: $(elem).parents('form').find('textarea.textInput').val(),
                     placement: 'facebook-composer'
-                }
+                };
             },
             clear: function (elem) {
                 $(elem).parents('form').find('textarea.textInput').val('');
@@ -165,10 +182,25 @@
             before: '.layerConfirm',
             className: 'buffer-facebook-button',
             selector: '.buffer-facebook-button',
-            elements: ['a', 'buffer-facebook-button uiOverlayButton uiButton uiButtonLarge'],
-            default: 'background: hsl(116, 39%, 45%); background: -webkit-linear-gradient(bottom, hsl(116, 39%, 45%) 95%, hsl(116, 39%, 60%) 96%); background: -moz-linear-gradient(bottom, hsl(116, 39%, 45%) 95%, hsl(116, 39%, 60%) 96%); border: 1px solid #40873B; color: white !important;padding: 3px 6px 1px; margin-right:5px;',
-            style:   'background: hsl(116, 39%, 45%); background: -webkit-linear-gradient(bottom, hsl(116, 39%, 45%) 95%, hsl(116, 39%, 60%) 96%); background: -moz-linear-gradient(bottom, hsl(116, 39%, 45%) 95%, hsl(116, 39%, 60%) 96%); border: 1px solid #40873B; color: white !important;padding: 3px 6px 1px; margin-right:5px;',
-            hover:   'background: hsl(116, 39%, 42%); background: -webkit-linear-gradient(bottom, hsl(116, 39%, 42%) 95%, hsl(116, 39%, 55%) 96%); background: -moz-linear-gradient(bottom, hsl(116, 39%, 42%) 95%, hsl(116, 39%, 55%) 96%); text-decoration: none;',
+            elements: ['a', 'buffer-facebook-button uiOverlayButton'],
+            default: [
+                'display: inline-block;',
+                'vertical-align: middle;',
+                'padding: 0 8px;',
+                'margin-right:5px;',
+                'line-height: 22px;',
+                'background: hsl(116, 39%, 45%);',
+                'border: 1px solid #40873B;',
+                'border-color: #45963F #45963F #40873B;',
+                'border-radius: 2px;',
+                'color: white !important;',
+                'text-shadow: rgba(0, 0, 0, 0.2) 0px -1px 0px;',
+                'font-size: 12px;',
+                'font-family: "Helvetica Neue", Helvetica, Arial, "lucida grande", tahoma, verdana, arial, sans-serif;',
+                'text-decoration: none !important'
+            ].join(''),
+            style: '',
+            hover: '',
             active:  'background: hsl(116, 39%, 40%); text-decoration: none;',
             create: function (btnConfig) {
                 
@@ -180,45 +212,44 @@
                 a.setAttribute('href', '#');
                 $(a).text(btnConfig.text); // EXT
 
-                $(a).hover(function () {
-                    if( $(this).hasClass("disabled") ) {
-                        $(this).attr('style', btnConfig.default);
-                        return;
-                    }
-                    $(this).attr('style', btnConfig.style + btnConfig.hover);
-                }, function() {
-                    if( $(this).hasClass("disabled") ) return;
-                    $(this).attr('style', btnConfig.style);
-                });
+                // Facebook has disabled hover states on the Share modal for now.
+                // $(a).hover(function () {
+                //     if( $(this).hasClass("disabled") ) {
+                //         $(this).attr('style', btnConfig.default);
+                //         return;
+                //     }
+                //     $(this).attr('style', btnConfig.style + btnConfig.hover);
+                // }, function() {
+                //     if( $(this).hasClass("disabled") ) return;
+                //     $(this).attr('style', btnConfig.style);
+                // });
 
                 $(a).mousedown(function () {
                     if( $(this).hasClass("disabled") ) return;
-                    $(this).attr('style', btnConfig.style + btnConfig.active);
+                    $(this).attr('style', btnConfig.default + btnConfig.active);
                 });
 
                 $(a).mouseup(function () {
                     if( $(this).hasClass("disabled") ) return;
-                    $(this).attr('style', btnConfig.style + btnConfig.hover);
+                    $(this).attr('style', btnConfig.default + btnConfig.hover);
                 });
 
                 return temp;
                 
             },
             data: function (elem) {
+                var $parent, text;
                 // This occurs when the item is shared from the main news feed and/or no share data is/was found. So now we try
                 // and grab from the data from the FB share modal instead.
                 if(getDataFromModal){
 
-                    var $parent = $(elem).parents('.uiOverlayFooter').parent().parent().find('.mentionsTextarea');
-                    var text = $parent.val();
+                    $parent = $(elem).parents('.uiOverlayFooter').parent().parent().find('.mentionsTextarea');
+                    text = $parent.val();
                     if( text === "Write something..." ) text = undefined;
                     if( text ) share.text = text;
 
                     var photoshare = $('.UIShareStage_Image img').attr('src');
                     var thumb = $('input[name="attachment[params][images][0]');
-                    
-                    //console.log("PHOTOSHARE", photoshare);
-                    //console.log("THUMB", thumb);
 
                     if(thumb.length > 0){                        
                         if($('.UIShareStage_Title')[0].innerText === "Status Update"){
@@ -245,13 +276,30 @@
                     }
                 }
                 else{
-                    var $parent = $(elem).parents('.uiOverlayFooter').parent().parent().find('.mentionsTextarea');
+                    $parent = $(elem).parents('.uiOverlayFooter').parent().parent().find('.mentionsTextarea');
 
                     // if the user has written a message, allow this to override the default text
                     
-                    var text = $parent.val();
+                    text = $parent.val();
                     if( text === "Write something..." ) text = undefined;
                     if( text ) share.text = text;
+                }
+
+                // Facebook does some href switching via js on link rollover
+                // If the user doesn't rollover, we have some leave facebook url
+                if (share.url && share.url.indexOf('http://www.facebook.com/l.php?') === 0) {
+
+                    var params = share.url.replace('http://www.facebook.com/l.php?','')
+                        .split('&');
+
+                    // Find the real url we want behind the 'u' parameter:
+                    for ( var i = 0; i < params.length; i++ ){
+                        if ( params[i].indexOf('u=') === 0 ){
+                            share.url = params[i].replace('u=','');
+                            break;
+                        }
+                    }
+
                 }
 
                 // fallback placement when we don't know if the attachment is a picture, link or status
