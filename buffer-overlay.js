@@ -208,7 +208,7 @@ var bufferData = function (port, postData) {
     }
     
     var config = {};
-    config.local = false;
+    config.local = true;
     config.pocketWeb = false;
     var segments = window.location.pathname.split('/');
     if( window.location.host.indexOf("getpocket") != -1 && segments[2] == "read" ) config.pocketWeb = true;
@@ -349,7 +349,7 @@ var bufferData = function (port, postData) {
         localendpoint: "https://local.bufferapp.com/add/",
         //endpoint: (config.local ? 'https:' : document.location.protocol) + '//bufferapp.com/add/',
         //localendpoint: (config.local ? 'https:' : document.location.protocol) + '//local.bufferapp.com/add/',
-        getCSS: function () { return "border:none;height:100%;width:100%;position:fixed!important;z-index:99999999;top:0;left:0;display:block!important;max-width:100%!important;max-height:100%!important;padding:0!important;background: none; background-color: transparent; background-color: rgba(0, 0, 0, 0.1);"; }
+        getCSS: function () {return "border:none;height:100%;width:100%;position:fixed!important;z-index:2147483647;top:0;left:0;display:block!important;max-width:100%!important;max-height:100%!important;padding:0!important;background: none; background-color: transparent; background-color: rgba(0, 0, 0, 0.1);"; }
     };
 
     // Method for handling the async firing of the cb
