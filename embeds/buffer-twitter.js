@@ -1,5 +1,8 @@
 ;(function() {
 
+    // Only run this script on twitter:
+    if ( window.location.host.indexOf('twitter.com') === -1 ) return;
+
     $('head').append([
         '<style>',
             '.tweet .action-buffer-container span.icon, .tweet.opened-tweet .action-buffer-container span.icon, .tweet.opened-tweet.hover .action-buffer-container span.icon  {',
@@ -101,7 +104,7 @@
                 var activate = function () {
                     var val = $(target).val();
                     var counter = $(elem).siblings('#char-count').val();
-                    if ( val.length > 0 && counter > -1) {
+                    if ( val && val.length > 0 && counter > -1) {
                         $(elem).removeClass('disabled').attr('style', btnConfig.style);
                     } else {
                         $(elem).addClass('disabled').attr('style', btnConfig.default);
@@ -118,10 +121,10 @@
             text: "Buffer",
             container: 'div.tweet-button-sub-container, div.tweet-button',
             after: '.tweet-counter',
-            default: 'min-height: 20px; padding-top: 9px;',
+            default: 'min-height: 21px; padding-top: 9px;',
             className: 'buffer-tweet-button btn disabled',
             selector: '.buffer-tweet-button',
-            style: 'min-height: 20px; padding-top: 9px; background: #4C9E46; border: 1px solid #40873B; color: white !important; text-shadow: rgba(0, 0, 0, 0.246094) 0px -1px 0px; font-weight: bold; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);',
+            style: 'min-height: 21px; padding-top: 9px; background: #4C9E46; border: 1px solid #40873B; color: white !important; text-shadow: rgba(0, 0, 0, 0.246094) 0px -1px 0px; font-weight: bold; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);',
             hover: 'background: #40873B;  background-image: -webkit-linear-gradient(rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15)); background-image: -moz-linear-gradient(rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15)); background-image: linear-gradient(rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15));',
             active: 'box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3); background: #40873B; text-decoration: none;',
             create: function (btnConfig) {

@@ -344,7 +344,24 @@ var getOverlayConfig = function(postData){
     config.overlay = {
         endpoint: "https://bufferapp.com/add/",
         localendpoint: "https://local.bufferapp.com/add/",
-        getCSS: function () {return "border:none;height:100%;width:100%;position:fixed!important;z-index:2147483646;top:0;left:0;display:block!important;max-width:100%!important;max-height:100%!important;padding:0!important;background: none; background-color: transparent; background-color: rgba(0, 0, 0, 0.1);"; }
+        getCSS: function () {
+            return [
+                'border:none;',
+                'height:100%;',
+                'width:100%;',
+                'position:fixed!important;',
+                'z-index:2147483646;',
+                'top:0;',
+                'left:0;',
+                'display:block!important;',
+                'max-width:100%!important;',
+                'max-height:100%!important;',
+                'padding:0!important;',
+                'background: none;',
+                'background-color: transparent;',
+                'background-color: rgba(0, 0, 0, 0.1);'
+            ].join('');
+        }
     };
 
     return config;
