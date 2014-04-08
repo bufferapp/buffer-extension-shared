@@ -198,7 +198,7 @@ var bufferOverlay = function(data, config, doneCallback) {
 };
 
 // getOverlayConfig returns the configuration object for use by bufferOverlay
-var getOverlayConfig = function(){
+var getOverlayConfig = function(postData){
     
     var config = {};
 
@@ -350,6 +350,39 @@ var getOverlayConfig = function(){
     return config;
 };
 
+// Method for handling the async firing of the cb
+var executeAfter = function(done, count, args, cb) {
+    if(done === count) {
+        setTimeout(function(){
+            cb.apply( null, args );
+        }, 0);
+    }
+};
+
+
+// Asynchronously gather data about the page and from embedded sources,
+// like Twitter or Facebook. Currently the async is a bit over the top,
+// and not used, but if we need aysnc down the line, it's there.
+var getData = function (postData, cb) {
+    var config = getOverlayConfig( postData );
+    var count = config.attributes.length;
+    var done = 0;
+    var data = {};
+    for(var i=0; i < count; i++) {
+        // Wrapped in a self-executing function to ensure we don't overwrite ‘a’
+        // and that the correct ‘i’ is used
+        (function (i) {
+            var a = config.attributes[i];
+            a.get(function(d) {
+                done += 1;
+                data[a.name] = d;
+                executeAfter(done, count, [ data, config ], cb);
+            });
+        }(i));
+    }
+};
+
+
 
 // bufferData is triggered by the buffer_click listener in
 // the buffer-browser-embed file, where it's passed a port
@@ -357,44 +390,11 @@ var getOverlayConfig = function(){
 // background page.
 var bufferData = function (port, postData) {
 
-    if (window.top !== window) {
-        return;
-    }
-
-    // Method for handling the async firing of the cb
-    var executeAfter = function(done, count, data, cb) {
-        if(done === count) {
-            setTimeout(function(){
-                cb(data)
-            }, 0);
-        }
-    };
-
-    // Asynchronously gather data about the page and from embedded sources,
-    // like Twitter or Facebook. Currently the async is a bit over the top,
-    // and not used, but if we need aysnc down the line, it's there.
-    var getData = function (cb) {
-        var config = getOverlayConfig();
-        var count = config.attributes.length;
-        var done = 0;
-        var data = {};
-        for(var i=0; i < count; i++) {
-            // Wrapped in a self-executing function to ensure we don't overwrite ‘a’
-            // and that the correct ‘i’ is used
-            (function (i) {
-                var a = config.attributes[i];
-                a.get(function(d) {
-                    done += 1;
-                    data[a.name] = d;
-                    executeAfter(done, count, data, cb);
-                });
-            }(i));
-        }
-    };
+    if (window.top !== window) return;
 
     // Transform the data somewhat, and then create an overlay.
     // When it's done, fire buffer_done back to the extension
-    var createOverlay = function (data) {
+    var createOverlay = function (data, config) {
         if( data.embed ) {
             if( typeof data.embed === "object" ) {
                 for( var i in data.embed ) {
@@ -420,7 +420,6 @@ var bufferData = function (port, postData) {
     // It all starts here.
     // createOverlay is the callback that should fire after getData has
     // gathered all the necessaries
-    getData(createOverlay);
-    
+    getData(postData, createOverlay);
 };
 
