@@ -110,7 +110,7 @@ var bufferOverlay = function(data, config, doneCallback) {
 
     var footer = document.createElement('div');
     footer.id = 'buffer_widget_footer';
-    footer.style.cssText = "z-index:999999999;background: #ffffff url(https://d389zggrogs7qo.cloudfront.net/images/bookmarklet_icon.png) 35px 16px no-repeat; background-size: 30px; box-shadow: 0 -1px 8px rgba(0, 0, 0, 0.1); border-top: 1px solid #ccc; border-bottom-left-radius: 4px; height: 60px; width: 100%; position: fixed; bottom: 0; right: 0;";
+    footer.style.cssText = "z-index:2147483647;background: #ffffff url(https://d389zggrogs7qo.cloudfront.net/images/bookmarklet_icon.png) 35px 16px no-repeat; background-size: 30px; box-shadow: 0 -1px 8px rgba(0, 0, 0, 0.1); border-top: 1px solid #ccc; border-bottom-left-radius: 4px; height: 60px; width: 100%; position: fixed; bottom: 0; right: 0;";
     footer.innerHTML = [ 
         '<ul id="buffer_widget_footer_list" style="float: right; margin-top: 13px; margin-right: 20px; min-width: 170px;">',
             '<li style="list-style-type: none; background:none; width: auto; display: inline-block;">',
@@ -344,7 +344,7 @@ var getOverlayConfig = function(postData){
     config.overlay = {
         endpoint: "https://bufferapp.com/add/",
         localendpoint: "https://local.bufferapp.com/add/",
-        getCSS: function () {return "border:none;height:100%;width:100%;position:fixed!important;z-index:2147483647;top:0;left:0;display:block!important;max-width:100%!important;max-height:100%!important;padding:0!important;background: none; background-color: transparent; background-color: rgba(0, 0, 0, 0.1);"; }
+        getCSS: function () {return "border:none;height:100%;width:100%;position:fixed!important;z-index:2147483646;top:0;left:0;display:block!important;max-width:100%!important;max-height:100%!important;padding:0!important;background: none; background-color: transparent; background-color: rgba(0, 0, 0, 0.1);"; }
     };
 
     return config;
