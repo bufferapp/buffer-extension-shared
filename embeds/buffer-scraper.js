@@ -93,7 +93,7 @@
         var ogtmp;
         if( ogimage.length > 0 ) {
             ogtmp = $('<img>').prop({
-                'src': $(ogimage).text(),
+                'src': $(ogimage).attr('content'),
                 'class': 'opengraph',
                 'width': 1000, // High priority
                 'height': 1000
