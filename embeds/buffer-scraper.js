@@ -45,7 +45,7 @@
 
     var calcGCD = function(size) {
         var a = size.x, b = size.y;
-        var remander = 0;
+        var remainder = 0;
         while (b !== 0) {
             remainder = a % b;
             a = b;

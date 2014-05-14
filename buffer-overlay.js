@@ -379,7 +379,7 @@ var executeAfter = function(done, count, args, cb) {
 
 // Asynchronously gather data about the page and from embedded sources,
 // like Twitter or Facebook. Currently the async is a bit over the top,
-// and not used, but if we need aysnc down the line, it's there.
+// and not used, but if we need async down the line, it's there.
 var getData = function (postData, cb) {
     var config = getOverlayConfig( postData );
     var count = config.attributes.length;
