@@ -437,6 +437,111 @@
                 }
             }
         },
+        {
+            // Spring 2014 new profiles layout
+            name: "buffer-profile-stream-RT-2014",
+            text: "Add to Buffer",
+            container: '.js-stream-item .js-actions',
+            after: '.js-toggle-rt',
+            default: '',
+            className: 'ProfileTweet-action js-tooltip',
+            selector: '.buffer-action',
+            style: [
+                'position: relative;',
+                'top: 2px;',
+                'width: 16px;',
+                'height: 18px;',
+                'background-image: url(' + xt.data.get('data/shared/img/twttr-sprite.png') + ') !important;',
+                'background-color: #ccd6dd;',
+                'background-position: -5px -3px;',
+                'background-repeat: no-repeat;'
+            ].join(''),
+            hover: '',
+            active: '',
+            create: function (btnConfig) {
+
+                var li = document.createElement('li');
+                li.className = "action-buffer-container";
+                // Normal is 10px, this adds space for display: inline-block hidden space
+                li.style.marginLeft = '12px'; 
+
+                var a = document.createElement('a');
+                a.setAttribute('class', btnConfig.className);
+                a.setAttribute('href', '#');
+                a.setAttribute('data-original-title', btnConfig.text); // Tooltip text
+
+                var i = document.createElement('span');
+                i.setAttribute('class', 'Icon');
+                i.setAttribute('style', btnConfig.style);
+                
+                i.onmouseover = function(e) {
+                    this.style.backgroundColor = '#168eea';
+                };
+                i.onmouseout = function(e) {
+                    this.style.backgroundColor = '#ccd6dd';
+                };
+
+                $(a).append(i);
+
+                $(li).append(a);
+
+                return li;
+            },
+            data: function (elem) {
+                var c = $(elem).closest('.js-tweet');
+                // Grab the tweet text
+                var text = c.find('.js-tweet-text').first();
+                // Iterate through all links in the text
+                $(text).children('a').each(function () {
+                    // Don't modify the screenames and the hastags
+                    if( $(this).attr('data-screen-name') ) return;
+                    if( $(this).hasClass('twitter-atreply') ) return;
+                    if( $(this).hasClass('twitter-hashtag') ) return;
+                    // swap the text with the actual link
+                    var original = $(this).text();
+                    $(this).text($(this).attr("href")).attr('data-original-text', original);
+                });
+                // Build the RT text
+                var rt = 'RT ' + c.find('.username').first().text().trim() + ': ' + $(text).text().trim() + '';
+                // Put the right links back
+                $(text).children('a').each(function () {
+                    if( ! $(this).attr('data-original-text') ) return;
+                    $(this).text($(this).attr('data-original-text'));
+                });
+                // Send back the data
+                if (should_be_native_retweet) {
+                    return {
+                        text: rt,
+                        placement: 'twitter-permalink',
+                        // grab info for retweeting
+                        retweeted_tweet_id: c.data('feedback-key').replace('stream_status_', ''),
+                        retweeted_user_id: c.data('user-id'),
+                        retweeted_user_name: c.data('screen-name'),
+                        retweeted_user_display_name: c.data('name')
+                    };
+                } else {
+                    return {
+                        text: rt,
+                        placement: 'twitter-feed'
+                    };
+                }
+            },
+            clear: function (elem) {
+            },
+            activator: function (elem, btnConfig) {
+                var $btn = $(elem);
+
+                // Remove extra margin on the last item in the list to prevent overflow
+                var moreActions = $btn.siblings('.js-more-tweet-actions').get(0);
+                if (moreActions) {
+                    moreActions.style.marginRight = '0px';
+                }
+
+                if( $btn.closest('.in-reply-to').length > 0 ) {
+                    $btn.find('i').css({'background-position-y': '-21px'});
+                }
+            }
+        },
         {   
             // Twitter is testing new stream action button placement - March 2014
             name: "buffer-action-2014",
