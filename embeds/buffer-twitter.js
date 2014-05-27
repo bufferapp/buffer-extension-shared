@@ -309,7 +309,7 @@
                 var text = c.find('.js-tweet-text').first();
                 // Iterate through all links in the text
                 $(text).children('a').each(function () {
-                    // Don't modify the screenames and the hastags
+                    // Don't modify the screennames and the hashtags
                     if( $(this).attr('data-screen-name') ) return;
                     if( $(this).hasClass('twitter-atreply') ) return;
                     if( $(this).hasClass('twitter-hashtag') ) return;
@@ -395,7 +395,7 @@
                 var text = c.find('.js-tweet-text').first();
                 // Iterate through all links in the text
                 $(text).children('a').each(function () {
-                    // Don't modify the screenames and the hastags
+                    // Don't modify the screennames and the hashtags
                     if( $(this).attr('data-screen-name') ) return;
                     if( $(this).hasClass('twitter-atreply') ) return;
                     if( $(this).hasClass('twitter-hashtag') ) return;
@@ -582,7 +582,7 @@
                 var text = c.find('.js-tweet-text').first();
                 // Iterate through all links in the text
                 $(text).children('a').each(function () {
-                    // Don't modify the screenames and the hastags
+                    // Don't modify the screennames and the hashtags
                     if( $(this).attr('data-screen-name') ) return;
                     if( $(this).hasClass('twitter-atreply') ) return;
                     if( $(this).hasClass('twitter-hashtag') ) return;
