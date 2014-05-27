@@ -385,18 +385,14 @@ var getData = function (postData, cb) {
     var count = config.attributes.length;
     var done = 0;
     var data = {};
-    for(var i=0; i < count; i++) {
-        // Wrapped in a self-executing function to ensure we don't overwrite ‘a’
-        // and that the correct ‘i’ is used
-        (function (i) {
-            var a = config.attributes[i];
-            a.get(function(d) {
-                done += 1;
-                data[a.name] = d;
-                executeAfter(done, count, [ data, config ], cb);
-            });
-        }(i));
-    }
+
+    config.attributes.forEach(function(attr, i){
+        attr.get(function(d){
+            done += 1;
+            data[ attr.name ] = d;
+            executeAfter(done, count, [ data, config ], cb);
+        });
+    });
 };
 
 
