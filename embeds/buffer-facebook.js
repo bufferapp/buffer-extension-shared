@@ -119,7 +119,22 @@
         {
             name: "status",
             text: "Buffer",
-            container: '#pagelet_composer > div > div > form > div > div + div + div > div',
+            container: function(btnConfig){
+                var $container;
+
+                // On the news feed, FB uses pagelet_composer, on other timeline
+                // views it's harder to determine
+                var $forms = $('#pagelet_composer form');
+                if (!$forms.length) $forms = $('form');
+
+                $forms.each(function(i, j){
+                    if (j.action && j.action.indexOf('updatestatus') > -1) {
+                        $container = $(j);
+                    }
+                });
+
+                return $container || $forms.last();
+            },
             after: 'ul.uiList > li:first',
             className: 'buffer-facebook-button',
             selector: '.buffer-facebook-button',
@@ -129,37 +144,44 @@
                             ['a', 'buffer-facebook-button']
                         ]
                     ],
-            default: 'background: hsl(116, 39%, 45%); background: -webkit-linear-gradient(bottom, hsl(116, 39%, 45%) 95%, hsl(116, 39%, 60%) 96%); background: -moz-linear-gradient(bottom, hsl(116, 39%, 45%) 95%, hsl(116, 39%, 60%) 96%); border: 1px solid #40873B; color: white !important;padding: 3px 10px;margin-top: 0px;display: block;',
-            style:   'background: hsl(116, 39%, 45%); background: -webkit-linear-gradient(bottom, hsl(116, 39%, 45%) 95%, hsl(116, 39%, 60%) 96%); background: -moz-linear-gradient(bottom, hsl(116, 39%, 45%) 95%, hsl(116, 39%, 60%) 96%); border: 1px solid #40873B; color: white !important;padding: 3px 10px;margin-top: 0px;display: block;',
-            hover:   'background: hsl(116, 39%, 42%); background: -webkit-linear-gradient(bottom, hsl(116, 39%, 42%) 95%, hsl(116, 39%, 55%) 96%); background: -moz-linear-gradient(bottom, hsl(116, 39%, 42%) 95%, hsl(116, 39%, 55%) 96%); text-decoration: none;',
-            active:  'background: hsl(116, 39%, 40%); text-decoration: none;',
+            default: [
+                'display: inline-block;',
+                'vertical-align: middle;',
+                'padding: 0 12px;',
+                'line-height: 22px;',
+                'background: hsl(116, 39%, 45%);',
+                'border: 1px solid #40873B;',
+                'border-color: #45963F #45963F #40873B;',
+                'border-radius: 2px;',
+                'color: white !important;',
+                'text-shadow: rgba(0, 0, 0, 0.2) 0px -1px 0px;',
+                'font-size: 12px;',
+                'font-family: Helvetica, Arial, "lucida grande",tahoma,verdana,arial,sans-serif;',
+                '-webkit-font-smoothing: antialiased;',
+                'text-decoration: none !important;'
+            ].join(''),
+            hover: 'text-decoration: none !important;',
             create: function (btnConfig) {
                 var temp = buildElement(btnConfig.elements);
+
+                // If on a timeline page, reduce the font size. Temp hack for now
+                if ( $('#pagelet_composer').length === 0) {
+                    btnConfig.default += 'font-size: 11px;';
+                }
                 
                 var a = $(temp).find(btnConfig.selector)[0];
                 a.setAttribute('style', btnConfig.default);
                 a.setAttribute('href', '#');
                 $(a).text(btnConfig.text);
 
-                $(a).hover(function () {
-                    if( $(this).hasClass("disabled") ) {
-                        $(this).attr('style', btnConfig.default);
-                        return;
-                    }
-                    $(this).attr('style', btnConfig.style + btnConfig.hover);
-                }, function() {
-                    if( $(this).hasClass("disabled") ) return;
-                    $(this).attr('style', btnConfig.style);
-                });
-
                 $(a).mousedown(function () {
                     if( $(this).hasClass("disabled") ) return;
-                    $(this).attr('style', btnConfig.style + btnConfig.active);
+                    $(this).attr('style', btnConfig.default + btnConfig.active);
                 });
 
                 $(a).mouseup(function () {
                     if( $(this).hasClass("disabled") ) return;
-                    $(this).attr('style', btnConfig.style + btnConfig.hover);
+                    $(this).attr('style', btnConfig.default + btnConfig.hover);
                 });
 
                 return temp;
@@ -175,6 +197,9 @@
                 $(elem).parents('form').find('textarea.textInput').val('');
             }
         },
+        /* Disabled May 2014 as this doesn't create a native share on facebook,
+           it creates a new post from that user. This is planned to eliminate
+           user confusion until 
         {
             name: "share",
             text: "Buffer",
@@ -212,18 +237,6 @@
                 a.setAttribute('href', '#');
                 $(a).text(btnConfig.text); // EXT
 
-                // Facebook has disabled hover states on the Share modal for now.
-                // $(a).hover(function () {
-                //     if( $(this).hasClass("disabled") ) {
-                //         $(this).attr('style', btnConfig.default);
-                //         return;
-                //     }
-                //     $(this).attr('style', btnConfig.style + btnConfig.hover);
-                // }, function() {
-                //     if( $(this).hasClass("disabled") ) return;
-                //     $(this).attr('style', btnConfig.style);
-                // });
-
                 $(a).mousedown(function () {
                     if( $(this).hasClass("disabled") ) return;
                     $(this).attr('style', btnConfig.default + btnConfig.active);
@@ -239,7 +252,8 @@
             },
             data: function (elem) {
                 var $parent, text;
-                // This occurs when the item is shared from the main news feed and/or no share data is/was found. So now we try
+                // This occurs when the item is shared from the main news feed 
+                // and/or no share data is/was found. So now we try
                 // and grab from the data from the FB share modal instead.
                 if(getDataFromModal){
 
@@ -310,7 +324,7 @@
             clear: function (elem) {
                 share = {};
             }
-        }
+        }*/
     ];
 
     var bufferEmbed = function bufferEmbed() {
@@ -321,21 +335,27 @@
             for ( i=0 ; i < l; i++ ) {
 
                 var btnConfig = config.buttons[i];
-                
-                $(btnConfig.container).each(function () {
-                    
-                    var container = $(this);
-                    
-                    if ( $(container).hasClass('buffer-inserted') ) return;
 
-                    $(container).addClass('buffer-inserted');
+                // Container can be a selector or a function that returns a 
+                // jQuery object
+                var $container = typeof btnConfig.container === 'function' ? 
+                    btnConfig.container( btnConfig ) :
+                    $(btnConfig.container);
+                
+                $container.each(function () {
+                    
+                    var $container = $(this);
+                    
+                    if ( $container.hasClass('buffer-inserted') ) return;
+
+                    $container.addClass('buffer-inserted');
 
                     var btn = btnConfig.create(btnConfig);
 
                     // EXT
-                    if ( btnConfig.after ) $(container).find(btnConfig.after).after(btn);
-                    else if ( btnConfig.before ) $(container).find(btnConfig.before).before(btn);
-                    else $(container).append(btn);
+                    if ( btnConfig.after ) $container.find(btnConfig.after).after(btn);
+                    else if ( btnConfig.before ) $container.find(btnConfig.before).before(btn);
+                    else $container.append(btn);
 
                     if ( !! btnConfig.activator ) btnConfig.activator(btn, btnConfig);
                     
@@ -367,7 +387,9 @@
 
         insertButtons();
         
-        setTimeout(bufferEmbed, config.time.reload);
+        // May 2014 - Disabled continuous checking after share modal button was
+        // removed:
+        // setTimeout(bufferEmbed, config.time.reload);
 
     };
 
