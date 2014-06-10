@@ -118,7 +118,7 @@
     config.buttons = [
         {
             name: "status",
-            text: "B",
+            text: "",
             container: function(btnConfig){
                 var $container;
 
@@ -145,20 +145,22 @@
                         ]
                     ],
             default: [
+                'width: 15px;',
+                'height: 20px;',
                 'display: inline-block;',
                 'vertical-align: middle;',
-                'padding: 0 12px;',
                 'line-height: 22px;',
-                'background: hsl(116, 39%, 45%);',
-                'border: 1px solid #40873B;',
-                'border-color: #45963F #45963F #40873B;',
-                'border-radius: 2px;',
+                'background: transparent;',
+                'background-image: url("https://d389zggrogs7qo.cloudfront.net/images/app/buffer-menu-icon-new.png");',
                 'color: white !important;',
                 'text-shadow: rgba(0, 0, 0, 0.2) 0px -1px 0px;',
                 'font-size: 12px;',
                 'font-family: Helvetica, Arial, "lucida grande",tahoma,verdana,arial,sans-serif;',
                 '-webkit-font-smoothing: antialiased;',
-                'text-decoration: none !important;'
+                'background-position: -22px 1px;',
+                'text-decoration: none !important;',
+                'top: 1px;',
+                'position: relative;'
             ].join(''),
             hover: 'text-decoration: none !important;',
             create: function (btnConfig) {
