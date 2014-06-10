@@ -378,19 +378,15 @@
                         clearcb();
                         clearcb = function () {}; // prevent clear from being called again, until the button is clicked again
                     });
-                    
-                });
-
+                });  
             }
-
         };
 
         insertButtons();
         
-        // May 2014 - Disabled continuous checking after share modal button was
-        // removed:
-        // setTimeout(bufferEmbed, config.time.reload);
-
+        // June 2014 - Update the checking here again since most content scripts only fire once onload. FB, when navigating through
+        // the site doesn't "retrigger" load events so have to keep trying to add in the button. :)
+        setTimeout(bufferEmbed, config.time.reload);
     };
 
     // Wait for xt.options to be set
