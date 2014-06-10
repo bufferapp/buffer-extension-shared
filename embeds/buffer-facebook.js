@@ -118,7 +118,7 @@
     config.buttons = [
         {
             name: "status",
-            text: "Buffer",
+            text: "B",
             container: function(btnConfig){
                 var $container;
 
