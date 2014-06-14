@@ -1,44 +1,49 @@
+// Put together a query string for the iframe
+var buildSrc = function(data, config) {
+
+    var src = data.local ? 
+        config.overlay.localendpoint : 
+        config.overlay.endpoint;
+
+    var qs = '';
+
+    config.attributes.forEach(function(attr, i){
+        if ( !data[ attr.name ] ) return;
+        if ( qs.length ) qs += '&';
+        qs += attr.name + '=' + attr.encode( data[attr.name] );
+    });
+
+    if (qs.length) src += '?' + qs;
+    
+    return src;
+};
+
+var openPopUp = function(src, doneCallback) {
+    
+    window.open(src, null, 'height=600,width=850');
+
+    // Bind close listener
+    // Listen for when the overlay has closed itself
+    bufferpm.bind("buffermessage", function(overlaydata) {
+        bufferpm.unbind("buffermessage");
+        setTimeout(function () {
+            doneCallback(overlaydata);
+        }, 0);
+        window.focus();
+    });
+};
+
 // Build that overlay!
 // Triggered by code working from the button up
 var bufferOverlay = function(data, config, doneCallback) {
     
     if( ! doneCallback ) doneCallback = function () {};
     if( ! config ) return;
-    
-    // Put together a query string for the iframe
-    var buildSrc = function() {
-        var src = config.overlay.endpoint;
-        if( data.local ) src = config.overlay.localendpoint;
-        
-        // Add button attributes
-        var first = true, count = 0;
-        for(var i=0, l=config.attributes.length; i < l; i++) {
-            var a = config.attributes[i];
-            if( ! data[a.name] ) continue;
-            if( first ) { src += '?'; first = false; }
-            count += 1;
-            if( count > 1 ) src += '&';
-            src += a.name + '=' + a.encode(data[a.name]);
-        }
-        
-        return src;
-    };
 
-    var src = buildSrc(); 
+    var src = buildSrc(data, config); 
 
     if (xt.options['buffer.op.tpc-disabled']) {
-        window.open(src, null, 'height=600,width=850');
-
-        // Bind close listener
-        // Listen for when the overlay has closed itself
-        bufferpm.bind("buffermessage", function(overlaydata) {
-            bufferpm.unbind("buffermessage");
-            setTimeout(function () {
-                doneCallback(overlaydata);
-            }, 0);
-            window.focus();
-        });
-
+        openPopUp();
         return;
     }
 
@@ -51,7 +56,7 @@ var bufferOverlay = function(data, config, doneCallback) {
     temp.name = 'buffer_overlay';
     temp.style.cssText = config.overlay.getCSS();
 
-    temp.src = buildSrc();
+    temp.src = src;
 
     var footerButtonBaseCSS = [
         'display: inline-block;',
@@ -199,7 +204,7 @@ var bufferOverlay = function(data, config, doneCallback) {
 
 // getOverlayConfig returns the configuration object for use by bufferOverlay
 var getOverlayConfig = function(postData){
-    
+
     var config = {};
 
     // Set this to true for using a local server while testing
@@ -207,7 +212,7 @@ var getOverlayConfig = function(postData){
 
     var segments = window.location.pathname.split('/');
 
-    config.pocketWeb = ( window.location.host.indexOf("getpocket") != -1 && segments[2] == "read" ) ? true : false;
+    config.pocketWeb = ( window.location.host.indexOf('getpocket') !== -1 && segments[2] === 'read' );
 
     // Specification for gathering data for the overlay
     config.attributes = [

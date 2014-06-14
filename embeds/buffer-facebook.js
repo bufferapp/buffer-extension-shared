@@ -333,16 +333,13 @@
 
         var insertButtons = function () {
 
-            var i, l=config.buttons.length;
-            for ( i=0 ; i < l; i++ ) {
-
-                var btnConfig = config.buttons[i];
+            config.buttons.forEach(function(btnConfig, i){
 
                 // Container can be a selector or a function that returns a 
                 // jQuery object
                 var $container = typeof btnConfig.container === 'function' ? 
-                    btnConfig.container( btnConfig ) :
-                    $(btnConfig.container);
+                        btnConfig.container( btnConfig ) :
+                        $(btnConfig.container);
                 
                 $container.each(function () {
                     
@@ -381,7 +378,7 @@
                         clearcb = function () {}; // prevent clear from being called again, until the button is clicked again
                     });
                 });  
-            }
+            });
         };
 
         insertButtons();
