@@ -43,8 +43,7 @@ var bufferOverlay = function(data, config, doneCallback) {
     var src = buildSrc(data, config); 
 
     if (xt.options['buffer.op.tpc-disabled']) {
-        openPopUp();
-        return;
+        return openPopUp(src, doneCallback);
     }
 
     // Create the iframe and add the footer:
