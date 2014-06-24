@@ -31,21 +31,30 @@
   ].join(''));
   try {
     document.body.appendChild(button);
-  } catch (err) {}
+  } catch (err) { /* No need to handle this error */ }
 
   var offset = 5;
-  var locateButton = function(e) {
+  var locateButton = function(e, X, Y) {
     var image = e.target;
     var box = image.getBoundingClientRect();
 
     if (box.height < 250 || box.width < 350) return;
 
     // Use image.width and height if available
-    var width = image.width || box.width;
-    var height = image.height || box.height;
+    var width = image.width || box.width,
+        height = image.height || box.height,
+        extraXOffset = 0 || X,
+        extraYOffset = 0 || Y;
+
+    // In Gmail, we slide over the button for inline images to not block g+ sharing
+    if (site.isGmail && 
+        window.getComputedStyle(image).getPropertyValue('position') !== 'absolute') {
+      extraXOffset = 72;
+      extraYOffset = 4;
+    }
     
-    var x = window.pageXOffset + box.left + width - buttonWidth - offset;
-    var y = window.pageYOffset + box.top + height - buttonHeight - offset;
+    var x = window.pageXOffset + box.left + width - buttonWidth - offset - extraXOffset;
+    var y = window.pageYOffset + box.top + height - buttonHeight - offset - extraYOffset;
 
     button.style.top = y + 'px';
     button.style.left = x + 'px';
@@ -84,10 +93,14 @@
    * Site detection
    */
   var domain = window.location.hostname.replace('www.','');
+  var site = {
+    isGmail: /mail.google.com/.test(domain),
+    isInstagram: /instagram.com/.test(domain)
+  };
 
   var getImageUrl = (function(domain){
     
-    if ( /instagram.com/.test(domain) ) {
+    if ( site.isInstagram ) {
       return function(el) {
         return el.style.backgroundImage
           .replace('url(','')
@@ -104,7 +117,7 @@
   var addBufferImageOverlays = function() {
     var selector = 'img';
 
-    if ( /instagram.com/.test(domain) ) {
+    if ( site.isInstagram ) {
       selector = '.Image.timelinePhoto, .Image.Frame';
     }
 
