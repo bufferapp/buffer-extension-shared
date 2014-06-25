@@ -29,12 +29,9 @@
     'opacity: 0.9;',
     'cursor: pointer;'
   ].join(''));
-  try {
-    document.body.appendChild(button);
-  } catch (err) { /* No need to handle this error */ }
 
   var offset = 5;
-  var locateButton = function(e, X, Y) {
+  var locateButton = function(e) {
     var image = e.target;
     var box = image.getBoundingClientRect();
 
@@ -43,8 +40,8 @@
     // Use image.width and height if available
     var width = image.width || box.width,
         height = image.height || box.height,
-        extraXOffset = 0 || X,
-        extraYOffset = 0 || Y;
+        extraXOffset = 0,
+        extraYOffset = 0;
 
     // In Gmail, we slide over the button for inline images to not block g+ sharing
     if (site.isGmail && 
@@ -121,6 +118,8 @@
       selector = '.Image.timelinePhoto, .Image.Frame';
     }
 
+    document.body.appendChild(button);
+
     $(document)
       .on('mouseenter', selector, locateButton)
       .on('mouseleave', selector, hideButton);
@@ -137,13 +136,13 @@
   }
 
   (function check() {
-      if (!xt.options) {
-        return setTimeout(check, 50);
-      }
-      if (typeof xt.options['buffer.op.image-overlays'] === 'undefined' ||
-          xt.options['buffer.op.image-overlays'] === 'image-overlays') {
-        addBufferImageOverlays();
-      }
+    if (!xt.options) {
+      return setTimeout(check, 50);
+    }
+    if (typeof xt.options['buffer.op.image-overlays'] === 'undefined' ||
+        xt.options['buffer.op.image-overlays'] === 'image-overlays') {
+      addBufferImageOverlays();
+    }
   }());
-
+  
 }());
