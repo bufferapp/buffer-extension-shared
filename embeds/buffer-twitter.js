@@ -291,6 +291,7 @@
             }
         },
         {
+            // Retweet modal window
             name: "retweet",
             text: "Buffer Retweet",
             container: '#retweet-tweet-dialog div.modal-footer, #retweet-dialog .twttr-prompt',
@@ -575,12 +576,12 @@
                 return li;
             },
             data: function (elem) {
-                var c = $(elem).closest('.js-tweet');
-                // Grab the tweet text
-                var text = c.find('.js-tweet-text').first();
+                var $tweet = $(elem).closest('.js-tweet');
+                var $text = $tweet.find('.js-tweet-text').first();
+
                 // Iterate through all links in the text
-                $(text).children('a').each(function () {
-                    // Don't modify the screenames and the hastags
+                $text.children('a').each(function () {
+                    // Don't modify the screennames and the hashtags
                     if( $(this).attr('data-screen-name') ) return;
                     if( $(this).hasClass('twitter-atreply') ) return;
                     if( $(this).hasClass('twitter-hashtag') ) return;
@@ -589,29 +590,35 @@
                     $(this).text($(this).attr("href")).attr('data-original-text', original);
                 });
                 // Build the RT text
-                var rt = 'RT ' + c.find('.username').first().text().trim() + ': ' + $(text).text().trim() + '';
+                var username = $tweet
+                        .find('.js-action-profile-name .ProfileTweet-screenname')
+                        .text()
+                        .trim();
+                var rt = 'RT ' + username + ': ' + $text.text().trim() + '';
+
                 // Put the right links back
-                $(text).children('a').each(function () {
+                $text.children('a').each(function () {
                     if( ! $(this).attr('data-original-text') ) return;
                     $(this).text($(this).attr('data-original-text'));
                 });
+
                 // Send back the data
                 if (should_be_native_retweet) {
                     return {
                         text: rt,
                         placement: 'twitter-permalink',
                         // grab info for retweeting
-                        retweeted_tweet_id: c.data('feedback-key').replace('stream_status_', ''),
-                        retweeted_user_id: c.data('user-id'),
-                        retweeted_user_name: c.data('screen-name'),
-                        retweeted_user_display_name: c.data('name')
-                    };
-                } else {
-                    return {
-                        text: rt,
-                        placement: 'twitter-feed'
+                        retweeted_tweet_id: $tweet.data('feedback-key').replace('stream_status_', ''),
+                        retweeted_user_id: $tweet.data('user-id'),
+                        retweeted_user_name: $tweet.data('screen-name'),
+                        retweeted_user_display_name: $tweet.data('name')
                     };
                 }
+
+                return {
+                    text: rt,
+                    placement: 'twitter-feed'
+                };
             },
             clear: function (elem) {
             },
@@ -664,11 +671,11 @@
                 return li;
             },
             data: function (elem) {
-                var c = $(elem).closest('.tweet');
-                // Grab the tweet text
-                var text = c.find('.js-tweet-text').first();
+                var $tweet = $(elem).closest('.js-tweet');
+                var $text = $tweet.find('.js-tweet-text').first();
+
                 // Iterate through all links in the text
-                $(text).children('a').each(function () {
+                $text.children('a').each(function () {
                     // Don't modify the screennames and the hashtags
                     if( $(this).attr('data-screen-name') ) return;
                     if( $(this).hasClass('twitter-atreply') ) return;
@@ -678,29 +685,35 @@
                     $(this).text($(this).attr("href")).attr('data-original-text', original);
                 });
                 // Build the RT text
-                var rt = 'RT ' + c.find('.username').first().text().trim() + ': ' + $(text).text().trim() + '';
+                var username = $tweet
+                        .find('.js-action-profile-name .ProfileTweet-screenname')
+                        .text()
+                        .trim();
+                var rt = 'RT ' + username + ': ' + $text.text().trim() + '';
+
                 // Put the right links back
-                $(text).children('a').each(function () {
+                $text.children('a').each(function () {
                     if( ! $(this).attr('data-original-text') ) return;
                     $(this).text($(this).attr('data-original-text'));
                 });
+
                 // Send back the data
                 if (should_be_native_retweet) {
                     return {
                         text: rt,
                         placement: 'twitter-permalink',
                         // grab info for retweeting
-                        retweeted_tweet_id: c.data('feedback-key').replace('stream_status_', ''),
-                        retweeted_user_id: c.data('user-id'),
-                        retweeted_user_name: c.data('screen-name'),
-                        retweeted_user_display_name: c.data('name')
-                    };
-                } else {
-                    return {
-                        text: rt,
-                        placement: 'twitter-feed'
+                        retweeted_tweet_id: $tweet.data('feedback-key').replace('stream_status_', ''),
+                        retweeted_user_id: $tweet.data('user-id'),
+                        retweeted_user_name: $tweet.data('screen-name'),
+                        retweeted_user_display_name: $tweet.data('name')
                     };
                 }
+
+                return {
+                    text: rt,
+                    placement: 'twitter-feed'
+                };
             },
             clear: function (elem) {
             },
