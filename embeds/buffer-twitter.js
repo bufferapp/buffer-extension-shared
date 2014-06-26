@@ -46,16 +46,42 @@
     var should_be_native_retweet = true;
     config.buttons = [
         {
+            // The standalone tweet page after a "Tweet" button has been clicked
             name: "twitter-button",
             text: "Buffer",
             container: 'div.ft',
-            after: '#char-count',
-            default: 'margin-right: 8px; background: #eee; background: -webkit-linear-gradient(bottom, #eee 25%, #f8f8f8 63%); background: -moz-linear-gradient(bottom, #eee 25%, #f8f8f8 63%); border: 1px solid #999; color: #444 !important; text-shadow: rgba(0, 0, 0, 0.246094) 0px -1px 0px;',
+            after: 'input[type="submit"]',
+            default: [
+                'margin-left: 8px;',
+                'background: #eee;',
+                'background: -webkit-linear-gradient(bottom, #eee 25%, #f8f8f8 63%);',
+                'background: -moz-linear-gradient(bottom, #eee 25%, #f8f8f8 63%);',
+                'border: 1px solid #999;',
+                'color: #444 !important;',
+                'text-shadow: rgba(0, 0, 0, 0.246094) 0px -1px 0px;'
+            ].join(''),
             className: 'button',
             selector: '.button',
-            style: 'margin-right: 8px; background: #4C9E46; background: -webkit-linear-gradient(bottom, #4C9E46 25%, #54B14E 63%); background: -moz-linear-gradient(bottom, #4C9E46 25%, #54B14E 63%); border: 1px solid #40873B; color: white !important; text-shadow: rgba(0, 0, 0, 0.246094) 0px -1px 0px;',
-            hover: 'background: #40873B; background: -webkit-linear-gradient(bottom, #40873B 25%, #4FA749 63%); background: -moz-linear-gradient(bottom, #40873B 25%, #4FA749 63%);',
-            active: 'box-shadow: inset 0 5px 10px -6px rgba(0,0,0,.5); background: #40873B; background: -webkit-linear-gradient(bottom, #40873B 25%, #4FA749 63%); background: -moz-linear-gradient(bottom, #40873B 25%, #4FA749 63%);',
+            style: [
+                'margin-left: 8px;',
+                'background: #4C9E46;',
+                'background: -webkit-linear-gradient(bottom, #4C9E46 25%, #54B14E 63%);',
+                'background: -moz-linear-gradient(bottom, #4C9E46 25%, #54B14E 63%);',
+                'border: 1px solid #40873B;',
+                'color: white !important;',
+                'text-shadow: rgba(0, 0, 0, 0.246094) 0px -1px 0px;'
+            ].join(''),
+            hover: [
+                'background: #40873B;',
+                'background: -webkit-linear-gradient(bottom, #40873B 25%, #4FA749 63%);',
+                'background: -moz-linear-gradient(bottom, #40873B 25%, #4FA749 63%);'
+            ].join(''),
+            active: [
+                'box-shadow: inset 0 5px 10px -6px rgba(0,0,0,.5);',
+                'background: #40873B;',
+                'background: -webkit-linear-gradient(bottom, #40873B 25%, #4FA749 63%);',
+                'background: -moz-linear-gradient(bottom, #40873B 25%, #4FA749 63%);'
+            ].join(''),
             create: function (btnConfig) {
                 window.resizeTo(845,700);
                 window.moveTo(screen.availWidth/2-845/2, screen.availHeight/2+700/2);
