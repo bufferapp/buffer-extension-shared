@@ -5,18 +5,45 @@
 
     $('head').append([
         '<style>',
-            '.tweet .action-buffer-container span.icon, .tweet.opened-tweet .action-buffer-container span.icon, .tweet.opened-tweet.hover .action-buffer-container span.icon  {',
-                'background-position: -3px -3px !important;} ',
+            // To shrink the composer buttons to fit on one line
+            '.tweet-button.buffer-inserted {',
+                'margin-top: 3px;',
+            '}',
+            '.tweet-button.buffer-inserted .btn {',
+                'padding: 7px 8px 6px;',
+            '}',
+            '.tweet-button.buffer-inserted .tweet-counter {',
+                'width: auto;',
+            '}',
+            '.tweet-box-extras .geo-picker {',
+                'margin-right: 0px;',
+            '}',
+            // For the twitter stream:
+            '.tweet .action-buffer-container span.icon, ',
+            '.tweet.opened-tweet .action-buffer-container span.icon, ',
+            '.tweet.opened-tweet.hover .action-buffer-container span.icon {',
+                'background-position: -3px -3px !important;',
+            '}',
             '.tweet:hover .action-buffer-container span.icon {',
-                'background-position: -3px  -21px !important;} ',
+                'background-position: -3px  -21px !important;',
+            '}',
             '.gallery-tweet .tweet .action-buffer-container span {',
-                'background-position: -3px  -38px !important; margin-top: -1px;} ',
+                'background-position: -3px  -38px !important;',
+                'margin-top: -1px;',
+            '}',
             '.tweet:hover .action-buffer-container span.Icon {',
-                'background-position: -5px -28px !important;} ',
+                'background-position: -5px -28px !important;',
+            '}',
             '.tweet .action-buffer-container span.Icon:hover {',
-                'background-color: #8899a6 !important;} ',
-            'div.stream-item-footer > ul.tweet-actions > li.action-buffer-container i {margin-top: 0px ;} ',
-            '#profile_popup-body > ol > li > div > div.content > div.stream-item-footer > ul.tweet-actions > li.action-buffer-container {display: none;}',
+                'background-color: #8899a6 !important;',
+            '}',
+            'div.stream-item-footer > ul.tweet-actions > li.action-buffer-container i {',
+                'margin-top: 0px ;',
+            '}',
+            '#profile_popup-body > ol > li > div > div.content > ',
+                'div.stream-item-footer > ul.tweet-actions > li.action-buffer-container {',
+                'display: none;',
+            '}',
         '</style>'
     ].join(''));
 
@@ -143,16 +170,38 @@
             }
         },    
         {
+            // The main composer in the twitter "home" page
+            // NOTE: Additional style overrides are located at the top of this file
             name: "composer",
             text: "Buffer",
             container: 'div.tweet-button-sub-container, div.tweet-button',
             after: '.tweet-counter',
-            default: 'min-height: 21px; padding-top: 9px;',
             className: 'buffer-tweet-button btn disabled',
             selector: '.buffer-tweet-button',
-            style: 'min-height: 21px; padding-top: 9px; background: #4C9E46; border: 1px solid #40873B; color: white !important; text-shadow: rgba(0, 0, 0, 0.246094) 0px -1px 0px; font-weight: bold; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);',
-            hover: 'background: #40873B;  background-image: -webkit-linear-gradient(rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15)); background-image: -moz-linear-gradient(rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15)); background-image: linear-gradient(rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15));',
-            active: 'box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3); background: #40873B; text-decoration: none;',
+            default: [
+                'vertical-align: top;',
+                'line-height: 19px;',
+            ].join(''),
+            style: [
+                'vertical-align: top;',
+                'line-height: 19px;',
+                'background: #4C9E46;',
+                'border: 1px solid rgba(0,0,0,0);',
+                'color: white !important;',
+                'text-shadow: rgba(0, 0, 0, 0.246094) 0px -1px 0px;',
+                'font-weight: bold;',
+                'box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);'
+            ].join(''),
+            hover: [
+                'background: #40873B;',
+                'background-image: -webkit-linear-gradient(rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15));',
+                'background-image: -moz-linear-gradient(rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15));',
+                'background-image: linear-gradient(rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15));'
+            ].join(''),
+            active: [
+                'box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);',
+                'background: #40873B; text-decoration: none;'
+            ].join(''),
             create: function (btnConfig) {
 
                 var a = document.createElement('a');
@@ -183,14 +232,16 @@
                 });
 
                 return a;
-
             },
             ignore: function(container) {
-                if( $(container).closest('.dm-dialog').length > 0 ) return true;
-                return false;
+                return $(container).closest('.dm-dialog').length ? true : false;
             },
             data: function (elem) {
-                var text = $(elem).parents('.toolbar').siblings('.tweet-content').find('.tweet-box').text();
+                var text = $(elem)
+                        .parents('form')
+                        .find('.tweet-content .tweet-box')
+                        .text();
+
                 return {
                     text: text,
                     placement: 'twitter-composer'
@@ -198,33 +249,43 @@
             },
             clear: function (elem) {
                 // Homebox
-                var context = $(elem).parents('.toolbar').siblings('.tweet-content');
-                var target = $(context).find('.tweet-box');
+                var $content = $(elem)
+                        .parents('form')
+                        .find('.tweet-content');
+                var $target = $content.find('.tweet-box');
 
                 if($(elem).parents('.home-tweet-box').length > 0){
                     // If its the home box condense the box after buffer
-                    $(context).parent().addClass('condensed');
-                    $(target).text('');
+                    $content
+                        .parents('form')
+                        .addClass('condensed');
                 }
-                else{
-                    $(target).text('');
-                }
+
+                $target.text('');
                
                 // Modal Close
                 // Closes the modal box
-                $("#global-tweet-dialog .js-close").click();
-                
-
+                $('#global-tweet-dialog .js-close').click();
             },
             activator: function (elem, btnConfig) {
-                var target = $(elem).parents('.toolbar').siblings('.tweet-content').find('.tweet-box');
-                $(target).on('keyup focus blur change paste cut', function (e) {
+                var $elem = $(elem);
+                var $target = $elem
+                        .parents('form')
+                        .find('.tweet-content .tweet-box');
+
+                $target.on('keyup focus blur change paste cut', function (e) {
                     var val = $(this).text();
-                    var counter = $(elem).siblings('.tweet-counter').text() || $(elem).siblings('.tweet-counter').val();
-                    if ( val.length > 0 && counter > -1 && val !== "Compose new Tweet...") {
-                        $(elem).removeClass('disabled').attr('style', btnConfig.style);
+                    var counter = $elem.siblings('.tweet-counter').text() ||
+                        $elem.siblings('.tweet-counter').val();
+
+                    if ( val.length > 0 && counter > -1 && val !== 'Compose new Tweet...') {
+                        $elem
+                            .removeClass('disabled')
+                            .attr('style', btnConfig.style);
                     } else {
-                        $(elem).addClass('disabled').attr('style', btnConfig.default);
+                        $elem
+                            .addClass('disabled')
+                            .attr('style', btnConfig.default);
                     }
                 });
             }
@@ -233,7 +294,7 @@
             name: "retweet",
             text: "Buffer Retweet",
             container: '#retweet-tweet-dialog div.modal-footer, #retweet-dialog .twttr-prompt',
-            after: '.cancel-action, .js-prompt-ok',
+            after: 'button:last-child',
             className: 'buffer-tweet-button btn',
             selector: '.buffer-tweet-button',
             default: 'margin-left: 4px; background: #4C9E46; border: 1px solid #40873B; color: white !important; text-shadow: rgba(0, 0, 0, 0.246094) 0px -1px 0px; font-weight: bold; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);',
@@ -655,26 +716,23 @@
 
     var insertButtons = function () {
 
-        var i, l=config.buttons.length;
-        for ( i=0 ; i < l; i++ ) {
-
-            var btnConfig = config.buttons[i];
+        config.buttons.forEach(function(btnConfig){
             
             $(btnConfig.container).each(function () {
                 
-                var container = $(this);
+                var $container = $(this);
                 
                 if( !! btnConfig.ignore ) {
-                    if( btnConfig.ignore(container) ) return;
+                    if( btnConfig.ignore($container) ) return;
                 }
                 
-                if ( $(container).hasClass('buffer-inserted') ) return;
+                if ( $container.hasClass('buffer-inserted') ) return;
 
-                $(container).addClass('buffer-inserted');
+                $container.addClass('buffer-inserted');
 
                 var btn = btnConfig.create(btnConfig);
 
-                $(container).find(btnConfig.after).after(btn);
+                $container.find(btnConfig.after).after(btn);
 
                 if ( !! btnConfig.activator) btnConfig.activator(btn, btnConfig);
                 
@@ -698,7 +756,7 @@
                 
             });
 
-        }
+        });
 
     };
 
