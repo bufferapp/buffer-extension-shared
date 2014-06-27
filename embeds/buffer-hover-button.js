@@ -3,6 +3,14 @@
  */
 ;(function(){
 
+  /**
+   * Prevent from being inserted in certain situations
+   */
+  // Do not insert for iframes
+  if (window !== window.parent) return;
+  // Do no insert for content editing windows
+  if (document.body.hasAttribute('contenteditable')) return;
+
   var currentImageUrl = null;
 
   /**
