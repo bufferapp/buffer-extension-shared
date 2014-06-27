@@ -355,6 +355,7 @@
             }   
         },
         {
+            // The Tweet permalink page
             name: "buffer-permalink-action",
             text: "Buffer",
             container: '.permalink-tweet div.stream-item-footer .tweet-actions',
@@ -375,8 +376,20 @@
                 a.setAttribute('href', '#');
 
                 var i = document.createElement('i');
-                i.setAttribute('class', 'sm-reply'); // let Twitter set the bg color
-                i.setAttribute('style', 'top: -2px; position: relative; margin-right: 4px; width: 16px; height: 16px; background-image: url(' + xt.data.get('data/shared/img/twttr-sprite.png') + ')!important; background-repeat: no-repeat; background-position: -5px -5px !important;');
+                i.setAttribute('class', 'Icon');
+                i.setAttribute('style', [
+                    'top: 3px;',
+                    'position: relative;',
+                    'margin-right: 6px;',
+                    'margin-left: 2px;',
+                    'width: 12px;',
+                    'height: 16px;',
+                    'background-color: #8899a6;',
+                    'background-image: url(' + xt.data.get('data/shared/img/twttr-sprite.png') + ') !important;',
+                    'background-repeat: no-repeat;',
+                    'background-size: 20px 60px;', // Natural is 25x75
+                    'background-position: -5px -2px !important;'
+                ].join(''));
 
                 $(a).append(i);
 
