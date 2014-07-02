@@ -11,11 +11,30 @@
   // Do no insert for content editing windows
   if (document.body.hasAttribute('contenteditable')) return;
 
-  var currentImageUrl = null;
+
+  /**
+   * Site detection
+   */
+  var domain = window.location.hostname.replace('www.','');
+  var site = {
+    isGmail: /mail.google.com/.test(domain),
+    isInstagram: /instagram.com/.test(domain)
+  };
+
+  // List of sites to disable this on:
+  var disabledDomains = [
+    'bufferapp.com',
+    'twitter.com',
+    'facebook.com'
+  ];
+  if (disabledDomains.indexOf(domain) > -1) {
+    return;
+  }
 
   /**
    * Create a single global button
    */
+  var currentImageUrl = null;
   var buttonWidth = 100;
   var buttonHeight = 25;
   var dpr = window.devicePixelRatio;
@@ -94,14 +113,6 @@
     .on('mouseenter', hoverButton)
     .on('mouseleave', hideButton);
 
-  /**
-   * Site detection
-   */
-  var domain = window.location.hostname.replace('www.','');
-  var site = {
-    isGmail: /mail.google.com/.test(domain),
-    isInstagram: /instagram.com/.test(domain)
-  };
 
   var getImageUrl = (function(domain){
     
@@ -133,15 +144,6 @@
       .on('mouseleave', selector, hideButton);
   };
 
-  // List of sites to disable this on:
-  var disabledDomains = [
-    'bufferapp.com',
-    'twitter.com',
-    'facebook.com'
-  ];
-  if (disabledDomains.indexOf(domain) > -1) {
-    return;
-  }
 
   (function check() {
     if (!xt.options) {
