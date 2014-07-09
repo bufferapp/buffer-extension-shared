@@ -1,5 +1,8 @@
 ;(function() {
 
+  // Only run this script on twitter:
+  if ( window.location.host.indexOf('quora.com') === -1 ) return;
+
   var config = {};
   config.buttons = [
     {
@@ -12,54 +15,61 @@
       separatorText: ' &bull; ',
       className: 'buffer-quora-button',
       data: function (element) {
-
-        var $parent = $(element).parents('.e_col'),
-          $author,
-          title,
-          link;
-
-        // We'll be using H1 tag to detect a question page
-        var $h1 = $('h1');
+        
+        var title, link, placement, $parent, $author;
+        
+        var $title = $('.question h1').clone();
+        var isQuestionPage = !!$title.length;
 
         // Question page
-        if ($h1.length) {
-          // Find and sanitize a question title
-          $h1.find('div').remove();
-          title = $h1.text();
+        if (isQuestionPage) {
 
-          // If it's an answer...
-          $author = $parent.find('.answer_user_wrapper');
-          if ($author.length) {
-            title = 'Answer by ' + $author.find('a.user').text() + ' to ' + title;
-          }
+          $parent = $(element).parents('.answer_text_wrapper');
+          $author = $parent.find('.answer_user_wrapper a.user');
+
+          // Find and sanitize a question title
+          $title.find('div').remove();
+          title = $title.text();
 
           // Just grab the current page URL, we don't need to do voodoo here
-          link = window.location.href;
+          link = window.location.href.replace(window.location.search,'');
+          placement = 'quora-page';
 
         // Home page feed
         } else {
 
-          // Find and sanitize a question title
-          var $link_text = $parent.find('.link_text');
-          $link_text.find('div').remove();
-          $link_text.find('span').remove();
-          title = $link_text.text();
+          $parent = $(element).parents('.feed_item');
+          $author = $parent.find('.feed_item_answer_user a.user');
 
-          // If it's an answer...
-          $author = $parent.find('.feed_item_answer_user');
-          if ($author.length) {
-            title = 'Answer by ' + $author.find('a.user').text() + ' to ' + title;
-          }
+          // Find and sanitize a question title
+          var $question = $parent.find('.feed_item_question .link_text').clone();
+          $question.find('div, span').remove();
+          title = $question.text();
 
           // Prefix link with the domain URL as we only have an URI
           link = 'https://www.quora.com' + $parent.find('a.question_link').attr('href');
+          placement = 'quora-feed';
+        }
 
+        // If it's an answer...
+        if ($author.length) {
+          title = 'Answer by ' + $author.text() + ' to ' + title;
+          placement += '-answer';
+
+          // If it's not an answer page, construct the author's answer url:
+          if (link.search(/\/answer\//)) {
+            if (link[ link.length - 1 ] !== '/') link += '/';
+            link += 'answer' + $author.attr('href');
+          }
+          
+        } else {
+          placement += '-question';
         }
 
         return {
           text: title,
           url: link,
-          placement: 'quora-action-bar'
+          placement: placement
         };
 
       }
