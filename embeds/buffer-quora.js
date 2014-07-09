@@ -5,14 +5,16 @@
         {
             text: 'Buffer',
             container: '.item_action_bar',
+            after: '.share_link',
+            before: '.downvote',
             containerClassName: 'buffer-quora-button-container',
             separatorClassName: 'bullet',
             separatorText: ' &bull; ',
             className: 'buffer-quora-button',
-            data: function (element)
-            {
+            data: function (element) {
 
                 var $parent = $(element).parents('.e_col'),
+                    $author,
                     title,
                     link;
 
@@ -27,7 +29,7 @@
                     title = $h1.text();
 
                     // If it's an answer...
-                    var $author = $parent.find('.answer_user_wrapper');
+                    $author = $parent.find('.answer_user_wrapper');
                     if ($author.length)
                     {
                         title = 'Answer by ' + $author.find('a.user').text() + ' to ' + title;
@@ -47,7 +49,7 @@
                     title = $link_text.text();
 
                     // If it's an answer...
-                    var $author = $parent.find('.feed_item_answer_user');
+                    $author = $parent.find('.feed_item_answer_user');
                     if ($author.length)
                     {
                         title = 'Answer by ' + $author.find('a.user').text() + ' to ' + title;
@@ -73,74 +75,80 @@
 
         // Buffer link itself
         var a = document.createElement('a');
-        a.setAttribute('class', cfg.className + ' share_link'); // share_link is added for styling purposes
+        // share_link is added for styling purposes
+        a.setAttribute('class', cfg.className + ' share_link');
         a.setAttribute('href', '#');
         $(a).text(cfg.text);
 
         // Quora style button separator
-        var b = document.createElement('span');
-        b.setAttribute('class', cfg.separatorClassName);
-        $(b).html(cfg.separatorText);
+        var bullet = document.createElement('span');
+        bullet.setAttribute('class', cfg.separatorClassName);
+        $(bullet).html(cfg.separatorText);
 
         // Container for button and separator
         var c = document.createElement('span');
         c.setAttribute('class', cfg.containerClassName);
-        $(c).append(a).append(b);
+        $(c).append(bullet).append(a);
 
         return c;
-
     };
 
     var insertButtons = function ()
     {
 
-        var idx,
-            l=config.buttons.length;
+        config.buttons.forEach(function(btnConfig, i){
 
-        for (idx=0 ; idx < l; idx++)
-        {
+            $(btnConfig.container).each(function(){
 
-            var btnConfig = config.buttons[idx];
-
-            $(btnConfig.container).each(function()
-            {
-
-                var container = $(this),
-                    $share_link = $(container).children('a.share_link');
+                var $container = $(this);
 
                 // If we don't have Share link in the action bar prevent inserting Buffer button
                 // This usually happens when user is not logged in
-                if (!$share_link.length || $(container).hasClass('buffer-inserted'))
-                {
+                if ($container.hasClass('buffer-inserted')) {
                     return;
                 }
 
-                $(container).addClass('buffer-inserted');
-
                 var button = createButton(btnConfig);
-
-                // Insert Buffer button before a Share link, it's more reliable to do so
-                $share_link.before(button);
 
                 var getData = btnConfig.data;
 
-                $(button).children('a.share_link').click(function (e)
-                {
+                $(button).children('a.share_link').on('click', function (e) {
                     xt.port.emit('buffer_click', getData(button));
                     e.preventDefault();
                 });
 
+                $container.addClass('buffer-inserted');
+
+                // We check for the share count
+                var hasShareCount = !!$container.find('.repost_count_link').length;
+                if (!hasShareCount) {
+                    $container.find(btnConfig.after).after(button);
+                    return;
+                }
+
+                // If it has the Downvote, we insert before that element's 
+                // previous element
+                var $before = $container.find(btnConfig.before);
+
+                if ($before.length) {
+                    $before.prev().before(button);
+                    return;
+                }
+
+                $container.append(button);
             });
 
-        }
+        });
 
+        setTimeout(insertButtons, 800);
     };
 
-    ;(function check()
-    {
-        // I was too lazy to put Quora in the options, let's assume it's turned of by default
-        insertButtons();
-        setInterval(insertButtons, 2000);
+    ;(function check(){
+        if( xt.options && xt.options['buffer.op.quora'] === 'quora') {
+            insertButtons();
+        } else {
+            setTimeout(check, 50);
+        }
     }());
 
 }());
