@@ -125,7 +125,10 @@
         var $before = $container.find(btnConfig.before);
 
         if ($before.length) {
-          $before.prev().before(button);
+          $before
+            .parent()
+            .prev()
+            .before(button);
           return;
         }
 
@@ -138,10 +141,12 @@
   };
 
   ;(function check(){
-    if( xt.options && xt.options['buffer.op.quora'] === 'quora') {
+    if (!xt.options) {
+      return setTimeout(check, 50);
+    }
+    if (typeof xt.options['buffer.op.quora'] === 'undefined' ||
+        xt.options['buffer.op.quora'] === 'quora') {
       insertButtons();
-    } else {
-      setTimeout(check, 50);
     }
   }());
 
