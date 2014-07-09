@@ -497,7 +497,8 @@
           
           xt.port.on("buffer_embed_clear", function () {
             clearcb();
-            clearcb = function () {}; // prevent clear from being called again, until the button is clicked again
+            // prevent clear from being called again, until the button is clicked again
+            clearcb = function () {}; 
           });
         });  
       });
@@ -505,8 +506,9 @@
 
     insertButtons();
     
-    // June 2014 - Update the checking here again since most content scripts only fire once onload. FB, when navigating through
-    // the site doesn't "retrigger" load events so have to keep trying to add in the button. :)
+    // June 2014 - Update the checking here again since most content scripts
+    // only fire once onload. FB, when navigating through the site doesn't
+    // "retrigger" load events so have to keep trying to add in the button. :)
     setTimeout(bufferEmbed, config.time.reload);
   };
 
