@@ -9,7 +9,7 @@
   // Do not insert for iframes
   if (window !== window.parent) return;
   // Do no insert for content editing windows
-  if (document.body.hasAttribute('contenteditable')) return;
+  if (!document.body || document.body.hasAttribute('contenteditable')) return;
 
 
   /**
