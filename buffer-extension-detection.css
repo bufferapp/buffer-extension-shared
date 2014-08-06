@@ -1,0 +1,4 @@
+#browser-extension-marker {
+    visibility: hidden;
+    left: 300px; /* magic # to check for */
+}
