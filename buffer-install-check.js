@@ -1,4 +1,4 @@
-/* globals chrome */
+/* globals chrome, safari */
 // buffer-install-check.js
 // (c) 2013 Buffer
 // Adds an element to our app page that we can use to check if the browser has our extension installed.
@@ -33,7 +33,16 @@ function getVersionForChrome(callback) {
   xhr.send(null);
 }
 
+function getVersionForSafari(callback) {
+  xt.port.on('buffer_send_extesion_info', function(data){
+    callback(data.version);
+  });
+  xt.port.emit('buffer_get_extesion_info');
+}
+
 if (typeof chrome !== 'undefined') {
   getVersionForChrome(bufferMarkOurSite);
+} else if (typeof safari !== 'undefined'){
+  getVersionForSafari(bufferMarkOurSite);
 }
 
