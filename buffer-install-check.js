@@ -8,13 +8,15 @@ var bufferMarkOurSite = function (version) {
 
 	if (document.location.host.match(/bufferapp.com/i)) {
 
-    var $marker = $('#browser-extension-marker');
-    if (!$marker.length) return;
+    var marker = document.querySelector('#browser-extension-marker');
+    if (!marker) return;
 
-    $marker.attr('data-version', version);
+    marker.setAttribute('data-version', version);
 
     // Trigger a click to let the app know we have the version:
-    $marker.trigger('click');
+    var evt = document.createEvent('HTMLEvents');
+    evt.initEvent('click', true, true );
+    marker.dispatchEvent(evt);
 	}
 };
 
