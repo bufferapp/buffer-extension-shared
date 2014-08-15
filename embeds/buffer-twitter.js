@@ -48,7 +48,7 @@
     ].join(''));
 
     var buildElement = function buildElement (parentConfig) {
-        
+
         var temp = document.createElement(parentConfig[0]);
         if( parentConfig[1] ) temp.setAttribute('class', parentConfig[1]);
         if( parentConfig[2] ) temp.setAttribute('style', parentConfig[2]);
@@ -59,11 +59,11 @@
                 temp.appendChild(buildElement(parentConfig[i]));
             }
         }
-        
+
         return temp;
-        
+
     };
-    
+
     var config = {};
     config.time = {
         success: {
@@ -129,12 +129,12 @@
                     if( $(this).hasClass("disabled") ) return;
                     $(this).attr('style', btnConfig.style);
                 });
-                
+
                 $(a).mousedown(function () {
                     if( $(this).hasClass("disabled") ) return;
                     $(this).attr('style', btnConfig.style + btnConfig.active);
                 });
-                
+
                 $(a).mouseup(function () {
                     if( $(this).hasClass("disabled") ) return;
                     $(this).attr('style', btnConfig.style + btnConfig.hover);
@@ -168,13 +168,13 @@
                 });
                 activate();
             }
-        },    
+        },
         {
             // The main composer in the twitter "home" page
             // NOTE: Additional style overrides are located at the top of this file
             name: "composer",
             text: "Buffer",
-            container: 'div.tweet-button-sub-container, div.tweet-button',
+            container: 'div.tweet-button-sub-container, .ProfileTweetbox .tweet-button',
             after: '.tweet-counter',
             className: 'buffer-tweet-button btn disabled',
             selector: '.buffer-tweet-button',
@@ -220,12 +220,12 @@
                     if( $(this).hasClass("disabled") ) return;
                     $(this).attr('style', btnConfig.style);
                 });
-                
+
                 $(a).mousedown(function () {
                     if( $(this).hasClass("disabled") ) return;
                     $(this).attr('style', btnConfig.style + btnConfig.active);
                 });
-                
+
                 $(a).mouseup(function () {
                     if( $(this).hasClass("disabled") ) return;
                     $(this).attr('style', btnConfig.style + btnConfig.hover);
@@ -262,7 +262,7 @@
                 }
 
                 $target.text('');
-               
+
                 // Modal Close
                 // Closes the modal box
                 $('#global-tweet-dialog .js-close').click();
@@ -320,12 +320,12 @@
                     if( $(this).hasClass("disabled") ) return;
                     $(this).attr('style', btnConfig.style);
                 });
-                
+
                 $(a).mousedown(function () {
                     if( $(this).hasClass("disabled") ) return;
                     $(this).attr('style', btnConfig.style + btnConfig.active);
                 });
-                
+
                 $(a).mouseup(function () {
                     if( $(this).hasClass("disabled") ) return;
                     $(this).attr('style', btnConfig.style + btnConfig.hover);
@@ -352,7 +352,7 @@
                         placement: 'twitter-retweet',
                     };
                 }
-            }   
+            }
         },
         {
             // The Tweet permalink page
@@ -564,7 +564,7 @@
                 var li = document.createElement('li');
                 li.className = "action-buffer-container";
                 // Normal is 10px, this adds space for display: inline-block hidden space
-                li.style.marginLeft = '12px'; 
+                li.style.marginLeft = '12px';
 
                 var a = document.createElement('a');
                 a.setAttribute('class', btnConfig.className);
@@ -574,7 +574,7 @@
                 var i = document.createElement('span');
                 i.setAttribute('class', 'Icon');
                 i.setAttribute('style', btnConfig.style);
-                
+
                 i.onmouseover = function(e) {
                     this.style.backgroundColor = '#168eea';
                 };
@@ -649,7 +649,7 @@
                 }
             }
         },
-        {   
+        {
             // Twitter is testing new stream action button placement - March 2014
             name: "buffer-action-2014",
             text: "Add to Buffer",
@@ -666,7 +666,7 @@
                 var li = document.createElement('li');
                 li.className = "action-buffer-container";
                 // Normal is 10px, this adds space for display: inline-block hidden space
-                li.style.marginLeft = '12px'; 
+                li.style.marginLeft = '12px';
 
                 var a = document.createElement('a');
                 a.setAttribute('class', btnConfig.className);
@@ -743,15 +743,15 @@
     var insertButtons = function () {
 
         config.buttons.forEach(function(btnConfig){
-            
+
             $(btnConfig.container).each(function () {
-                
+
                 var $container = $(this);
-                
+
                 if( !! btnConfig.ignore ) {
                     if( btnConfig.ignore($container) ) return;
                 }
-                
+
                 if ( $container.hasClass('buffer-inserted') ) return;
 
                 $container.addClass('buffer-inserted');
@@ -761,10 +761,10 @@
                 $container.find(btnConfig.after).after(btn);
 
                 if ( !! btnConfig.activator) btnConfig.activator(btn, btnConfig);
-                
+
                 var getData = btnConfig.data;
                 var clearData = btnConfig.clear;
-                
+
                 var clearcb = function () {};
 
                 $(btn).click(function (e) {
@@ -774,12 +774,12 @@
                     xt.port.emit("buffer_click", getData(btn));
                     e.preventDefault();
                 });
-                
+
                 xt.port.on("buffer_embed_clear", function () {
                     clearcb();
                     clearcb = function () {}; // prevent clear from being called again, until the button is clicked again
                 });
-                
+
             });
 
         });
@@ -813,5 +813,5 @@
         }
     }());
 
-    
+
 }());
