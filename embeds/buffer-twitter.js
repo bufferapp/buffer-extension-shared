@@ -174,7 +174,7 @@
             // NOTE: Additional style overrides are located at the top of this file
             name: "composer",
             text: "Buffer",
-            container: 'div.tweet-button-sub-container, .ProfileTweetbox .tweet-button',
+            container: 'div.tweet-button-sub-container, .tweet-form:not(.dm-tweetbox) .tweet-button',
             after: '.tweet-counter',
             className: 'buffer-tweet-button btn disabled',
             selector: '.buffer-tweet-button',
