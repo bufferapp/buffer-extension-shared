@@ -1,3 +1,5 @@
+/* globals bufferpm */
+
 // Put together a query string for the iframe
 var buildSrc = function(data, config) {
 
