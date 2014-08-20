@@ -1,8 +1,8 @@
 // Put together a query string for the iframe
 var buildSrc = function(data, config) {
 
-    var src = data.local ? 
-        config.overlay.localendpoint : 
+    var src = data.local ?
+        config.overlay.localendpoint :
         config.overlay.endpoint;
 
     var qs = '';
@@ -14,12 +14,12 @@ var buildSrc = function(data, config) {
     });
 
     if (qs.length) src += '?' + qs;
-    
+
     return src;
 };
 
 var openPopUp = function(src, doneCallback) {
-    
+
     window.open(src, null, 'height=600,width=850');
 
     // Bind close listener
@@ -33,16 +33,29 @@ var openPopUp = function(src, doneCallback) {
     });
 };
 
+/**
+ * This is a list of domains that have a strict Content Security Policy
+ * This is a temporary work around while we figure out a long term solution
+ * to this issue: https://github.com/bufferapp/buffer-chrome/issues/12
+ */
+var CSPWhitelist = [
+  'github.com',
+  'medium.com',
+  'www.npmjs.org'
+];
+
 // Build that overlay!
 // Triggered by code working from the button up
 var bufferOverlay = function(data, config, doneCallback) {
-    
+
     if( ! doneCallback ) doneCallback = function () {};
     if( ! config ) return;
 
-    var src = buildSrc(data, config); 
+    var src = buildSrc(data, config);
+    var domain = window.location.hostname;
 
-    if (xt.options['buffer.op.tpc-disabled']) {
+    if (xt.options['buffer.op.tpc-disabled'] ||
+        CSPWhitelist.indexOf(domain) > -1 ) {
         return openPopUp(src, doneCallback);
     }
 
@@ -56,6 +69,10 @@ var bufferOverlay = function(data, config, doneCallback) {
     temp.style.cssText = config.overlay.getCSS();
 
     temp.src = src;
+
+    // Testing CSP issues w/ sandboxed iframe
+    // var qs = src.split('?')[1];
+    // temp.src = xt.data.get('data/shared/extension.html?' + qs);
 
     var footerButtonBaseCSS = [
         'display: inline-block;',
@@ -115,7 +132,7 @@ var bufferOverlay = function(data, config, doneCallback) {
     var footer = document.createElement('div');
     footer.id = 'buffer_widget_footer';
     footer.style.cssText = "z-index:2147483647;background: #ffffff url(https://d389zggrogs7qo.cloudfront.net/images/bookmarklet_icon.png) 35px 16px no-repeat; background-size: 30px; box-shadow: 0 -1px 8px rgba(0, 0, 0, 0.1); border-top: 1px solid #ccc; border-bottom-left-radius: 4px; height: 60px; width: 100%; position: fixed; bottom: 0; right: 0;";
-    footer.innerHTML = [ 
+    footer.innerHTML = [
         '<ul id="buffer_widget_footer_list" style="float: right; margin-top: 13px; margin-right: 20px; min-width: 170px;">',
             '<li style="list-style-type: none; background:none; width: auto; display: inline-block;">',
                 '<a href="https://bufferapp.com/app" target="_blank" class="buffer_widget_button_white" style="' + footerButtonWhiteCSS + '">',
@@ -148,7 +165,7 @@ var bufferOverlay = function(data, config, doneCallback) {
         // Color options: 'blue' or 'white'
         color = color || 'blue';
         var style = color === 'blue' ? footerButtonBlueCSS : footerButtonWhiteCSS;
-        
+
         var li = document.createElement('li');
         li.style.cssText = 'list-style-type: none; background:none; width: auto; display: inline-block; margin-right: 8px;';
         li.innerHTML = [
@@ -170,7 +187,7 @@ var bufferOverlay = function(data, config, doneCallback) {
 
         ul.insertBefore(li, firstLi);
 
-        // Send the iframe click info via postmessage for any new buttons. 
+        // Send the iframe click info via postmessage for any new buttons.
         // Original button data is passed back to the listening iframe
         document.getElementById( id ).addEventListener('click', function(){
             bufferpm({
@@ -198,7 +215,7 @@ var bufferOverlay = function(data, config, doneCallback) {
         }, 0);
         window.focus();
     });
-    
+
 };
 
 // getOverlayConfig returns the configuration object for use by bufferOverlay
@@ -236,7 +253,7 @@ var getOverlayConfig = function(postData){
             get: function (cb) {
                 if(document.getSelection().toString().length) {
                     cb('"' + document.getSelection().toString() + '"');
-                } 
+                }
                 else{
                     if(config.pocketWeb){
                         var header = document.getElementsByClassName('reader_head')[0];
@@ -309,7 +326,7 @@ var getOverlayConfig = function(postData){
         {
             name: "local",
             get: function (cb) {
-                cb(config.local);  
+                cb(config.local);
             },
             encode: function (val) {
                 return encodeURIComponent(val);
@@ -318,7 +335,7 @@ var getOverlayConfig = function(postData){
         {
             name: "version",
             get: function (cb) {
-                cb(postData.version);  
+                cb(postData.version);
             },
             encode: function (val) {
                 return encodeURIComponent(val);
@@ -439,4 +456,3 @@ var bufferData = function (port, postData) {
     // gathered all the necessaries
     getData(postData, createOverlay);
 };
-
