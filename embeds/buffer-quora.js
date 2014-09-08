@@ -1,38 +1,34 @@
 ;(function() {
 
-  // Only run this script on twitter:
+  // Only run this script on Quora:
   if ( window.location.host.indexOf('quora.com') === -1 ) return;
 
   var config = {};
   config.buttons = [
     {
       text: 'Buffer',
-      container: '.item_action_bar',
-      after: '.share_link',
-      before: '.downvote',
-      containerClassName: 'buffer-quora-button-container',
-      separatorClassName: 'bullet',
-      separatorText: ' &bull; ',
-      className: 'buffer-quora-button',
+      container: '.ActionBar',
+      before: '.share_link',
+      containerClassName: 'action_item',
       data: function (element) {
-        
+
         var title, link, placement, $parent, $author;
-        
-        var $title = $('.question h1').clone();
+
+        var $title = $('h1:not(.header_logo)').clone();
         var isQuestionPage = !!$title.length;
 
         // Question page
         if (isQuestionPage) {
 
-          $parent = $(element).parents('.answer_text_wrapper');
-          $author = $parent.find('.answer_user_wrapper a.user');
+          $parent = $(element).parents('.Answer');
+          $author = $parent.find('.feed_item_answer_user a.user');
 
           // Find and sanitize a question title
           $title.find('div').remove();
           title = $title.text();
 
           // Just grab the current page URL, we don't need to do voodoo here
-          link = window.location.href.replace(window.location.search,'');
+          link = window.location.href.replace(window.location.search, '');
           placement = 'quora-page';
 
         // Home page feed
@@ -42,7 +38,7 @@
           $author = $parent.find('.feed_item_answer_user a.user');
 
           // Find and sanitize a question title
-          var $question = $parent.find('.feed_item_question .link_text').clone();
+          var $question = $parent.find('.QuestionText .link_text').clone();
           $question.find('div, span').remove();
           title = $question.text();
 
@@ -61,7 +57,7 @@
             if (link[ link.length - 1 ] !== '/') link += '/';
             link += 'answer' + $author.attr('href');
           }
-          
+
         } else {
           placement += '-question';
         }
@@ -80,20 +76,13 @@
 
     // Buffer link itself
     var a = document.createElement('a');
-    // share_link is added for styling purposes
-    a.setAttribute('class', cfg.className + ' share_link');
     a.setAttribute('href', '#');
     $(a).text(cfg.text);
 
-    // Quora style button separator
-    var bullet = document.createElement('span');
-    bullet.setAttribute('class', cfg.separatorClassName);
-    $(bullet).html(cfg.separatorText);
-
     // Container for button and separator
-    var c = document.createElement('span');
+    var c = document.createElement('div');
     c.setAttribute('class', cfg.containerClassName);
-    $(c).append(bullet).append(a);
+    $(c).append(a);
 
     return c;
   };
@@ -106,8 +95,6 @@
 
         var $container = $(this);
 
-        // If we don't have Share link in the action bar prevent inserting Buffer button
-        // This usually happens when user is not logged in
         if ($container.hasClass('buffer-inserted')) {
           return;
         }
@@ -116,31 +103,17 @@
 
         var getData = btnConfig.data;
 
-        $(button).children('a.share_link').on('click', function (e) {
+        $(button).children('a').on('click', function (e) {
           xt.port.emit('buffer_click', getData(button));
           e.preventDefault();
         });
 
         $container.addClass('buffer-inserted');
 
-        // We check for the share count
-        var hasShareCount = !!$container.find('.repost_count_link').length;
-        if (!hasShareCount) {
-          $container.find(btnConfig.after).after(button);
-          return;
-        }
-
-        // If it has the Downvote, we insert before that element's 
-        // previous element
-        var $before = $container.find(btnConfig.before);
-
-        if ($before.length) {
-          $before
-            .parent()
-            .prev()
-            .before(button);
-          return;
-        }
+        // Insert button
+        // Implementing complex logic where to insert Buffer button makes no sense.
+        // Quora is changing its' layout often, share button stays always on place.
+        $container.find(btnConfig.before).parent().parent().before(button);
 
         $container.append(button);
       });
