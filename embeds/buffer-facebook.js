@@ -58,7 +58,7 @@
 
     thumb: [
       'img._46-i',
-      '.uiScaledImageContainer img',
+      '.uiScaledImageContainer:not(.fbStoryAttachmentImage) img',
       '.uiPhotoThumb img',
       '.photoUnit img',
       '.fbPhotoImage',
