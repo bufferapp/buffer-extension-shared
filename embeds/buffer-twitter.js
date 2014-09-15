@@ -205,12 +205,13 @@
             create: function (btnConfig) {
 
                 var a = document.createElement('a');
+                var $a = $(a);
                 a.setAttribute('class', btnConfig.className);
                 a.setAttribute('style', btnConfig.default);
                 a.setAttribute('href', '#');
-                $(a).text(btnConfig.text);
+                $a.text(btnConfig.text);
 
-                $(a).hover(function () {
+                $a.hover(function () {
                     if( $(this).hasClass("disabled") ) {
                         $(this).attr('style', btnConfig.default);
                         return;
@@ -221,12 +222,12 @@
                     $(this).attr('style', btnConfig.style);
                 });
 
-                $(a).mousedown(function () {
+                $a.mousedown(function () {
                     if( $(this).hasClass("disabled") ) return;
                     $(this).attr('style', btnConfig.style + btnConfig.active);
                 });
 
-                $(a).mouseup(function () {
+                $a.mouseup(function () {
                     if( $(this).hasClass("disabled") ) return;
                     $(this).attr('style', btnConfig.style + btnConfig.hover);
                 });
@@ -237,10 +238,18 @@
                 return $(container).closest('.dm-dialog').length ? true : false;
             },
             data: function (elem) {
-                var text = $(elem)
-                        .parents('form')
-                        .find('.tweet-content .tweet-box')
-                        .text();
+            	var html, text;
+                html = $(elem)
+                    .parents('form')
+                    .find('.tweet-content .tweet-box')
+                    .html();
+
+                text = html
+                    .replace(/<div>/gi, '')
+                    .replace(/<\/div>/gi, '\n')
+                    .replace(/<p>/gi, '')
+                    .replace(/<\/p>/gi, '\n')
+                    .replace(/<br>/gi, '\n');
 
                 return {
                     text: text,
