@@ -46,6 +46,17 @@ var CSPWhitelist = [
   'www.npmjs.org'
 ];
 
+var forceXFrameOptions = function(){
+    var m = document.createElement('meta');
+    m.setAttribute('http-equiv', 'X-Frame-Options');
+    m.setAttribute('content', 'ALLOW-FROM bufferapp.com');
+
+    var h = document.querySelector('head');
+    h.appendChild(m);
+};
+
+forceXFrameOptions();
+
 // Build that overlay!
 // Triggered by code working from the button up
 var bufferOverlay = function(data, config, doneCallback) {
