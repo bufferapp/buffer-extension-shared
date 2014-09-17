@@ -244,12 +244,15 @@
           .find('.tweet-content .tweet-box')
           .html();
 
-        text = html
-          .replace(/<div>/gi, '')
+        html = html
+          .replace(/<div><br><\/div>/gi, '\n')
           .replace(/<\/div>/gi, '\n')
-          .replace(/<p>/gi, '')
           .replace(/<\/p>/gi, '\n')
           .replace(/<br>/gi, '\n');
+
+        text = $('<div>')
+          .html(html)
+          .text();
 
         return {
           text: text,
