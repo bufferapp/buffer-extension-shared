@@ -237,7 +237,7 @@ var getOverlayConfig = function(postData){
   var config = {};
 
   // Set this to true for using a local server while testing
-  config.local = true;
+  config.local = false;
 
   var segments = window.location.pathname.split('/');
 
