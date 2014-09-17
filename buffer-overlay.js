@@ -46,16 +46,16 @@ var CSPWhitelist = [
   'www.npmjs.org'
 ];
 
-var forceXFrameOptions = function(){
-  var m = document.createElement('meta');
-  m.setAttribute('http-equiv', 'X-Frame-Options');
-  m.setAttribute('content', 'ALLOW-FROM bufferapp.com');
+// var forceXFrameOptions = function(){
+//   var m = document.createElement('meta');
+//   m.setAttribute('http-equiv', 'X-Frame-Options');
+//   m.setAttribute('content', 'ALLOW-FROM bufferapp.com');
 
-  var h = document.querySelector('head');
-  h.appendChild(m);
-};
+//   var h = document.querySelector('head');
+//   h.appendChild(m);
+// };
 
-forceXFrameOptions();
+// forceXFrameOptions();
 
 // Build that overlay!
 // Triggered by code working from the button up
@@ -237,7 +237,7 @@ var getOverlayConfig = function(postData){
   var config = {};
 
   // Set this to true for using a local server while testing
-  config.local = false;
+  config.local = true;
 
   var segments = window.location.pathname.split('/');
 
