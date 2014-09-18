@@ -443,7 +443,7 @@
             text: rt,
             placement: 'twitter-permalink',
             // grab info for retweeting
-            retweeted_tweet_id: c.data('item-id'),
+            retweeted_tweet_id: c.attr('data-item-id'),
             retweeted_user_id: c.data('user-id'),
             retweeted_user_name: c.data('screen-name'),
             retweeted_user_display_name: c.data('name')
@@ -529,7 +529,7 @@
             text: rt,
             placement: 'twitter-permalink',
             // grab info for retweeting
-            retweeted_tweet_id: c.data('item-id'),
+            retweeted_tweet_id: c.attr('data-item-id'),
             retweeted_user_id: c.data('user-id'),
             retweeted_user_name: c.data('screen-name'),
             retweeted_user_display_name: c.data('name')
@@ -633,7 +633,7 @@
             text: rt,
             placement: 'twitter-permalink',
             // grab info for retweeting
-            retweeted_tweet_id: $tweet.data('item-id'),
+            retweeted_tweet_id: $tweet.attr('data-item-id'),
             retweeted_user_id: $tweet.data('user-id'),
             retweeted_user_name: $tweet.data('screen-name'),
             retweeted_user_display_name: $tweet.data('name')
@@ -728,7 +728,7 @@
             text: rt,
             placement: 'twitter-permalink',
             // grab info for retweeting
-            retweeted_tweet_id: $tweet.data('item-id'),
+            retweeted_tweet_id: $tweet.attr('data-item-id'),
             retweeted_user_id: $tweet.data('user-id'),
             retweeted_user_name: $tweet.data('screen-name'),
             retweeted_user_display_name: $tweet.data('name')
