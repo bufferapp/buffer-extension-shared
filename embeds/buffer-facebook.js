@@ -117,9 +117,7 @@
 
     // find picture status
     if ( image ) {
-      // convert the thumbnail link to a link to the fullsize image
-      image = image.replace(/c([0-9]+\.)+[0-9]+\//, '');
-      share.picture = image.replace(/[sp][0-9]+x[0-9]+\//, '');
+      share.picture = image;
 
       // Disable this until we add sharing to the image modal
       // share.url = $('a.uiPhotoThumb, a.photo', parent).attr('href');
@@ -127,7 +125,7 @@
     } else if ($videoThumb.length) {
       share.url = url;
       image = $videoThumb[0].src.replace(/c([0-9]+\.)+[0-9]+\//, '');
-      share.picture = image.replace(/[sp][0-9]+x[0-9]+\//, '');
+      share.picture = image;
       share.placement = 'facebook-timeline-video';
     } else if (url) {
       // find link status
