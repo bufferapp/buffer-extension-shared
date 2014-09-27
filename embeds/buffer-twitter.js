@@ -6,6 +6,9 @@
   $('head').append([
     '<style>',
       // To shrink the composer buttons to fit on one line
+      '.ProfileTweet-actionList.buffer-inserted {',
+        'list-style: none;',
+      '}',
       '.tweet-button.buffer-inserted {',
         'margin-top: 3px;',
       '}',
