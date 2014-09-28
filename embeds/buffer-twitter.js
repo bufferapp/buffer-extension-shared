@@ -5,10 +5,11 @@
 
   $('head').append([
     '<style>',
-      // To shrink the composer buttons to fit on one line
+      // This fixes the bullet point issue with pocket
       '.ProfileTweet-actionList.buffer-inserted {',
         'list-style: none;',
       '}',
+      // To shrink the composer buttons to fit on one line
       '.tweet-button.buffer-inserted {',
         'margin-top: 3px;',
       '}',
@@ -576,10 +577,10 @@
       active: '',
       create: function (btnConfig) {
 
-        var li = document.createElement('li');
-        li.className = "action-buffer-container";
+        var div = document.createElement('div');
+        div.className = "action-buffer-container";
         // Normal is 10px, this adds space for display: inline-block hidden space
-        li.style.marginLeft = '12px';
+        div.style.marginLeft = '12px';
 
         var a = document.createElement('a');
         a.setAttribute('class', btnConfig.className);
@@ -599,9 +600,9 @@
 
         $(a).append(i);
 
-        $(li).append(a);
+        $(div).append(a);
 
-        return li;
+        return div;
       },
       data: function (elem) {
         var $tweet = $(elem).closest('.js-tweet');
