@@ -38,9 +38,6 @@
       '.tweet:hover .action-buffer-container span.Icon {',
         'background-position: -5px -28px !important;',
       '}',
-      '.tweet .action-buffer-container span.Icon:hover {',
-        'background-color: #8899a6 !important;',
-      '}',
       'div.stream-item-footer > ul.tweet-actions > li.action-buffer-container i {',
         'margin-top: 0px ;',
       '}',
@@ -470,6 +467,7 @@
       }
     },
     {
+      //REVIEW - I think this is no longer on the twitter site -DJF, OCT 2014
       name: "buffer-action",
       text: "Buffer",
       container: '.tweet-actions',
@@ -555,11 +553,12 @@
       }
     },
     {
-      // Spring 2014 new profiles layout
-      name: "buffer-profile-stream-RT-2014",
+      // April & October 2014 profile & home stream changes
+      name: "buffer-profile-stream-OCT-2014",
       text: "Add to Buffer",
       container: '.js-stream-item .js-actions',
-      after: '.js-toggle-rt',
+      after: '.js-toggleRt, .js-toggle-rt',
+      //NOTE: .js-toggleRt is new OCT 2014
       default: '',
       className: 'ProfileTweet-action js-tooltip',
       selector: '.buffer-action',
@@ -605,7 +604,8 @@
         return div;
       },
       data: function (elem) {
-        var $tweet = $(elem).closest('.js-tweet');
+        // NOTE: .js-stream-tweet - new in OCT 2014
+        var $tweet = $(elem).closest('.js-tweet, .js-stream-tweet');
         var $text = $tweet.find('.js-tweet-text').first();
 
         // Iterate through all links in the text
@@ -637,10 +637,10 @@
             text: rt,
             placement: 'twitter-permalink',
             // grab info for retweeting
-            retweeted_tweet_id: $tweet.attr('data-item-id'),
-            retweeted_user_id: $tweet.data('user-id'),
-            retweeted_user_name: $tweet.data('screen-name'),
-            retweeted_user_display_name: $tweet.data('name')
+            retweeted_tweet_id:          $tweet.attr('data-item-id'),
+            retweeted_user_id:           $tweet.attr('data-user-id'),
+            retweeted_user_name:         $tweet.attr('data-screen-name'),
+            retweeted_user_display_name: $tweet.attr('data-name')
           };
         }
 
