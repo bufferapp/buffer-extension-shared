@@ -42,6 +42,7 @@ var openPopUp = function(src, doneCallback) {
  */
 var CSPWhitelist = [
   'github.com',
+  'education.github.com',
   'medium.com',
   'www.npmjs.org'
 ];
