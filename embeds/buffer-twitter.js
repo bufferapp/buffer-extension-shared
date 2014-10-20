@@ -368,7 +368,7 @@
       }
     },
     {
-      // The Tweet permalink page
+      // The Tweet permalink page - OLD
       name: "buffer-permalink-action",
       text: "Buffer",
       container: '.permalink-tweet div.stream-item-footer .tweet-actions',
@@ -464,6 +464,119 @@
           $(elem).find('i').css({'background-position-y': '-30px'});
         }
 
+      }
+    },
+    {
+      // October 2014 permalink page update
+      //REVIEW - Refactor to share code with the new OCT 2014 stream item below
+      name: "buffer-permalink-action-OCT-2014",
+      text: "Add to Buffer",
+      // NOTE - Possibly switch from permalink one day
+      container: '.permalink .js-actionable-tweet .js-actions',
+      after: '.js-toggleRt',
+      default: '',
+      className: 'ProfileTweet-action js-tooltip',
+      selector: '.buffer-action',
+      style: [
+        'position: relative;',
+        'top: 2px;',
+        'width: 16px;',
+        'height: 18px;',
+        'background-image: url(' + xt.data.get('data/shared/img/twttr-sprite.png') + ') !important;',
+        'background-color: #ccd6dd;',
+        'background-position: -5px -3px;',
+        'background-repeat: no-repeat;'
+      ].join(''),
+      hover: '',
+      active: '',
+      create: function (btnConfig) {
+
+        var div = document.createElement('div');
+        div.className = "action-buffer-container";
+        // Normal is 10px, this adds space for display: inline-block hidden space
+        div.style.marginLeft = '12px';
+
+        var a = document.createElement('a');
+        a.setAttribute('class', btnConfig.className);
+        a.setAttribute('href', '#');
+        a.setAttribute('data-original-title', btnConfig.text); // Tooltip text
+
+        var i = document.createElement('span');
+        i.setAttribute('class', 'Icon');
+        i.setAttribute('style', btnConfig.style);
+
+        i.onmouseover = function(e) {
+          this.style.backgroundColor = '#168eea';
+        };
+        i.onmouseout = function(e) {
+          this.style.backgroundColor = '#ccd6dd';
+        };
+
+        $(a).append(i);
+
+        $(div).append(a);
+
+        return div;
+      },
+      data: function (elem) {
+        var $tweet = $(elem).closest('.js-actionable-tweet');
+        var $text = $tweet.find('.js-tweet-text').first();
+
+        // Iterate through all links in the text
+        $text.children('a').each(function () {
+          // Don't modify the screennames and the hashtags
+          if( $(this).attr('data-screen-name') ) return;
+          if( $(this).hasClass('twitter-atreply') ) return;
+          if( $(this).hasClass('twitter-hashtag') ) return;
+          // swap the text with the actual link
+          var original = $(this).text();
+          $(this).text($(this).attr("href")).attr('data-original-text', original);
+        });
+        // Build the RT text
+        var username = $tweet
+            .find('.js-action-profile-name .ProfileTweet-screenname')
+            .text()
+            .trim();
+        var rt = 'RT ' + username + ': ' + $text.text().trim() + '';
+
+        // Put the right links back
+        $text.children('a').each(function () {
+          if( ! $(this).attr('data-original-text') ) return;
+          $(this).text($(this).attr('data-original-text'));
+        });
+
+        // Send back the data
+        if (should_be_native_retweet) {
+          return {
+            text: rt,
+            placement: 'twitter-permalink',
+            // grab info for retweeting
+            retweeted_tweet_id:          $tweet.attr('data-item-id'),
+            retweeted_user_id:           $tweet.attr('data-user-id'),
+            retweeted_user_name:         $tweet.attr('data-screen-name'),
+            retweeted_user_display_name: $tweet.attr('data-name')
+          };
+        }
+
+        return {
+          text: rt,
+          placement: 'twitter-permalink'
+        };
+      },
+      clear: function (elem) {
+      },
+      activator: function (elem, btnConfig) {
+        var $btn = $(elem);
+
+        // Remove extra margin on the last item in the list to prevent overflow
+        var moreActions = $btn.siblings('.js-more-tweet-actions').get(0);
+        if (moreActions) {
+          moreActions.style.marginRight = '0px';
+        }
+
+        if( $btn.closest('.in-reply-to').length > 0 ) {
+          $btn.find('i').css({'background-position-y': '-21px'});
+        }
       }
     },
     {
