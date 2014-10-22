@@ -1,4 +1,4 @@
-/* globals bufferpm */
+/* globals bufferpm, chrome */
 
 // Put together a query string for the iframe
 var buildSrc = function(data, config) {
@@ -79,6 +79,13 @@ var bufferOverlay = function(data, config, doneCallback) {
   // iframe.src = xt.data.get('data/shared/extension.html?' + qs);
 
   document.body.appendChild(iframe);
+
+  // Remove the loading image when we hear from the other side
+  bufferpm.bind('buffer_loaded', function(data) {
+    bufferpm.unbind('buffer_loaded');
+    iframe.style.backgroundImage = 'none';
+  });
+
 
   var styleTag = createStyleTag();
   document.body.appendChild(styleTag);
@@ -288,25 +295,31 @@ var getOverlayConfig = function(postData){
     }
   ];
 
+  var loadingImgRel = 'img/white-loading-gif-small.gif';
+  var loadingImg = chrome ? 
+    chrome.extension.getURL('data/shared/' +  loadingImgRel) :
+    document.location.protocol === 'http:' ?
+      'http://static.bufferapp.com/images/extensions/' + loadingImgRel :
+      'https://d389zggrogs7qo.cloudfront.net/images/extensions/' + loadingImgRel;
+
   config.overlay = {
     endpoint: "https://bufferapp.com/add/",
     localendpoint: "https://local.bufferapp.com/add/",
     getCSS: function () {
       return [
-        'border:none;',
-        'height:100%;',
-        'width:100%;',
-        'position:fixed!important;',
-        'z-index:2147483646;',
+        'border: none;',
+        'height: 100%;',
+        'width: 100%;',
+        'position: fixed!important;',
+        'z-index: 2147483646;',
         'top:0;',
         'left:0;',
-        'display:block!important;',
-        'max-width:100%!important;',
-        'max-height:100%!important;',
-        'padding:0!important;',
-        'background: none;',
-        'background-color: transparent;',
-        'background-color: rgba(0, 0, 0, 0.1);'
+        'display: block!important;',
+        'max-width: 100%!important;',
+        'max-height: 100%!important;',
+        'padding: 0!important;',
+        'background: rgba(0, 0, 0, 0.1) url(' + loadingImg +') no-repeat center center;',
+        'background-size: 40px;'
       ].join('');
     }
   };
