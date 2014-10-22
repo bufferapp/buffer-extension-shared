@@ -285,15 +285,6 @@ var getOverlayConfig = function(postData){
       encode: function (val) {
         return encodeURIComponent(val);
       }
-    },
-    {
-      name: "client_assistance",
-      get: function (cb) {
-        cb('1');
-      },
-      encode: function (val) {
-        return encodeURIComponent(val);
-      }
     }
   ];
 
