@@ -296,7 +296,7 @@ var getOverlayConfig = function(postData){
   ];
 
   var loadingImgRel = 'img/white-loading-gif-small.gif';
-  var loadingImg = chrome ? 
+  var loadingImg = typeof chrome !== 'undefined' ? 
     chrome.extension.getURL('data/shared/' +  loadingImgRel) :
     document.location.protocol === 'http:' ?
       'http://static.bufferapp.com/images/extensions/' + loadingImgRel :
