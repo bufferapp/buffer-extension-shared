@@ -348,20 +348,34 @@
 
       },
       data: function (elem) {
-        var c = $(elem).closest('.retweet-tweet-dialog, #retweet-dialog, #retweet-tweet-dialog');
-        var tweet = c.find('.tweet').first();
+        var $dialog = $(elem).closest('.retweet-tweet-dialog, #retweet-dialog, #retweet-tweet-dialog');
+        
+        var $tweet = $dialog.find('.js-actionable-tweet').first();
+
+        var screenname = $tweet.attr('data-screen-name');
+        if (!screenname) {
+          screenname = $tweet.find('.js-action-profile-name')
+            .filter(function(i){ return $(this).text()[0] === '@' })
+            .first()
+            .text()
+            .trim()
+            .replace(/^@/, '');
+        }
+        var tweetText = $tweet.find('.js-tweet-text').text().trim();
+        var text = 'RT @' + screenname + ': ' + tweetText + ''
+
         if (should_be_native_retweet) {
           return {
-            text: 'RT @' + c.find('.stream-item-header .username, .twttr-reply-screenname').first().text().trim().replace(/^@/, '') + ': ' + c.find('.js-tweet-text').text().trim() + '',
+            text: text,
             placement: 'twitter-retweet',
-            retweeted_tweet_id: tweet.attr('data-item-id'),
-            retweeted_user_id: tweet.data('user-id'),
-            retweeted_user_name: tweet.data('screen-name'),
-            retweeted_user_display_name: tweet.data('name')
+            retweeted_tweet_id:          $tweet.attr('data-item-id'),
+            retweeted_user_id:           $tweet.attr('data-user-id'),
+            retweeted_user_name:         $tweet.attr('data-screen-name'),
+            retweeted_user_display_name: $tweet.attr('data-name')
           };
-        } else { // not a native retweet
+        } else {
           return {
-            text: 'RT @' + c.find('.stream-item-header .username, .twttr-reply-screenname').first().text().trim().replace(/^@/, '') + ': ' + c.find('.js-tweet-text').text().trim() + '',
+            text: text,
             placement: 'twitter-retweet',
           };
         }
@@ -717,6 +731,7 @@
         return div;
       },
       data: function (elem) {
+
         // NOTE: .js-stream-tweet - new in OCT 2014
         var $tweet = $(elem).closest('.js-tweet, .js-stream-tweet');
         var $text = $tweet.find('.js-tweet-text').first();
@@ -731,12 +746,18 @@
           var original = $(this).text();
           $(this).text($(this).attr("href")).attr('data-original-text', original);
         });
+        
         // Build the RT text
-        var username = $tweet
-            .find('.js-action-profile-name .ProfileTweet-screenname')
+        var screenname = $tweet.attr('data-screen-name');
+        if (!screenname) {
+          screenname = $tweet.find('.js-action-profile-name')
+            .filter(function(i){ return $(this).text()[0] === '@' })
+            .first()
             .text()
-            .trim();
-        var rt = 'RT ' + username + ': ' + $text.text().trim() + '';
+            .trim()
+            .replace(/^@/, '');
+        }
+        var text = 'RT @' + screenname + ': ' + $text.text().trim() + '';
 
         // Put the right links back
         $text.children('a').each(function () {
@@ -747,7 +768,7 @@
         // Send back the data
         if (should_be_native_retweet) {
           return {
-            text: rt,
+            text: text,
             placement: 'twitter-permalink',
             // grab info for retweeting
             retweeted_tweet_id:          $tweet.attr('data-item-id'),
@@ -758,7 +779,7 @@
         }
 
         return {
-          text: rt,
+          text: text,
           placement: 'twitter-feed'
         };
       },
@@ -775,94 +796,6 @@
 
         if( $btn.closest('.in-reply-to').length > 0 ) {
           $btn.find('i').css({'background-position-y': '-21px'});
-        }
-      }
-    },
-    {
-      // Twitter is testing new stream action button placement - March 2014
-      name: "buffer-action-2014",
-      text: "Add to Buffer",
-      container: '.tweet-actions-sidebar',
-      after: '.action-rt-container',
-      default: '',
-      className: 'js-tooltip',
-      selector: '.buffer-action',
-      style: '',
-      hover: '',
-      active: '',
-      create: function (btnConfig) {
-
-        var li = document.createElement('li');
-        li.className = "action-buffer-container";
-        // Normal is 10px, this adds space for display: inline-block hidden space
-        li.style.marginLeft = '12px';
-
-        var a = document.createElement('a');
-        a.setAttribute('class', btnConfig.className);
-        a.setAttribute('href', '#');
-        a.setAttribute('data-original-title', btnConfig.text); // Tooltip text
-
-        var i = document.createElement('span');
-        i.setAttribute('class', 'Icon');
-        i.setAttribute('style', 'position: relative; top: 1px; width: 16px; height: 18px; margin-right: 5px; background-image: url(' + xt.data.get('data/shared/img/twttr-sprite.png') + ')!important; background-color: #ccd6dd; background-position: -5px -3px; background-repeat: no-repeat;');
-
-        $(a).append(i);
-
-        $(li).append(a);
-
-        return li;
-      },
-      data: function (elem) {
-        var $tweet = $(elem).closest('.js-tweet');
-        var $text = $tweet.find('.js-tweet-text').first();
-
-        // Iterate through all links in the text
-        $text.children('a').each(function () {
-          // Don't modify the screennames and the hashtags
-          if( $(this).attr('data-screen-name') ) return;
-          if( $(this).hasClass('twitter-atreply') ) return;
-          if( $(this).hasClass('twitter-hashtag') ) return;
-          // swap the text with the actual link
-          var original = $(this).text();
-          $(this).text($(this).attr("href")).attr('data-original-text', original);
-        });
-        // Build the RT text
-        var username = $tweet
-            .find('.js-action-profile-name .ProfileTweet-screenname')
-            .text()
-            .trim();
-        var rt = 'RT ' + username + ': ' + $text.text().trim() + '';
-
-        // Put the right links back
-        $text.children('a').each(function () {
-          if( ! $(this).attr('data-original-text') ) return;
-          $(this).text($(this).attr('data-original-text'));
-        });
-
-        // Send back the data
-        if (should_be_native_retweet) {
-          return {
-            text: rt,
-            placement: 'twitter-permalink',
-            // grab info for retweeting
-            retweeted_tweet_id: $tweet.attr('data-item-id'),
-            retweeted_user_id: $tweet.data('user-id'),
-            retweeted_user_name: $tweet.data('screen-name'),
-            retweeted_user_display_name: $tweet.data('name')
-          };
-        }
-
-        return {
-          text: rt,
-          placement: 'twitter-feed'
-        };
-      },
-      clear: function (elem) {
-      },
-      activator: function (elem, btnConfig) {
-
-        if( $(elem).closest('.in-reply-to').length > 0 ) {
-          $(elem).find('i').css({'background-position-y': '-21px'});
         }
       }
     }
