@@ -65,7 +65,7 @@
       delay: 2000
     }
   };
-  var should_be_native_retweet = true;
+
   config.buttons = [
     {
       // The standalone tweet page after a "Tweet" button has been clicked
@@ -358,21 +358,14 @@
         var tweetText = $tweet.find('.js-tweet-text').text().trim();
         var text = 'RT @' + screenname + ': ' + tweetText + ''
 
-        if (should_be_native_retweet) {
-          return {
-            text: text,
-            placement: 'twitter-retweet',
-            retweeted_tweet_id:          $tweet.attr('data-item-id'),
-            retweeted_user_id:           $tweet.attr('data-user-id'),
-            retweeted_user_name:         $tweet.attr('data-screen-name'),
-            retweeted_user_display_name: $tweet.attr('data-name')
-          };
-        } else {
-          return {
-            text: text,
-            placement: 'twitter-retweet',
-          };
-        }
+        return {
+          text: text,
+          placement: 'twitter-retweet',
+          retweeted_tweet_id:          $tweet.attr('data-item-id'),
+          retweeted_user_id:           $tweet.attr('data-user-id'),
+          retweeted_user_name:         $tweet.attr('data-screen-name'),
+          retweeted_user_display_name: $tweet.attr('data-name')
+        };
       }
     },
     {
@@ -446,23 +439,17 @@
           if( ! $(this).attr('data-original-text') ) return;
           $(this).text($(this).attr('data-original-text'));
         });
+
         // Send back the data
-        if (should_be_native_retweet) {
-          return {
-            text: rt,
-            placement: 'twitter-permalink',
-            // grab info for retweeting
-            retweeted_tweet_id: c.attr('data-item-id'),
-            retweeted_user_id: c.data('user-id'),
-            retweeted_user_name: c.data('screen-name'),
-            retweeted_user_display_name: c.data('name')
-          }
-        } else {
-          return {
-            text: rt,
-            placement: 'twitter-permalink'
-          }
-        }
+        return {
+          text: rt,
+          placement: 'twitter-permalink',
+          // grab info for retweeting
+          retweeted_tweet_id: c.attr('data-item-id'),
+          retweeted_user_id: c.data('user-id'),
+          retweeted_user_name: c.data('screen-name'),
+          retweeted_user_display_name: c.data('name')
+        };
       },
       clear: function (elem) {
       },
@@ -551,21 +538,14 @@
         var text = 'RT @' + screenname + ': ' + tweetText + '';
 
         // Send back the data
-        if (should_be_native_retweet) {
-          return {
-            text: text,
-            placement: 'twitter-permalink',
-            // grab info for retweeting
-            retweeted_tweet_id:          $tweet.attr('data-item-id'),
-            retweeted_user_id:           $tweet.attr('data-user-id'),
-            retweeted_user_name:         $tweet.attr('data-screen-name'),
-            retweeted_user_display_name: $tweet.attr('data-name')
-          };
-        }
-
         return {
           text: text,
-          placement: 'twitter-permalink'
+          placement: 'twitter-permalink',
+          // grab info for retweeting
+          retweeted_tweet_id:          $tweet.attr('data-item-id'),
+          retweeted_user_id:           $tweet.attr('data-user-id'),
+          retweeted_user_name:         $tweet.attr('data-screen-name'),
+          retweeted_user_display_name: $tweet.attr('data-name')
         };
       },
       clear: function (elem) {
@@ -671,21 +651,14 @@
         });
 
         // Send back the data
-        if (should_be_native_retweet) {
-          return {
-            text: text,
-            placement: 'twitter-permalink',
-            // grab info for retweeting
-            retweeted_tweet_id:          $tweet.attr('data-item-id'),
-            retweeted_user_id:           $tweet.attr('data-user-id'),
-            retweeted_user_name:         $tweet.attr('data-screen-name'),
-            retweeted_user_display_name: $tweet.attr('data-name')
-          };
-        }
-
         return {
           text: text,
-          placement: 'twitter-feed'
+          placement: 'twitter-feed',
+          // grab info for retweeting
+          retweeted_tweet_id:          $tweet.attr('data-item-id'),
+          retweeted_user_id:           $tweet.attr('data-user-id'),
+          retweeted_user_name:         $tweet.attr('data-screen-name'),
+          retweeted_user_display_name: $tweet.attr('data-name')
         };
       },
       clear: function (elem) {
