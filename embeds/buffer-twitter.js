@@ -28,16 +28,10 @@
       '.tweet.opened-tweet.hover .action-buffer-container span.icon {',
         'background-position: -3px -3px !important;',
       '}',
-      // '.tweet:hover .action-buffer-container span.icon {',
-      //   'background-position: -3px  -21px !important;',
-      // '}',
       '.gallery-tweet .tweet .action-buffer-container span {',
         'background-position: -3px  -38px !important;',
         'margin-top: -1px;',
       '}',
-      // '.tweet:hover .action-buffer-container span.Icon {',
-      //   'background-position: -5px -28px !important;',
-      // '}',
       'div.stream-item-footer > ul.tweet-actions > li.action-buffer-container i {',
         'margin-top: 0px ;',
       '}',
@@ -590,92 +584,6 @@
 
         if( $btn.closest('.in-reply-to').length > 0 ) {
           $btn.find('i').css({'background-position-y': '-21px'});
-        }
-      }
-    },
-    {
-      //REVIEW - I think this is no longer on the twitter site -DJF, OCT 2014
-      name: "buffer-action",
-      text: "Buffer",
-      container: '.tweet-actions',
-      after: '.action-fav-container',
-      default: '',
-      className: 'buffer-action',
-      selector: '.buffer-action',
-      style: '',
-      hover: '',
-      active: '',
-      create: function (btnConfig) {
-
-        var li = document.createElement('li');
-        li.className = "action-buffer-container";
-
-        var a = document.createElement('a');
-        a.setAttribute('class', btnConfig.className + " with-icn");
-        a.setAttribute('href', '#');
-
-        var i = document.createElement('span');
-        i.setAttribute('class', 'icon sm-reply'); // let Twitter set the bg colors
-        i.setAttribute('style', 'position: relative; top: 0px; margin-right: 4px; background-image: url(' + xt.data.get('data/shared/img/twttr-sprite-small.png') + ')!important; background-repeat: no-repeat;');
-
-        $(a).append(i);
-
-        var b = document.createElement('b');
-        $(b).text(btnConfig.text);
-
-        $(a).append(b);
-
-        $(li).append(a);
-
-        return li;
-
-
-      },
-      data: function (elem) {
-        var c = $(elem).closest('.tweet');
-        // Grab the tweet text
-        var text = c.find('.js-tweet-text').first();
-        // Iterate through all links in the text
-        $(text).children('a').each(function () {
-          // Don't modify the screennames and the hashtags
-          if( $(this).attr('data-screen-name') ) return;
-          if( $(this).hasClass('twitter-atreply') ) return;
-          if( $(this).hasClass('twitter-hashtag') ) return;
-          // swap the text with the actual link
-          var original = $(this).text();
-          $(this).text($(this).attr("href")).attr('data-original-text', original);
-        });
-        // Build the RT text
-        var rt = 'RT ' + c.find('.username').first().text().trim() + ': ' + $(text).text().trim() + '';
-        // Put the right links back
-        $(text).children('a').each(function () {
-          if( ! $(this).attr('data-original-text') ) return;
-          $(this).text($(this).attr('data-original-text'));
-        });
-        // Send back the data
-        if (should_be_native_retweet) {
-          return {
-            text: rt,
-            placement: 'twitter-permalink',
-            // grab info for retweeting
-            retweeted_tweet_id: c.attr('data-item-id'),
-            retweeted_user_id: c.data('user-id'),
-            retweeted_user_name: c.data('screen-name'),
-            retweeted_user_display_name: c.data('name')
-          };
-        } else {
-          return {
-            text: rt,
-            placement: 'twitter-feed'
-          };
-        }
-      },
-      clear: function (elem) {
-      },
-      activator: function (elem, btnConfig) {
-
-        if( $(elem).closest('.in-reply-to').length > 0 ) {
-          $(elem).find('i').css({'background-position-y': '-21px'});
         }
       }
     },
