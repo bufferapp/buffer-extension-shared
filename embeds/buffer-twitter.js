@@ -531,32 +531,29 @@
         var $text = $tweet.find('.js-tweet-text').first();
 
         // Iterate through all links in the text
-        $text.children('a').each(function () {
-          // Don't modify the screennames and the hashtags
-          if( $(this).attr('data-screen-name') ) return;
-          if( $(this).hasClass('twitter-atreply') ) return;
-          if( $(this).hasClass('twitter-hashtag') ) return;
-          // swap the text with the actual link
-          var original = $(this).text();
-          $(this).text($(this).attr("href")).attr('data-original-text', original);
+        var $textClone = $text.clone();
+        $textClone.find('a[data-expanded-url]').each(function(){
+          var $link = $(this);
+          $link.text($link.attr('data-expanded-url'));
         });
-        // Build the RT text
-        var username = $tweet
-            .find('.js-action-profile-name .ProfileTweet-screenname')
-            .text()
-            .trim();
-        var rt = 'RT ' + username + ': ' + $text.text().trim() + '';
+        var tweetText = $textClone.text().trim();
 
-        // Put the right links back
-        $text.children('a').each(function () {
-          if( ! $(this).attr('data-original-text') ) return;
-          $(this).text($(this).attr('data-original-text'));
-        });
+        // Build the RT text
+        var screenname = $tweet.attr('data-screen-name');
+        if (!screenname) {
+          screenname = $tweet.find('.js-action-profile-name')
+            .filter(function(i){ return $(this).text()[0] === '@' })
+            .first()
+            .text()
+            .trim()
+            .replace(/^@/, '');
+        }
+        var text = 'RT @' + screenname + ': ' + tweetText + '';
 
         // Send back the data
         if (should_be_native_retweet) {
           return {
-            text: rt,
+            text: text,
             placement: 'twitter-permalink',
             // grab info for retweeting
             retweeted_tweet_id:          $tweet.attr('data-item-id'),
@@ -567,7 +564,7 @@
         }
 
         return {
-          text: rt,
+          text: text,
           placement: 'twitter-permalink'
         };
       },
