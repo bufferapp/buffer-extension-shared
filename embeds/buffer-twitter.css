@@ -1,4 +1,6 @@
-/* The main buffer icon */
+/* The main buffer icon 
+ * !important's are used to override the default Twitter styles
+ */
 .icon-buffer,
 .icon.icon-buffer {
   position: relative;
@@ -11,8 +13,9 @@
   background-size: 16px 32px; /* Natural is 32x64 */
   background-position: top;
 }
-.icon-buffer:hover {
-  background-position: bottom;
+.icon-buffer:hover,
+.icon.icon-buffer:hover {
+  background-position: bottom !important;
 }
 
 .ProfileTweet .icon-buffer {
@@ -35,19 +38,7 @@
 }
 
 
-/* For the twitter stream: */
-.tweet .action-buffer-container span.icon,
-.tweet.opened-tweet .action-buffer-container span.icon,
-.tweet.opened-tweet.hover .action-buffer-container span.icon {
-  /*background-position: -3px -3px !important;*/
-}
-.gallery-tweet .tweet .action-buffer-container span {
-  /*background-position: -3px  -38px !important;*/
-  /*margin-top: -1px;*/
-}
-div.stream-item-footer > ul.tweet-actions > li.action-buffer-container i {
-  /*margin-top: 0px ;*/
-}
+/* For the twitter stream - Not sure if this is needed anymore... */
 #profile_popup-body > ol > li > div > div.content > ,
 div.stream-item-footer > ul.tweet-actions > li.action-buffer-container {
   display: none;,
