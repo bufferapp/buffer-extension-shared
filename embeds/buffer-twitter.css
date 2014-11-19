@@ -1,11 +1,12 @@
 /* The main buffer icon */
-.icon-buffer {
+.icon-buffer,
+.icon.icon-buffer {
   position: relative;
   top: 3px;
-  width: 16px;
-  height: 16px;
+  width: 16px !important;
+  height: 16px !important;
   background-color: transparent;
-  background-image: url(chrome-extension://noojglkidnpfjbincgijbaiedldjfbhh/data/shared/img/twitter-sprite.png);
+  background-image: url(https://d389zggrogs7qo.cloudfront.net/images/extensions/img/twitter-sprite.png);
   background-repeat: no-repeat;
   background-size: 16px 32px; /* Natural is 32x64 */
   background-position: top;

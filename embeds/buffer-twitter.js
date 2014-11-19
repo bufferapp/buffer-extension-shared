@@ -8,7 +8,7 @@
   $('head').append([
     '<style>',
       '.icon-buffer {',
-        'background-image: url(' + xt.data.get('data/shared/img/twitter-sprite.png') + ');',
+        'background-image: url(' + xt.data.get('data/shared/img/twitter-sprite.png') + ') !important;',
       '}',
     '</style>'
   ].join(''));
