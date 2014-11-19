@@ -1,0 +1,53 @@
+/* The main buffer icon */
+.icon-buffer {
+  position: relative;
+  top: 3px;
+  width: 16px;
+  height: 16px;
+  background-color: transparent;
+  background-image: url(chrome-extension://noojglkidnpfjbincgijbaiedldjfbhh/data/shared/img/twitter-sprite.png);
+  background-repeat: no-repeat;
+  background-size: 16px 32px; /* Natural is 32x64 */
+  background-position: top;
+}
+.icon-buffer:hover {
+  background-position: bottom;
+}
+
+.ProfileTweet .icon-buffer {
+  top: 4px; /* The profile streams appear slightly different */
+}
+
+
+/* To shrink the composer buttons to fit on one line */
+.tweet-button.buffer-inserted {
+  margin-top: 3px;
+}
+.tweet-button.buffer-inserted .btn {
+  padding: 7px 8px 6px;
+}
+.tweet-button.buffer-inserted .tweet-counter {
+  width: auto;
+}
+.tweet-box-extras .geo-picker {
+  margin-right: 0px;
+}
+
+
+/* For the twitter stream: */
+.tweet .action-buffer-container span.icon,
+.tweet.opened-tweet .action-buffer-container span.icon,
+.tweet.opened-tweet.hover .action-buffer-container span.icon {
+  /*background-position: -3px -3px !important;*/
+}
+.gallery-tweet .tweet .action-buffer-container span {
+  /*background-position: -3px  -38px !important;*/
+  /*margin-top: -1px;*/
+}
+div.stream-item-footer > ul.tweet-actions > li.action-buffer-container i {
+  /*margin-top: 0px ;*/
+}
+#profile_popup-body > ol > li > div > div.content > ,
+div.stream-item-footer > ul.tweet-actions > li.action-buffer-container {
+  display: none;,
+},

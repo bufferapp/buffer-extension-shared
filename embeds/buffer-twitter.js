@@ -3,41 +3,12 @@
   // Only run this script on twitter:
   if ( window.location.host.indexOf('twitter.com') === -1 ) return;
 
+
+  // Override the buffer-twitter.css file with a browser-specific image
   $('head').append([
     '<style>',
-      // This fixes the bullet point issue with pocket
-      '.ProfileTweet-actionList.buffer-inserted {',
-        'list-style: none;',
-      '}',
-      // To shrink the composer buttons to fit on one line
-      '.tweet-button.buffer-inserted {',
-        'margin-top: 3px;',
-      '}',
-      '.tweet-button.buffer-inserted .btn {',
-        'padding: 7px 8px 6px;',
-      '}',
-      '.tweet-button.buffer-inserted .tweet-counter {',
-        'width: auto;',
-      '}',
-      '.tweet-box-extras .geo-picker {',
-        'margin-right: 0px;',
-      '}',
-      // For the twitter stream:
-      '.tweet .action-buffer-container span.icon, ',
-      '.tweet.opened-tweet .action-buffer-container span.icon, ',
-      '.tweet.opened-tweet.hover .action-buffer-container span.icon {',
-        'background-position: -3px -3px !important;',
-      '}',
-      '.gallery-tweet .tweet .action-buffer-container span {',
-        'background-position: -3px  -38px !important;',
-        'margin-top: -1px;',
-      '}',
-      'div.stream-item-footer > ul.tweet-actions > li.action-buffer-container i {',
-        'margin-top: 0px ;',
-      '}',
-      '#profile_popup-body > ol > li > div > div.content > ',
-        'div.stream-item-footer > ul.tweet-actions > li.action-buffer-container {',
-        'display: none;',
+      '.icon-buffer {',
+        'background-image: url(' + xt.data.get('data/shared/img/twitter-sprite.png') + ');',
       '}',
     '</style>'
   ].join(''));
@@ -377,9 +348,6 @@
       default: '',
       className: 'buffer-action',
       selector: '.buffer-action',
-      style: '',
-      hover: '',
-      active: '',
       create: function (btnConfig) {
 
         var li = document.createElement('li');
@@ -390,20 +358,7 @@
         a.setAttribute('href', '#');
 
         var i = document.createElement('i');
-        i.setAttribute('class', 'Icon');
-        i.setAttribute('style', [
-          'top: 3px;',
-          'position: relative;',
-          'margin-right: 6px;',
-          'margin-left: 2px;',
-          'width: 12px;',
-          'height: 16px;',
-          'background-color: #8899a6;',
-          'background-image: url(' + xt.data.get('data/shared/img/twttr-sprite.png') + ') !important;',
-          'background-repeat: no-repeat;',
-          'background-size: 20px 60px;', // Natural is 25x75
-          'background-position: -5px -2px !important;'
-        ].join(''));
+        i.setAttribute('class', 'icon icon-buffer');
 
         $(a).append(i);
 
@@ -472,24 +427,12 @@
       default: '',
       className: 'ProfileTweet-action js-tooltip',
       selector: '.buffer-action',
-      style: [
-        'position: relative;',
-        'top: 2px;',
-        'width: 16px;',
-        'height: 18px;',
-        'background-image: url(' + xt.data.get('data/shared/img/twttr-sprite.png') + ') !important;',
-        'background-color: #ccd6dd;',
-        'background-position: -5px -3px;',
-        'background-repeat: no-repeat;'
-      ].join(''),
-      hover: '',
-      active: '',
       create: function (btnConfig) {
 
         var div = document.createElement('div');
         div.className = "action-buffer-container";
         // Normal is 10px, this adds space for display: inline-block hidden space
-        div.style.marginLeft = '12px';
+        // div.style.marginLeft = '12px';
 
         var a = document.createElement('a');
         a.setAttribute('class', btnConfig.className);
@@ -497,15 +440,7 @@
         a.setAttribute('data-original-title', btnConfig.text); // Tooltip text
 
         var i = document.createElement('span');
-        i.setAttribute('class', 'Icon');
-        i.setAttribute('style', btnConfig.style);
-
-        i.onmouseover = function(e) {
-          this.style.backgroundColor = '#168eea';
-        };
-        i.onmouseout = function(e) {
-          this.style.backgroundColor = '#ccd6dd';
-        };
+        i.setAttribute('class', 'icon icon-buffer');
 
         $(a).append(i);
 
@@ -565,7 +500,7 @@
       }
     },
     {
-      // April & October 2014 profile & home stream changes
+      // October 2014 profile & home stream changes
       name: "buffer-profile-stream-OCT-2014",
       text: "Add to Buffer",
       container: '.js-stream-item .js-actions',
@@ -574,24 +509,10 @@
       default: '',
       className: 'ProfileTweet-action js-tooltip',
       selector: '.buffer-action',
-      style: [
-        'position: relative;',
-        'top: 2px;',
-        'width: 16px;',
-        'height: 18px;',
-        'background-image: url(' + xt.data.get('data/shared/img/twttr-sprite.png') + ') !important;',
-        'background-color: #ccd6dd;',
-        'background-position: -5px -3px;',
-        'background-repeat: no-repeat;'
-      ].join(''),
-      hover: '',
-      active: '',
       create: function (btnConfig) {
 
         var div = document.createElement('div');
         div.className = "action-buffer-container";
-        // Normal is 10px, this adds space for display: inline-block hidden space
-        div.style.marginLeft = '12px';
 
         var a = document.createElement('a');
         a.setAttribute('class', btnConfig.className);
@@ -599,15 +520,7 @@
         a.setAttribute('data-original-title', btnConfig.text); // Tooltip text
 
         var i = document.createElement('span');
-        i.setAttribute('class', 'Icon');
-        i.setAttribute('style', btnConfig.style);
-
-        i.onmouseover = function(e) {
-          this.style.backgroundColor = '#168eea';
-        };
-        i.onmouseout = function(e) {
-          this.style.backgroundColor = '#ccd6dd';
-        };
+        i.setAttribute('class', 'icon icon-buffer');
 
         $(a).append(i);
 
