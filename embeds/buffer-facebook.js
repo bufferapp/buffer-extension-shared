@@ -205,22 +205,8 @@
     {
       name: "status",
       text: "",
-      container: function(btnConfig){
-        var $container;
-
-        // On the news feed, FB uses pagelet_composer, on other timeline
-        // views it's harder to determine
-        var $forms = $('#pagelet_composer form');
-        if (!$forms.length) $forms = $('form');
-
-        $forms.each(function(i, j){
-          if (j.action && j.action.indexOf('updatestatus') > -1) {
-            $container = $(j);
-          }
-        });
-
-        return $container || $forms.last();
-      },
+      // container: '#pagelet_composer form, .fbTimelineComposerUnit form',
+      container: 'form[action^="/ajax/updatestatus"]',
       after: 'ul.uiList > li:first',
       className: 'buffer-facebook-button',
       selector: '.buffer-facebook-button',
