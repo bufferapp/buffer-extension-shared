@@ -1,3 +1,4 @@
+/* globals self, bufferpm */
 //  buffer-tpc-check.js
 //  (c) 2013 Sunil Sadasivan
 //  Check if third party cookies are disabled
@@ -5,12 +6,13 @@
 
 ;(function () {
 
+  if (window !== window.top) return;
 
   ;(function check() {
     //if the 3rd party cookies check is done, remove the iframe
     if((self.port) || (xt && xt.options)) {
       bufferpm.bind("buffer_3pc_done", function(){
-        elem = document.getElementById('buffer_tpc_check');
+        var elem = document.getElementById('buffer_tpc_check');
         if(elem) { elem.parentNode.removeChild(elem); }
         return false;
       });
