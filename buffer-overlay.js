@@ -44,7 +44,8 @@ var CSPWhitelist = [
   'github.com',
   'education.github.com',
   'medium.com',
-  'www.npmjs.org'
+  'www.npmjs.org',
+  'www.npmjs.com' // DEC 2014
 ];
 
 
