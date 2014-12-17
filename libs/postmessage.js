@@ -1,3 +1,4 @@
+/* globals jQuery */
 /**
  The MIT License
 
@@ -147,8 +148,8 @@ var NO_JQUERY = {};
                  }
                  else {
                      // unbind all listeners of all type
-                     for (var i in l) {
-                       delete l[i];
+                     for (var j in l) {
+                       delete l[j];
                      }
                  }
              }
@@ -170,7 +171,7 @@ var NO_JQUERY = {};
              var r = [];
              for (var i=0; i<32; i++) {
                  r[i] = bufferpm._CHARS[0 | Math.random() * 32];
-             };
+             }
              return r.join("");
          },
 
@@ -199,9 +200,9 @@ var NO_JQUERY = {};
          },
 
          _dispatch: function(e) {
-             //console.log("$.pm.dispatch", e, this);
+             var msg;
              try {
-                 var msg = JSON.parse(e.data);
+                 msg = JSON.parse(e.data);
              }
              catch (ex) {
                  /*console.warn("postmessage data invalid json: ", ex);*/
@@ -245,7 +246,7 @@ var NO_JQUERY = {};
                              bufferpm.send({target:e.source, data:ex, type:msg.errback});
                          }
                      }
-                 };
+                 }
              }
          }
      };
@@ -275,7 +276,7 @@ var NO_JQUERY = {};
                              source_window = i;
                              break;
                          }
-                     };
+                     }
                  }
                  catch(ex) {
                      // Opera: security error trying to access parent.frames x-origin
@@ -382,7 +383,7 @@ var NO_JQUERY = {};
                              bufferpm.send({target:source_window, data:ex, type:msg.errback, hash:true, url:hash.source.url});
                          }
                      }
-                 };
+                 }
              }
          },
 
