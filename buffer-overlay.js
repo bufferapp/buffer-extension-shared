@@ -116,13 +116,16 @@ var bufferOverlay = function(data, config, doneCallback) {
 var createStyleTag = function() {
   var style = document.createElement('style');
   style.type = 'text/css';
-  style.innerHTML = [
+
+  var content = document.createTextNode([
     '.buffer-floating-btn:hover {',
       'text-decoration: none;',
       'color: #323b43;',
       'cursor: pointer;',
     '}'
-  ].join('');
+  ].join(''));
+
+  style.appendChild(content);
 
   return style;
 };
@@ -156,7 +159,9 @@ var createDashboardButton = function() {
   button.target = '_blank';
   button.setAttribute('class', 'buffer-floating-btn');
   button.setAttribute('style', css);
-  button.innerHTML = 'Go to Buffer';
+
+  var text = document.createTextNode('Go to Buffer');
+  button.appendChild(text);
   
   return button;
 };
@@ -199,8 +204,8 @@ var getOverlayConfig = function(postData){
         }
         else{
           if(config.pocketWeb){
-            var header = document.getElementsByClassName('reader_head')[0];
-            var title = header.getElementsByTagName('h1')[0].innerHTML;
+            var headline = document.querySelectorAll('.reader_head h1')[0];
+            var title = headline && headline.textContent;
             cb(title);
           }
           else{
