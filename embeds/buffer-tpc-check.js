@@ -1,4 +1,4 @@
-/* globals self, bufferpm */
+/* globals self, bufferpm, chrome */
 //  buffer-tpc-check.js
 //  (c) 2013 Sunil Sadasivan
 //  Check if third party cookies are disabled
@@ -28,8 +28,13 @@
 
       var iframe = document.createElement('iframe');
       iframe.id = 'buffer_tpc_check';
-      iframe.src = 'https://d3ijcis4e2ziok.cloudfront.net/tpc-check.html';
-      //iframe.src = 'http://local.bufferapp.com/js/tpc-check.html';
+
+      if (typeof window.chrome !== 'undefined') {
+        iframe.src = chrome.extension.getURL('data/shared/tpc-check.html');
+      } else {
+        iframe.src = 'https://d3ijcis4e2ziok.cloudfront.net/tpc-check.html';
+      }
+
       iframe.style.display="none";
       document.body.appendChild(iframe);
     } else {
