@@ -113,20 +113,24 @@ var bufferOverlay = function(data, config, doneCallback) {
   bufferpm.bind('buffer_loaded', function(data) {
     bufferpm.unbind('buffer_loaded');
     iframe.style.backgroundImage = 'none';
+    
+    if ($(".buffer-floating-cancel-btn").length) {
+        $(".buffer-floating-cancel-btn").remove();
+    }
   });
 };
 
 function closePopup(document, doneCallback, overlayData) {
 
-    if ($("#buffer_overlay")) {
+    if ($("#buffer_overlay").length) {
         $("#buffer_overlay").remove();
     }
     
-    if ($(".buffer-floating-cancel-btn")) {
+    if ($(".buffer-floating-cancel-btn").length) {
         $(".buffer-floating-cancel-btn").remove();
     }
     
-    if ($(".buffer-floating-btn")) {
+    if ($(".buffer-floating-btn").length) {
         $(".buffer-floating-btn").remove();
     }
     
@@ -200,12 +204,9 @@ var createCancelButton = function() {
     'top: 10px;',
     'left: 10px;',
     'z-index: 2147483647;',
-    'padding: 8px 10px 8px 32px;',
+    'padding: 8px 10px 8px 10px;',
     'background-color: #fff;',
-    'background-image: url(https://d389zggrogs7qo.cloudfront.net/images/bookmarklet_icon.png);',
     'background-repeat: no-repeat;',
-    'background-size: 15px;',
-    'background-position: 11px 12px;',
     'color: #323b43;',
     'border: 0;',
     'text-decoration: none;',
