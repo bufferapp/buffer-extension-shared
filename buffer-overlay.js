@@ -81,37 +81,68 @@ var bufferOverlay = function(data, config, doneCallback) {
 
   document.body.appendChild(iframe);
 
-  // Remove the loading image when we hear from the other side
-  bufferpm.bind('buffer_loaded', function(data) {
-    bufferpm.unbind('buffer_loaded');
-    iframe.style.backgroundImage = 'none';
-  });
-
-
   var styleTag = createStyleTag();
   document.body.appendChild(styleTag);
 
   var dashboardButton = createDashboardButton();
   document.body.appendChild(dashboardButton);
 
+  var cancelButton = createCancelButton();
+  document.body.appendChild(cancelButton);
+    
+  $(document).on('click', '.buffer-floating-cancel-btn', function() {
+      closePopup(document, doneCallback);
+  });
+    
   // Bind close listener
   // Listen for when the overlay has closed itself
   bufferpm.bind('buffermessage', function(overlaydata) {
-    
-    document.body.removeChild(iframe);
-    document.body.removeChild(dashboardButton);
+      closePopup(document, doneCallback, overlaydata);
+  });
 
+  /**
+   * Listen to ESC key and close the popup when hit.
+   */
+  $(document).keyup(function(e) {
+    if (e.keyCode == 27) {
+        closePopup(document, doneCallback);
+    }
+  });
+    
+  // Remove the loading image when we hear from the other side
+  bufferpm.bind('buffer_loaded', function(data) {
+    bufferpm.unbind('buffer_loaded');
+    iframe.style.backgroundImage = 'none';
+    
+    if ($(".buffer-floating-cancel-btn").length) {
+        $(".buffer-floating-cancel-btn").remove();
+    }
+  });
+};
+
+function closePopup(document, doneCallback, overlayData) {
+
+    if ($("#buffer_overlay").length) {
+        $("#buffer_overlay").remove();
+    }
+    
+    if ($(".buffer-floating-cancel-btn").length) {
+        $(".buffer-floating-cancel-btn").remove();
+    }
+    
+    if ($(".buffer-floating-btn").length) {
+        $(".buffer-floating-btn").remove();
+    }
+    
     bufferpm.unbind('buffermessage');
     bufferpm.unbind('buffer_addbutton');
     
     setTimeout(function () {
-      doneCallback(overlaydata);
+      doneCallback(overlayData);
     }, 0);
     
     window.focus();
-  });
-
-};
+}
 
 var createStyleTag = function() {
   var style = document.createElement('style');
@@ -161,6 +192,37 @@ var createDashboardButton = function() {
   button.setAttribute('style', css);
 
   var text = document.createTextNode('Go to Buffer');
+  button.appendChild(text);
+  
+  return button;
+};
+
+var createCancelButton = function() {
+
+  var css = [
+    'position: fixed;',
+    'top: 10px;',
+    'left: 10px;',
+    'z-index: 2147483647;',
+    'padding: 8px 10px 8px 10px;',
+    'background-color: #fff;',
+    'background-repeat: no-repeat;',
+    'color: #323b43;',
+    'border: 0;',
+    'text-decoration: none;',
+    'border-radius: 2px;',
+    'text-decoration: none;',
+    'font-size: 14px;',
+    'line-height: 1.6;',
+    'font-family: "Open Sans", Roboto, Helvetica, Arial;',
+    'box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);'
+  ].join('');
+
+  var button = document.createElement('button');
+  button.setAttribute('class', 'buffer-floating-btn buffer-floating-cancel-btn');
+  button.setAttribute('style', css);
+
+  var text = document.createTextNode('Cancel');
   button.appendChild(text);
   
   return button;
