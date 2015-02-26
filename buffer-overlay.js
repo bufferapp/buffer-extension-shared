@@ -261,19 +261,22 @@ var getOverlayConfig = function(postData){
     {
       name: "text",
       get: function (cb) {
-        if(document.getSelection().toString().length) {
-          cb('"' + document.getSelection().toString() + '"');
+        if (document.getSelection().toString().length) {
+          return cb('"' + document.getSelection().toString() + '"');
         }
-        else{
-          if(config.pocketWeb){
-            var headline = document.querySelectorAll('.reader_head h1')[0];
-            var title = headline && headline.textContent;
-            cb(title);
-          }
-          else{
-            cb(document.title);
-          }
+
+        if (config.pocketWeb){
+          var headline = document.querySelectorAll('.reader_head h1')[0];
+          var title = headline && headline.textContent;
+          return cb(title);
         }
+
+        var ogTitle = document.head.querySelector('meta[property="og:title"]');
+        if (ogTitle && ogTitle.content && ogTitle.content.length) {
+          return cb(ogTitle.content);
+        }
+
+        cb(document.title);
       },
       encode: function (val) {
         return encodeURIComponent(val);
