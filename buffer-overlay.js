@@ -89,11 +89,11 @@ var bufferOverlay = function(data, config, doneCallback) {
 
   var cancelButton = createCancelButton();
   document.body.appendChild(cancelButton);
-    
+
   $(document).on('click', '.buffer-floating-cancel-btn', function() {
       closePopup(document, doneCallback);
   });
-    
+
   // Bind close listener
   // Listen for when the overlay has closed itself
   bufferpm.bind('buffermessage', function(overlaydata) {
@@ -108,12 +108,12 @@ var bufferOverlay = function(data, config, doneCallback) {
         closePopup(document, doneCallback);
     }
   });
-    
+
   // Remove the loading image when we hear from the other side
   bufferpm.bind('buffer_loaded', function(data) {
     bufferpm.unbind('buffer_loaded');
     iframe.style.backgroundImage = 'none';
-    
+
     if ($(".buffer-floating-cancel-btn").length) {
         $(".buffer-floating-cancel-btn").remove();
     }
@@ -125,22 +125,22 @@ function closePopup(document, doneCallback, overlayData) {
     if ($("#buffer_overlay").length) {
         $("#buffer_overlay").remove();
     }
-    
+
     if ($(".buffer-floating-cancel-btn").length) {
         $(".buffer-floating-cancel-btn").remove();
     }
-    
+
     if ($(".buffer-floating-btn").length) {
         $(".buffer-floating-btn").remove();
     }
-    
+
     bufferpm.unbind('buffermessage');
     bufferpm.unbind('buffer_addbutton');
-    
+
     setTimeout(function () {
       doneCallback(overlayData);
     }, 0);
-    
+
     window.focus();
 }
 
@@ -193,7 +193,7 @@ var createDashboardButton = function() {
 
   var text = document.createTextNode('Go to Buffer');
   button.appendChild(text);
-  
+
   return button;
 };
 
@@ -224,7 +224,7 @@ var createCancelButton = function() {
 
   var text = document.createTextNode('Cancel');
   button.appendChild(text);
-  
+
   return button;
 };
 
@@ -364,7 +364,7 @@ var getOverlayConfig = function(postData){
   ];
 
   var loadingImgRel = 'img/white-loading-gif-small.gif';
-  var loadingImg = typeof chrome !== 'undefined' ? 
+  var loadingImg = typeof chrome !== 'undefined' ?
     chrome.extension.getURL('data/shared/' +  loadingImgRel) :
     document.location.protocol === 'http:' ?
       'http://static.bufferapp.com/images/extensions/' + loadingImgRel :
