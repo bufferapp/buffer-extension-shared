@@ -276,7 +276,14 @@
       name: 'timeline-post-buffer',
       text: 'Buffer',
       container: '.commentable_item',
-      after: '.share_action_link',
+      // after: '.share_action_link',
+      // Adjustment made w/ Timeline adjustments noticed by Joel Mar 26 2015
+      after: function($container) {
+        var $shareBtn = $container.find('.share_action_link');
+        // share_action_link's parent, only if the par is div.uiPopover
+        if ($shareBtn.parent().hasClass('uiPopover')) return $shareBtn.parent();
+        return $shareBtn;
+      },
       default: [].join(''),
       create: function(btnConfig) {
 
@@ -458,17 +465,25 @@
           var btn = btnConfig.create(btnConfig);
 
           // EXT
-          if ( btnConfig.after ) $container.find(btnConfig.after).after(btn);
-          else if ( btnConfig.before ) $container.find(btnConfig.before).before(btn);
-          else $container.append(btn);
+          if ( btnConfig.after ) {
+            if (typeof btnConfig.after === 'function') {
+              btnConfig.after($container).after(btn);
+            } else {
+              $container.find(btnConfig.after).after(btn);
+            }
+          } else if ( btnConfig.before ) {
+            $container.find(btnConfig.before).before(btn);
+          } else {
+            $container.append(btn);
+          }
 
           if ( !! btnConfig.activator ) btnConfig.activator(btn, btnConfig);
-          
+
           if ( !! btnConfig.lastly ) btnConfig.lastly(btn, btnConfig);
-          
+
           var getData = btnConfig.data;
           var clearData = btnConfig.clear;
-          
+
           var clearcb = function () {};
 
           $(btn).click(function (e) {
