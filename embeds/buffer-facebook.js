@@ -3,7 +3,7 @@
   // EXT
   // (obj notation)
   var buildElement = function buildElement (parentConfig) {
-    
+
     var temp = document.createElement(parentConfig[0]);
     if( parentConfig[1] ) temp.setAttribute('class', parentConfig[1]);
     if( parentConfig[2] ) temp.setAttribute('style', parentConfig[2]);
@@ -14,9 +14,9 @@
         temp.appendChild(buildElement(parentConfig[i]));
       }
     }
-    
+
     return temp;
-    
+
   };
 
   // Listen for share button clicks
@@ -25,7 +25,7 @@
 
   // Dictionary of selectors
   var selectors = {
-    
+
     // .userContentWrapper - new FB news feed, 3/2014
     timelineItem: [
       '.genericStreamStory',
@@ -49,7 +49,7 @@
       // photo caption
       '.text_exposed_root',
       // Above video
-      '.aboveUnitContent', 
+      '.aboveUnitContent',
       '.messageBody',
       '.tlTxFe',
       '.caption',
@@ -91,7 +91,7 @@
   function getClosestShareData(elem) {
 
     var parent = $(elem).closest(selectors.timelineItem);
-    
+
     // reset share object on every 'share' button click
     var share = {};
 
@@ -104,7 +104,7 @@
     var $thumb = $(selectors.thumb, parent);
     var image = $thumb.attr('src');
     var $videoThumb = $(selectors.videoThumb, parent);
-    var $anchor = $(selectors.anchor, parent);        
+    var $anchor = $(selectors.anchor, parent);
 
     // If we can't find it, try this alternate, slower search looking for external links
     if ($anchor.length === 0) {
@@ -178,24 +178,24 @@
     return share;
   }
 
-  /*  This has been disabled along with the Buffer button being removed from the 
+  /*  This has been disabled along with the Buffer button being removed from the
       share modal in May 2014.
   $('body').on('click', 'a.share_action_link, a:contains("Share")', function (e) {
 
     share = getClosestShareData();
 
-    // Woops we failed in getting the data we needed because FB has changed 
-    // or this is the main feed. Now we just try and grab the url/photo 
+    // Woops we failed in getting the data we needed because FB has changed
+    // or this is the main feed. Now we just try and grab the url/photo
     // because this needs to be fetched from here. After this we use the
-    // modal's data when pressing the "Buffer" button. It's bit more 
+    // modal's data when pressing the "Buffer" button. It's bit more
     // reliable source of info.
-    if (share.via === '' && 
-        share.text === '' && 
+    if (share.via === '' &&
+        share.text === '' &&
         share.placement === 'facebook-share-status') {
       share = getClosestShareData(e.currentTarget);
     }
   });*/
-  
+
   var config = {};
   config.base = "https://facebook.com";
   config.time = {
@@ -242,7 +242,7 @@
         if ( $('#pagelet_composer').length === 0) {
           btnConfig.default += 'font-size: 11px;';
         }
-        
+
         var a = $(temp).find(btnConfig.selector)[0];
         a.setAttribute('style', btnConfig.default);
         a.setAttribute('href', '#');
@@ -259,7 +259,7 @@
         });
 
         return temp;
-        
+
       },
       data: function (elem) {
         return {
@@ -343,9 +343,9 @@
       hover: '',
       active:  'background: hsl(116, 39%, 40%); text-decoration: none;',
       create: function (btnConfig) {
-        
-        var temp = buildElement(btnConfig.elements);    
-        
+
+        var temp = buildElement(btnConfig.elements);
+
         var a = $(temp).find(btnConfig.selector)[0];
         if( ! a ) a = temp; // EXT
         a.setAttribute('style', btnConfig.default);
@@ -363,11 +363,11 @@
         });
 
         return temp;
-        
+
       },
       data: function (elem) {
         var $parent, text;
-        // This occurs when the item is shared from the main news feed 
+        // This occurs when the item is shared from the main news feed
         // and/or no share data is/was found. So now we try
         // and grab from the data from the FB share modal instead.
         if(isDataFromModal){
@@ -380,7 +380,7 @@
           var photoshare = $('.UIShareStage_Image img').attr('src');
           var thumb = $('input[name="attachment[params][images][0]');
 
-          if(thumb.length > 0){                        
+          if(thumb.length > 0){
             if($('.UIShareStage_Title')[0].innerText === "Status Update"){
               //Only add text from status update
               share.text = $('.UIShareStage_Summary')[0].innerText;
@@ -408,7 +408,7 @@
           $parent = $(elem).parents('.uiOverlayFooter').parent().parent().find('.mentionsTextarea');
 
           // if the user has written a message, allow this to override the default text
-          
+
           text = $parent.val();
           if( text === "Write something..." ) text = undefined;
           if( text ) share.text = text;
@@ -448,16 +448,16 @@
 
       config.buttons.forEach(function(btnConfig, i){
 
-        // Container can be a selector or a function that returns a 
+        // Container can be a selector or a function that returns a
         // jQuery object
-        var $container = typeof btnConfig.container === 'function' ? 
+        var $container = typeof btnConfig.container === 'function' ?
             btnConfig.container( btnConfig ) :
             $(btnConfig.container);
-        
+
         $container.each(function () {
-          
+
           var $container = $(this);
-          
+
           if ( $container.hasClass('buffer-inserted') ) return;
 
           $container.addClass('buffer-inserted');
@@ -493,18 +493,18 @@
             xt.port.emit("buffer_click", getData(btn));
             e.preventDefault();
           });
-          
+
           xt.port.on("buffer_embed_clear", function () {
             clearcb();
             // prevent clear from being called again, until the button is clicked again
-            clearcb = function () {}; 
+            clearcb = function () {};
           });
-        });  
+        });
       });
     };
 
     insertButtons();
-    
+
     // June 2014 - Update the checking here again since most content scripts
     // only fire once onload. FB, when navigating through the site doesn't
     // "retrigger" load events so have to keep trying to add in the button. :)
@@ -520,5 +520,5 @@
       setTimeout(check, 50);
     }
   }());
-  
+
 }());
