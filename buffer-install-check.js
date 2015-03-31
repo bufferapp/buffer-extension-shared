@@ -6,7 +6,8 @@
 var bufferMarkOurSite = function (version) {
 	if (window.top !== window) return;
 
-	if (document.location.host.match(/bufferapp.com/i)) {
+	if (document.location.host.match(/buffer.com/i) ||
+      document.location.host.match(/bufferapp.com/i)) {
 
     var marker = document.querySelector('#browser-extension-marker');
     if (!marker) return;
@@ -20,7 +21,7 @@ var bufferMarkOurSite = function (version) {
 	}
 };
 
-// Chrome doesn't expose the version so easily with the permissions 
+// Chrome doesn't expose the version so easily with the permissions
 // we currently require, so we xhr for the manifest file to get the version.
 function getVersionForChrome(callback) {
 

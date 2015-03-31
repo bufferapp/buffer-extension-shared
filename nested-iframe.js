@@ -8,6 +8,6 @@
  */
 var qs = window.location.search;
 var iframe = document.createElement('iframe');
-iframe.src = 'https://bufferapp.com/add' + qs;
+iframe.src = 'https://buffer.com/add' + qs;
 document.body.appendChild(iframe);
 //TODO - Need to add postMessage communication between this iframe and parent page

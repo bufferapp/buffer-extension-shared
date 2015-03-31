@@ -8,7 +8,7 @@
   var inIframe = (window.top !== window || (window.frames.length === 0 && window.parent.frames.length > 0));
 
   // Only allow this to run in the Buffer iframe
-  if( document.location.host.match(/bufferapp.com/i) && inIframe ) {
+  if( document.location.host.match(/buffer.com/i) && inIframe ) {
 
     // Listen for information
     xt.port.on('buffer_details', function (details) {

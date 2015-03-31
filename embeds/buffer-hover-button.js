@@ -23,6 +23,7 @@
 
   // List of sites to disable this on:
   var disabledDomains = [
+    'buffer.com',
     'bufferapp.com',
     'twitter.com',
     'facebook.com'
@@ -71,12 +72,12 @@
         extraYOffset = 0;
 
     // In Gmail, we slide over the button for inline images to not block g+ sharing
-    if (site.isGmail && 
+    if (site.isGmail &&
         window.getComputedStyle(image).getPropertyValue('position') !== 'absolute') {
       extraXOffset = 72;
       extraYOffset = 4;
     }
-    
+
     var x = window.pageXOffset + box.left + width - buttonWidth - offset - extraXOffset;
     var y = window.pageYOffset + box.top + height - buttonHeight - offset - extraYOffset;
 
@@ -115,7 +116,7 @@
 
 
   var getImageUrl = (function(domain){
-    
+
     if ( site.isInstagram ) {
       return function(el) {
         return el.style.backgroundImage
@@ -123,7 +124,7 @@
           .replace(')','');
       };
     }
-    
+
     return function(el) {
       return el.src;
     };
@@ -154,5 +155,5 @@
       addBufferImageOverlays();
     }
   }());
-  
+
 }());

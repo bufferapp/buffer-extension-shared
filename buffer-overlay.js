@@ -186,7 +186,7 @@ var createDashboardButton = function() {
   ].join('');
 
   var button = document.createElement('a');
-  button.href = 'https://bufferapp.com/app';
+  button.href = 'https://buffer.com/app';
   button.target = '_blank';
   button.setAttribute('class', 'buffer-floating-btn');
   button.setAttribute('style', css);
@@ -367,6 +367,7 @@ var getOverlayConfig = function(postData){
   ];
 
   var loadingImgRel = 'img/white-loading-gif-small.gif';
+  //TODO - Change to static.buffer when it's set up!
   var loadingImg = typeof chrome !== 'undefined' ?
     chrome.extension.getURL('data/shared/' +  loadingImgRel) :
     document.location.protocol === 'http:' ?
@@ -374,8 +375,8 @@ var getOverlayConfig = function(postData){
       'https://d389zggrogs7qo.cloudfront.net/images/extensions/' + loadingImgRel;
 
   config.overlay = {
-    endpoint: "https://bufferapp.com/add/",
-    localendpoint: "https://local.bufferapp.com/add/",
+    endpoint: "https://buffer.com/add/",
+    localendpoint: "https://local.buffer.com/add/",
     getCSS: function () {
       return [
         'border: none;',
