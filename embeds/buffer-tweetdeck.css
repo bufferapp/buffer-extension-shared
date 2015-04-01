@@ -28,3 +28,21 @@
 .tweet-detail-action-item .icon-buffer {
   margin: 0 auto;
 }
+
+/* composer button */
+.btn.btn-buffer {
+  color: #fff;
+  background: #4C9E46;
+  border-color: transparent;
+  box-shadow: 1px 1px 0 rgba(17,17,17,0.2);
+}
+.btn.btn-buffer:hover {
+  color: #fff;
+  background: #469440; /* slightly darker */
+}
+.btn.btn-buffer.is-disabled {
+  color: #72C86C;
+  background: #4C9E46;
+  border-color: transparent;
+}
+

@@ -86,6 +86,51 @@
           retweeted_user_display_name: displayName
         };
       }
+    },
+
+    // Composer slide-out
+    {
+      placement: 'tweetdeck-composer',
+      selector: '.js-docked-compose .js-send-button-container:not(.buffer-inserted)',
+      $button: $([
+        '<button class="js-buffer-button btn-buffer is-disabled btn btn-extra-height">',
+          'Buffer',
+        '</button>'
+      ].join('')),
+      insert: function(el) {
+        var $actions = $(el);
+        var $newActionItem = this.$button.clone();
+
+        $actions
+          .addClass('buffer-inserted')
+          .prepend($newActionItem);
+
+        var $container = $(el).parents('.js-docked-compose');
+        this.$newActionItem = $newActionItem;
+        this.$textarea = $container.find('.js-compose-text');
+        this.$charCount = $container.find('.js-character-count');
+
+        // Listen to changes in the textarea
+        this.$textarea.on('keyup focus blur change paste cut', this.onKeyup.bind(this));
+
+        return $newActionItem;
+      },
+      onKeyup: function(e) {
+        // NOTE - We check the live character count b/c the URL will be shortened
+        var count = parseInt(this.$charCount.val(), 10);
+        if (count < 140 && count >= 0) {
+          this.$newActionItem.removeClass('is-disabled');
+        } else {
+          this.$newActionItem.addClass('is-disabled');
+        }
+      },
+      getData: function(el) {
+        var text = this.$textarea.val().trim();
+        return {
+          text: text,
+          placement: this.placement
+        };
+      }
     }
 
   ];
