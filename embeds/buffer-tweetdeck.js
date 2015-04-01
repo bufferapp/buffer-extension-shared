@@ -135,6 +135,47 @@
 
   ];
 
+  // RT modal - This does not work on the loop
+  var RTConfig = {
+    placement: 'tweetdeck-rt-modal',
+    selector: '#actions-modal .js-retweet-button:not(.buffer-inserted)',
+    $button: $([
+      '<button data-action="buffer" class="js-buffer-button btn btn-buffer">',
+        'Buffer Retweet',
+      '</button>'
+    ].join('')),
+    insert: function(el) {
+      var $rtButton = $(el);
+      $rtButton.addClass('buffer-inserted');
+      var $actions = $rtButton.parent();
+
+      var $newActionItem = this.$button.clone();
+      $actions.append($newActionItem);
+
+      return $newActionItem;
+    },
+    getData: function(el) {
+      var $tweet = $('#actions-modal .js-tweet');
+
+      var $text = $tweet.find('.js-tweet-text');
+      var $screenname = $tweet.find('.username');
+      var screenname = $screenname.text().trim().replace(/^@/, '');
+      var text = 'RT @' + screenname + ': ' + $text.text().trim() + '';
+      var displayName = $tweet.find('.fullname').text().trim();
+      var tweetURL = $tweet.find('.js-timestamp a').attr('href');
+
+      // NOTE - this is kind of a strict regex, may need to change if URLs change
+      var tweetId = tweetURL.replace(/https:\/\/twitter.com\/\w+\/status\//, '');
+
+      return {
+        text: text,
+        placement: this.placement,
+        retweeted_tweet_id: tweetId,
+        retweeted_user_name: screenname,
+        retweeted_user_display_name: displayName
+      };
+    }
+  };
 
   var insertButton = function(target) {
     $(target.selector).each(function(i, el) {
@@ -155,6 +196,22 @@
     setTimeout(tweetdeckLoop, 500);
   };
 
+  var start = function() {
+    tweetdeckLoop();
+
+    // Listen for a RT click so we can inject into the modal instantly
+    // This addresses the potentially 500ms delay
+    $('body').on('click',
+      '.js-stream-item .js-tweet-actions .tweet-action[rel="retweet"],' +
+      '.js-tweet-detail .tweet-detail-actions .tweet-detail-action[rel="retweet"]',
+      function() {
+        // 10ms delay for modal to open
+        setTimeout(function() {
+          insertButton(RTConfig);
+        }, 10);
+      });
+  }
+
 
   // Wait for xt.options to be set
   ;(function check() {
@@ -162,7 +219,7 @@
     if (!xt.options) {
       setTimeout(check, 0);
     } else if (xt.options['buffer.op.twitter'] === 'twitter') {
-      tweetdeckLoop();
+      start();
     } else {
       setTimeout(check, 2000);
     }
