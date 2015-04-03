@@ -30,7 +30,7 @@
         var $text = $streamItem.find('.js-tweet-text');
         var $screenname = $streamItem.find('.username');
         var screenname = $screenname.text().trim().replace(/^@/, '');
-        var text = 'RT @' + screenname + ': ' + $text.text().trim() + '';
+        var text = getFullTweetText($text, screenname);
         var displayName = $streamItem.find('.fullname').text().trim();
 
         return {
@@ -73,15 +73,13 @@
         var $text = $streamItem.find('.js-tweet-text');
         var $screenname = $streamItem.find('.username');
         var screenname = $screenname.text().trim().replace(/^@/, '');
-        var text = 'RT @' + screenname + ': ' + $text.text().trim() + '';
+        var text = getFullTweetText($text, screenname);
         var displayName = $streamItem.find('.fullname').text().trim();
 
         return {
           text: text,
           placement: this.placement,
           retweeted_tweet_id: $streamItem.attr('data-key'),
-          // NOTE - we may not really need the user id after all...
-          // retweeted_user_id:           $tweet.attr('data-user-id'),
           retweeted_user_name: screenname,
           retweeted_user_display_name: displayName
         };
@@ -160,7 +158,7 @@
       var $text = $tweet.find('.js-tweet-text');
       var $screenname = $tweet.find('.username');
       var screenname = $screenname.text().trim().replace(/^@/, '');
-      var text = 'RT @' + screenname + ': ' + $text.text().trim() + '';
+      var text = getFullTweetText($text, screenname);
       var displayName = $tweet.find('.fullname').text().trim();
       var tweetURL = $tweet.find('.js-timestamp a').attr('href');
 
@@ -175,6 +173,17 @@
         retweeted_user_display_name: displayName
       };
     }
+  };
+
+  var getFullTweetText = function($text, screenname) {
+    var $clone = $text.clone();
+
+    // Replace any shortened URL with the full url
+    $clone.find('a').each(function(i, el) {
+      el.textContent = el.getAttribute('data-full-url');
+    });
+
+    return 'RT @' + screenname + ': ' + $clone.text().trim() + '';
   };
 
   var insertButton = function(target) {
