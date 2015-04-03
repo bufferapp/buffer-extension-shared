@@ -31,18 +31,18 @@
 
 /* composer button */
 .buffer-tweetdeck .btn.btn-buffer {
-  color: #fff;
-  background: #4C9E46;
-  border-color: transparent;
-  box-shadow: 1px 1px 0 rgba(17,17,17,0.2);
+  color: #fff !important;
+  background: #4C9E46 !important;
+  border-color: transparent !important;
+  box-shadow: 1px 1px 0 rgba(17,17,17,0.2) !important;
 }
 .buffer-tweetdeck .btn.btn-buffer:hover {
-  color: #fff;
-  background: #469440; /* slightly darker */
+  color: #fff !important;
+  background: #469440 !important; /* slightly darker */
 }
 .buffer-tweetdeck .btn.btn-buffer.is-disabled {
-  color: #72C86C;
-  background: #4C9E46;
-  border-color: transparent;
+  color: #72C86C !important;
+  background: #4C9E46 !important;
+  border-color: transparent !important;
 }
 
