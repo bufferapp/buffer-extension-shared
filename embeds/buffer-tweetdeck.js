@@ -1,5 +1,11 @@
 ;(function() {
 
+  // Only run this script on tweetdeck:
+  if ( window.location.host.indexOf('tweetdeck.twitter.com') !== 0 ) return;
+
+  // Add class for css scoping
+  document.body.classList.add('buffer-tweetdeck');
+
   var conifg = [
 
     // Streams

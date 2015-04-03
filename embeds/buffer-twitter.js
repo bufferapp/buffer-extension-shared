@@ -1,8 +1,10 @@
 ;(function() {
 
   // Only run this script on twitter:
-  if ( window.location.host.indexOf('twitter.com') === -1 ) return;
+  if ( window.location.host.indexOf('twitter.com') !== 0 ) return;
 
+  // Add class for css scoping
+  document.body.classList.add('buffer-twitter');
 
   // Override the buffer-twitter.css file with a browser-specific image
   $('head').append([
@@ -314,7 +316,7 @@
       },
       data: function (elem) {
         var $dialog = $(elem).closest('.retweet-tweet-dialog, #retweet-dialog, #retweet-tweet-dialog');
-        
+
         var $tweet = $dialog.find('.js-actionable-tweet').first();
 
         var screenname = $tweet.attr('data-screen-name');
@@ -544,7 +546,7 @@
           var original = $(this).text();
           $(this).text($(this).attr("href")).attr('data-original-text', original);
         });
-        
+
         // Build the RT text
         var screenname = $tweet.attr('data-screen-name');
         if (!screenname) {
