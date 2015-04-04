@@ -6,9 +6,15 @@
   // Add class for css scoping
   document.body.classList.add('buffer-tweetdeck');
 
-  if (!!document.head.querySelector('link[title="dark"]')) {
-    document.body.classList.add('buffer-tweetdeck-dark');
-  }
+  var checkDarkTheme = function() {
+    var darkStylesheet = document.head.querySelector('link[title="dark"]');
+    if (!!darkStylesheet && !darkStylesheet.disabled) {
+      console.info('disabled?', darkStylesheet.disabled);
+      document.body.classList.add('buffer-tweetdeck-dark');
+    }
+  };
+
+  $(document).on('ready', checkDarkTheme);
 
   var conifg = [
 
