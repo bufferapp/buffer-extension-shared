@@ -9,12 +9,17 @@
   var checkDarkTheme = function() {
     var darkStylesheet = document.head.querySelector('link[title="dark"]');
     if (!!darkStylesheet && !darkStylesheet.disabled) {
-      console.info('disabled?', darkStylesheet.disabled);
       document.body.classList.add('buffer-tweetdeck-dark');
+    } else {
+      document.body.classList.remove('buffer-tweetdeck-dark');
     }
   };
 
-  $(document).on('ready', checkDarkTheme);
+  $(document).on('ready', function() {
+    checkDarkTheme();
+    // Check again in case the app hasn't initialized
+    setTimeout(checkDarkTheme, 2000);
+  });
 
   var conifg = [
 
