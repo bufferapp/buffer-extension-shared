@@ -6,6 +6,10 @@
   // Add class for css scoping
   document.body.classList.add('buffer-tweetdeck');
 
+  if (!!document.head.querySelector('link[title="dark"]')) {
+    document.body.classList.add('buffer-tweetdeck-dark');
+  }
+
   var conifg = [
 
     // Streams
