@@ -3,24 +3,6 @@
   // Only run this script on tweetdeck:
   if ( window.location.host.indexOf('tweetdeck.twitter.com') !== 0 ) return;
 
-  // Add class for css scoping
-  document.body.classList.add('buffer-tweetdeck');
-
-  var checkDarkTheme = function() {
-    var darkStylesheet = document.head.querySelector('link[title="dark"]');
-    if (!!darkStylesheet && !darkStylesheet.disabled) {
-      document.body.classList.add('buffer-tweetdeck-dark');
-    } else {
-      document.body.classList.remove('buffer-tweetdeck-dark');
-    }
-  };
-
-  $(document).on('ready', function() {
-    checkDarkTheme();
-    // Check again in case the app hasn't initialized
-    setTimeout(checkDarkTheme, 2000);
-  });
-
   var conifg = [
 
     // Streams
@@ -226,7 +208,27 @@
     setTimeout(tweetdeckLoop, 500);
   };
 
+  var checkDarkTheme = function() {
+    var darkStylesheet = document.head.querySelector('link[title="dark"]');
+    if (!!darkStylesheet && !darkStylesheet.disabled) {
+      document.body.classList.add('buffer-tweetdeck-dark');
+    } else {
+      document.body.classList.remove('buffer-tweetdeck-dark');
+    }
+  };
+
   var start = function() {
+
+    // Add class for css scoping
+    document.body.classList.add('buffer-tweetdeck');
+
+    $(document).on('ready', function() {
+      checkDarkTheme();
+      // Check again in case the app hasn't initialized
+      setTimeout(checkDarkTheme, 2000);
+    });
+
+    // Start the loop that will watch for new DOM elements
     tweetdeckLoop();
 
     // Listen for a RT click so we can inject into the modal instantly
@@ -248,7 +250,7 @@
     // If tweetdeck is switched on, start the main loop
     if (!xt.options) {
       setTimeout(check, 0);
-    } else if (xt.options['buffer.op.twitter'] === 'twitter') {
+    } else if (xt.options['buffer.op.tweetdeck'] === 'tweetdeck') {
       start();
     } else {
       setTimeout(check, 2000);
