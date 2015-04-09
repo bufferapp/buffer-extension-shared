@@ -598,20 +598,14 @@
     setTimeout(twitterLoop, 500);
   };
 
-  var start = function() {
-
-    // Add class for css scoping
+  // Add class for css scoping, try this twice in case the scripts load strangely
+  var addBufferClass = function(argument) {
     document.body.classList.add('buffer-twitter');
+    setTimeout(addBufferClass, 2000);
+  }
 
-    // Override the buffer-twitter.css file with a browser-specific image
-    $('head').append([
-      '<style>',
-        '.icon-buffer {',
-          'background-image: url(' + xt.data.get('data/shared/img/twitter-sprite.png') + ') !important;',
-        '}',
-      '</style>'
-    ].join(''));
-
+  var start = function() {
+    addBufferClass();
     twitterLoop();
   };
 
