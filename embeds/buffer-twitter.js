@@ -127,66 +127,19 @@
     },
     {
       // The main composer in the twitter "home" page
-      // NOTE: Additional style overrides are located at the top of this file
       name: "composer",
       text: "Buffer",
       container: 'div.tweet-button-sub-container, .tweet-form:not(.dm-tweetbox) .tweet-button',
       after: '.tweet-counter',
       className: 'buffer-tweet-button btn disabled',
       selector: '.buffer-tweet-button',
-      default: [
-        'vertical-align: top;',
-        'line-height: 19px;',
-      ].join(''),
-      style: [
-        'vertical-align: top;',
-        'line-height: 19px;',
-        'background: #4C9E46;',
-        'border: 1px solid rgba(0,0,0,0);',
-        'color: white !important;',
-        'text-shadow: rgba(0, 0, 0, 0.246094) 0px -1px 0px;',
-        'font-weight: bold;',
-        'box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);'
-      ].join(''),
-      hover: [
-        'background: #40873B;',
-        'background-image: -webkit-linear-gradient(rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15));',
-        'background-image: -moz-linear-gradient(rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15));',
-        'background-image: linear-gradient(rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15));'
-      ].join(''),
-      active: [
-        'box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);',
-        'background: #40873B; text-decoration: none;'
-      ].join(''),
       create: function (btnConfig) {
 
         var a = document.createElement('a');
         var $a = $(a);
         a.setAttribute('class', btnConfig.className);
-        a.setAttribute('style', btnConfig.default);
         a.setAttribute('href', '#');
         $a.text(btnConfig.text);
-
-        $a.hover(function () {
-          if( $(this).hasClass("disabled") ) {
-            $(this).attr('style', btnConfig.default);
-            return;
-          }
-          $(this).attr('style', btnConfig.style + btnConfig.hover);
-        }, function() {
-          if( $(this).hasClass("disabled") ) return;
-          $(this).attr('style', btnConfig.style);
-        });
-
-        $a.mousedown(function () {
-          if( $(this).hasClass("disabled") ) return;
-          $(this).attr('style', btnConfig.style + btnConfig.active);
-        });
-
-        $a.mouseup(function () {
-          if( $(this).hasClass("disabled") ) return;
-          $(this).attr('style', btnConfig.style + btnConfig.hover);
-        });
 
         return a;
       },
@@ -247,13 +200,9 @@
             $elem.siblings('.tweet-counter').val();
 
           if ( val.length > 0 && counter > -1 && val !== 'Compose new Tweet...') {
-            $elem
-              .removeClass('disabled')
-              .attr('style', btnConfig.style);
+            $elem.removeClass('disabled');
           } else {
-            $elem
-              .addClass('disabled')
-              .attr('style', btnConfig.default);
+            $elem.addClass('disabled');
           }
         });
       }
@@ -611,11 +560,17 @@
         var clearcb = function () {};
 
         $(btn).click(function (e) {
-          clearcb = function () { // allow clear to be called for this button
+          e.preventDefault();
+
+          if ($(this).hasClass('disabled'))
+            return;
+
+          // allow clear to be called for this button
+          clearcb = function () {
             if ( !! clearData ) clearData(btn);
           };
+
           xt.port.emit("buffer_click", getData(btn));
-          e.preventDefault();
         });
 
         xt.port.on("buffer_embed_clear", function () {
