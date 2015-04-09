@@ -129,7 +129,10 @@
       // The main composer in the twitter "home" page
       name: "composer",
       text: "Buffer",
-      container: 'div.tweet-button-sub-container, .tweet-form:not(.dm-tweetbox) .tweet-button',
+      container: [ // Two containers:
+        'div.tweet-button-sub-container',
+        '.tweet-form:not(.dm-tweetbox):not(.RetweetDialog-tweetForm) .tweet-button'
+      ].join(','),
       after: '.tweet-counter',
       className: 'buffer-tweet-button btn disabled',
       selector: '.buffer-tweet-button',
