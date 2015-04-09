@@ -3,18 +3,6 @@
   // Only run this script on twitter:
   if ( window.location.host.indexOf('twitter.com') !== 0 ) return;
 
-  // Add class for css scoping
-  document.body.classList.add('buffer-twitter');
-
-  // Override the buffer-twitter.css file with a browser-specific image
-  $('head').append([
-    '<style>',
-      '.icon-buffer {',
-        'background-image: url(' + xt.data.get('data/shared/img/twitter-sprite.png') + ') !important;',
-      '}',
-    '</style>'
-  ].join(''));
-
   var buildElement = function buildElement (parentConfig) {
 
     var temp = document.createElement(parentConfig[0]);
@@ -655,14 +643,30 @@
     setTimeout(twitterLoop, 500);
   };
 
+  var start = function() {
+
+    // Add class for css scoping
+    document.body.classList.add('buffer-twitter');
+
+    // Override the buffer-twitter.css file with a browser-specific image
+    $('head').append([
+      '<style>',
+        '.icon-buffer {',
+          'background-image: url(' + xt.data.get('data/shared/img/twitter-sprite.png') + ') !important;',
+        '}',
+      '</style>'
+    ].join(''));
+
+    twitterLoop();
+  };
+
   // Wait for xt.options to be set
   ;(function check() {
     // If twitter is switched on, start the main loop
-    if ( !xt.options) {
+    if (!xt.options) {
       setTimeout(check, 0);
-    }
-    else if( xt.options['buffer.op.twitter'] === 'twitter') {
-      twitterLoop();
+    } else if (xt.options['buffer.op.twitter'] === 'twitter') {
+      start();
     } else {
       setTimeout(check, 2000);
     }
