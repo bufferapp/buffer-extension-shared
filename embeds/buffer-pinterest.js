@@ -105,14 +105,33 @@
         return $newActionItem;
       },
       getData: function(el) {
-        var $img = $(el).parents('.Module.inModal').children('.pinContainer').find('.pinImg');
+        var $img = $(el).parents('.boardsWrapper').siblings('.pinContainer').find('.pinImg');
 
         var image = $img.attr('src');
         // Grab text from image alt attribute
         var text = $img.attr('alt');
 
-        var $source = $(el).parents('.Module.inModal').children('.pinContainer').find('.pinDomain');
+        var $source = $(el).parents('.boardsWrapper').siblings('.pinContainer').find('.pinDomain');
         var source = $source.text();
+
+        if(!source){
+          if(window.location.search){
+            var params = window.location.search.split('&');
+
+            var urlIndex = -1;
+            for(var i = 0; i < params.length; i++){
+              if(params[i].indexOf('?url') > -1){
+                urlIndex = 0;
+                break;
+              }
+            }
+
+            if(urlIndex > -1){
+              source = decodeURIComponent(params[urlIndex].split("=")[1]);
+            }
+          }
+
+        }
 
         return {
           text: text,
