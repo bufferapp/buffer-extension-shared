@@ -31,9 +31,12 @@
         var image = $img.attr('src');
         // Grab text from image alt attribute
         var text = $img.attr('alt');
+
+        var $source = $(el).find('.pinNavLink');
+        var source = $source.attr('href');
         return {
           text: text,
-          url: "https://www.pinterest.com",
+          url: source,
           picture: image,
           placement: this.placement
         };
