@@ -6,7 +6,7 @@
 
 /* Hover */
 
-.buffer-pinterest .pinImageActionButtonWrapper.buffer-inserted .pin-action-item{
+.buffer-pinterest .Pin.Module.buffer-inserted .pinImageActionButtonWrapper .pin-action-item{
   display: none;
   position: absolute;
   z-index: 101;
@@ -16,13 +16,25 @@
   top: 8px;
   border-radius: 4px;
 }
-.buffer-pinterest .pinImageActionButtonWrapper.buffer-inserted .pin-action-item:hover{
+.buffer-pinterest .Pin.Module.buffer-inserted .pinImageActionButtonWrapper .pin-action-item:hover{
   border-color: #666;
 }
-.buffer-pinterest .pinImageActionButtonWrapper.buffer-inserted:hover .pin-action-item{
+.buffer-pinterest .Pin.Module.buffer-inserted .pinImageActionButtonWrapper:hover .pin-action-item{
   display: block;
 }
 
+.buffer-pinterest .BoardLabel.Module.buffer-inserted .pin-action-item {
+  display: none;
+  float: right;
+  width: 14px;
+  padding: 6px 17px 6px 6px;
+  border-radius: 4px;
+  margin-left: 5px;
+}
+
+.buffer-pinterest .Module.SelectList .item.selected .BoardLabel.Module.buffer-inserted .pin-action-item {
+  display: block;
+}
 .buffer-pinterest .PinActionBar.buffer-inserted .pin-action-item.action-bar{
   width: 20px;
   height: 20px;
@@ -31,6 +43,8 @@
   border-radius: 3px;
   padding: 7px 13px 7px 8px;
 }
+
+
 
 
 /* The main buffer icon
