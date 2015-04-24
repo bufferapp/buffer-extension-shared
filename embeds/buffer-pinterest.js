@@ -120,8 +120,8 @@
 
             var urlIndex = -1;
             for(var i = 0; i < params.length; i++){
-              if(params[i].indexOf('?url') > -1){
-                urlIndex = 0;
+              if(params[i].indexOf('url=') > -1){
+                urlIndex = i;
                 break;
               }
             }
