@@ -175,8 +175,6 @@
 
   // Wait for xt.options to be set
   ;(function check() {
-    start();
-
     // If Pinterest is switched on, start the main loop
     if (!xt.options) {
       setTimeout(check, 0);
