@@ -36,7 +36,7 @@
         if($source.length === 0){
           $source = $(el).find('.pinDomain');
         }
-        console.error($source);
+
         var source = $source.attr('href') || $source.text();
         return {
           text: text,
