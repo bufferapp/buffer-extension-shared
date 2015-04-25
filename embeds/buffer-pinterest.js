@@ -33,7 +33,11 @@
         var text = $img.attr('alt');
 
         var $source = $(el).find('.pinNavLink');
-        var source = $source.attr('href');
+        if($source.length === 0){
+          $source = $(el).find('.pinDomain');
+        }
+        console.error($source);
+        var source = $source.attr('href') || $source.text();
         return {
           text: text,
           url: source,
