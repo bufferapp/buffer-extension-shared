@@ -12,15 +12,27 @@
   z-index: 101;
   left: 150px;
   padding: 5px 10px 5px 5px;
-  border: 1px solid #999;
+  border: 1px solid rgba(0, 0, 0, 0.55) !important;
   top: 8px;
   border-radius: 4px;
+}
+.buffer-pinterest .Pin.Module.buffer-inserted .pinImageActionButtonWrapper .pin-action-item.Button.btn {
+  position: absolute;
+  display: none;
+  padding: 5px 10px 5px 5px;
 }
 .buffer-pinterest .Pin.Module.buffer-inserted .pinImageActionButtonWrapper .pin-action-item:hover{
   border-color: #666;
 }
 .buffer-pinterest .Pin.Module.buffer-inserted .pinImageActionButtonWrapper:hover .pin-action-item{
   display: block;
+}
+
+.buffer-pinterest .Pin.Module.buffer-inserted .pinImageActionButtonWrapper:hover .pin-action-item.Button.btn{
+  border: 1px solid rgba(0, 0, 0, 0.55) !important;
+  display: inline-block !important;
+  position: absolute !important;
+  padding: 5px 10px 5px 5px !important;
 }
 
 .buffer-pinterest .BoardLabel.Module.buffer-inserted .pin-action-item {
