@@ -47,6 +47,11 @@
 .buffer-pinterest .Module.SelectList .item.selected .BoardLabel.Module.buffer-inserted .pin-action-item {
   display: block;
 }
+
+.buffer-pinterest .Module.SelectList .BoardLabel.Module.buffer-inserted .pin-action-item.Button.btn{
+  padding: 6px 16px 6px 6px !important;
+}
+
 .buffer-pinterest .PinActionBar.buffer-inserted .pin-action-item.action-bar{
   width: 20px;
   height: 20px;
@@ -55,6 +60,11 @@
   border-radius: 3px;
   padding: 7px 13px 7px 8px;
 }
+.buffer-pinterest .PinActionBar.buffer-inserted .pin-action-item.action-bar.Button.btn{
+  padding: 5px 10px 1px 5px !important;
+  height: 28px !important;
+}
+
 
 
 
