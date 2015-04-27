@@ -182,7 +182,7 @@
     // If Pinterest is switched on, start the main loop
     if (!xt.options) {
       setTimeout(check, 0);
-    } else if (xt.options['buffer.op.pinterest'] === 'pinterest') {
+    } else if (xt.options['buffer.op.pinterest'] === 'pinterest' || typeof xt.options['buffer.op.pinterest'] == 'undefined') {
       start();
     } else {
       setTimeout(check, 2000);
