@@ -115,8 +115,9 @@
         // Grab text from image alt attribute
         var text = $img.attr('alt');
 
-        var $source = $(el).parents('.boardsWrapper').siblings('.pinContainer').find('.pinDomain');
-        var source = $source.text();
+        // Grab full url from page behind modal
+        var $source = $(document).find('img[src="'+image+'"]').parents('.pinHolder').siblings('.pinNavLink');
+        var source = $source.attr('href');
 
         if(!source){
           if(window.location.search){
