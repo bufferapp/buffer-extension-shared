@@ -41,6 +41,7 @@ var openPopUp = function(src, doneCallback) {
  * to this issue: https://github.com/bufferapp/buffer-chrome/issues/12
  */
 var CSPWhitelist = [
+  'twitter.com',
   'github.com',
   'education.github.com',
   'medium.com',
