@@ -1,4 +1,4 @@
-/* globals bufferpm, chrome */
+/* globals bufferpm, chrome, safari */
 
 // Put together a query string for the iframe
 var buildSrc = function(data, config) {
@@ -20,9 +20,14 @@ var buildSrc = function(data, config) {
   return src;
 };
 
-var openPopUp = function(src, doneCallback) {
+var openPopUp = function(src, port, doneCallback) {
 
-  window.open(src, null, 'height=600,width=850');
+  // Safari doesn't allow window.open when popups are disabled
+  if (typeof safari !== 'undefined') {
+    port.emit('buffer_safari_open', src);
+  } else {
+    window.open(src, null, 'height=600,width=850');
+  }
 
   // Bind close listener
   // Listen for when the overlay has closed itself
@@ -52,7 +57,7 @@ var CSPWhitelist = [
 
 // Build that overlay!
 // Triggered by code working from the button up
-var bufferOverlay = function(data, config, doneCallback) {
+var bufferOverlay = function(data, config, port, doneCallback) {
 
   if( ! doneCallback ) doneCallback = function () {};
   if( ! config ) return;
@@ -62,7 +67,7 @@ var bufferOverlay = function(data, config, doneCallback) {
 
   if (xt.options['buffer.op.tpc-disabled'] ||
     CSPWhitelist.indexOf(domain) > -1 ) {
-    return openPopUp(src, doneCallback);
+    return openPopUp(src, port, doneCallback);
   }
 
   // Create the iframe and add the footer:
@@ -458,7 +463,7 @@ var bufferData = function (port, postData) {
         data.embed = null;
       }
     }
-    bufferOverlay(data, config, function (overlaydata) {
+    bufferOverlay(data, config, port, function (overlaydata) {
       port.emit("buffer_done", overlaydata);
     });
   };
