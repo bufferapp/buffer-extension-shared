@@ -267,8 +267,17 @@ var getOverlayConfig = function(postData){
     {
       name: "text",
       get: function (cb) {
-        if (document.getSelection().toString().length) {
-          return cb('"' + document.getSelection().toString() + '"');
+        var selectedText = document.getSelection().toString();
+        var quoteChars;
+
+        if (selectedText) {
+          // If quotes surround the selected text, strip them away
+          quoteChars = ['"', '“', '”', '\'', '‘', '’', '«', '»'];
+          if (quoteChars.indexOf(selectedText[0]) != -1 && quoteChars.indexOf(selectedText[selectedText.length - 1]) != -1) {
+            selectedText = selectedText.slice(1, selectedText.length - 1);
+          }
+
+          return cb('"' + selectedText + '"');
         }
 
         if (config.pocketWeb){
