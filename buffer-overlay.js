@@ -22,12 +22,8 @@ var buildSrc = function(data, config) {
 
 var openPopUp = function(src, port, doneCallback) {
 
-  // Safari doesn't allow window.open when popups are disabled
-  if (typeof safari !== 'undefined') {
-    port.emit('buffer_safari_open', src);
-  } else {
-    window.open(src, null, 'height=600,width=850');
-  }
+  // Open popups from privileged code
+  port.emit('buffer_open_popup', src);
 
   // Bind close listener
   // Listen for when the overlay has closed itself
