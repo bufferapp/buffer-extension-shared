@@ -279,7 +279,7 @@
       // after: '.share_action_link',
       // Adjustment made w/ Timeline adjustments noticed by Joel Mar 26 2015
       after: function($container) {
-        var $shareBtn = $container.find('.share_action_link');
+        var $shareBtn = $container.find('.share_root');
         // share_action_link's parent, only if the par is div.uiPopover
         if ($shareBtn.parent().hasClass('uiPopover')) return $shareBtn.parent();
         return $shareBtn;
