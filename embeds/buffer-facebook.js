@@ -288,10 +288,11 @@
       create: function(btnConfig) {
 
         var span = document.createElement('span');
-        var spacer = document.createTextNode(' · ');
+        var spacer = document.createTextNode(' \u00A0'); // A space, followed by a nbsp
         var button = document.createElement('a');
 
         button.setAttribute('style', btnConfig.default);
+        button.setAttribute('class', 'buffer-facebook-newsfeed-post-embed');
         button.setAttribute('href', '#');
         button.textContent = btnConfig.text;
 
