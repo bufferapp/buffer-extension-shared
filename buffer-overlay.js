@@ -50,7 +50,6 @@ var CSPWhitelist = [
   'www.npmjs.com' // DEC 2014
 ];
 
-
 // Build that overlay!
 // Triggered by code working from the button up
 var bufferOverlay = function(data, config, port, doneCallback) {
@@ -65,6 +64,9 @@ var bufferOverlay = function(data, config, port, doneCallback) {
     CSPWhitelist.indexOf(domain) > -1 ) {
     return openPopUp(src, port, doneCallback);
   }
+
+  var shouldContinue = ensureOnlyOneOverlayOpen(data, closePopup.bind(window, document, doneCallback));
+  if (!shouldContinue) return;
 
   // Create the iframe and add the footer:
   var iframe = document.createElement('iframe');
@@ -105,9 +107,12 @@ var bufferOverlay = function(data, config, port, doneCallback) {
   /**
    * Listen to ESC key and close the popup when hit.
    */
-  $(document).keyup(function(e) {
+  $(document).on('keyup.bufferOverlay', function(e) {
     if (e.keyCode == 27) {
-        closePopup(document, doneCallback);
+      // When an overlay instance is hidden (but still open), don't let shortcuts close it
+      if (!ensureOnlyOneOverlayOpen.isOverlayVisible()) return;
+
+      closePopup(document, doneCallback);
     }
   });
 
@@ -121,6 +126,30 @@ var bufferOverlay = function(data, config, port, doneCallback) {
     }
   });
 };
+
+// Returns true if a new overlay should be open, false if we've toggled the visibility of
+// and existing overlay instead.
+function ensureOnlyOneOverlayOpen(data, closePopup) {
+  // State can't be saved in this script, since it gets re-executed multiple times by some browsers
+  // (e.g. Firefox), so we rely on the DOM instead.
+  var isOverlayOpen = function() { return !!$('#buffer_overlay').length };
+
+  // If the open intent comes from the Buffer toolbar button or a keyboard shortcut, toggle the
+  // visibility of the overlay if it's already open, otherwise allow a new one to be open.
+  if (data.placement == 'toolbar' || data.placement == 'hotkey') {
+    if (!isOverlayOpen()) return true;
+
+    $('#buffer_overlay, .buffer-floating-cancel-btn, .buffer-floating-btn').toggle();
+    return false;
+  }
+
+  // If the open intent comes from somewhere else, discard any hidden overlay and open a new one
+  closePopup();
+
+  return true;
+};
+
+ensureOnlyOneOverlayOpen.isOverlayVisible = function() { return $('#buffer_overlay').is(':visible') };
 
 function closePopup(document, doneCallback, overlayData) {
 
@@ -138,6 +167,8 @@ function closePopup(document, doneCallback, overlayData) {
 
     bufferpm.unbind('buffermessage');
     bufferpm.unbind('buffer_addbutton');
+
+    $(document).off('keyup.bufferOverlay');
 
     setTimeout(function () {
       doneCallback(overlayData);
