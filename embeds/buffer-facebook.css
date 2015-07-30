@@ -15,3 +15,20 @@
   background-repeat: no-repeat;
   background-size: 14px 14px;
 }
+
+.buffer-facebook-ticker-embed-spacer,
+.tickerDialogContent .buffer-facebook-newsfeed-embed-spacer {
+  display: none;
+}
+
+.tickerDialogContent .buffer-facebook-ticker-embed-spacer {
+  display: inline;
+}
+
+.tickerDialogContent .buffer-facebook-newsfeed-post-embed {
+  padding-left: 0 !important;
+}
+
+.tickerDialogContent .buffer-facebook-newsfeed-post-embed:before {
+  content: none;
+}

@@ -288,7 +288,6 @@
       create: function(btnConfig) {
 
         var span = document.createElement('span');
-        var spacer = document.createTextNode(' \u00A0'); // A space, followed by a nbsp
         var button = document.createElement('a');
 
         button.setAttribute('style', btnConfig.default);
@@ -296,7 +295,16 @@
         button.setAttribute('href', '#');
         button.textContent = btnConfig.text;
 
-        span.appendChild(spacer);
+        var timelineSpacer = document.createElement('span');
+        timelineSpacer.appendChild(document.createTextNode(' \u00A0')); // A space, followed by a nbsp
+        timelineSpacer.setAttribute('class', 'buffer-facebook-newsfeed-embed-spacer');
+
+        var tickerSpacer = document.createElement('span');
+        tickerSpacer.appendChild(document.createTextNode(' · '));
+        tickerSpacer.setAttribute('class', 'buffer-facebook-ticker-embed-spacer');
+
+        span.appendChild(timelineSpacer);
+        span.appendChild(tickerSpacer);
         span.appendChild(button);
 
         return span;
