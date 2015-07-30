@@ -27,6 +27,22 @@
     }
   };
 
+  var getTextFromRichtext = function(html) {
+    var text;
+
+    html = html
+      .replace(/<div><br><\/div>/gi, '\n')
+      .replace(/<\/div>/gi, '\n')
+      .replace(/<\/p>/gi, '\n')
+      .replace(/<br>/gi, '\n');
+
+    text = $('<div>')
+      .html(html)
+      .text();
+
+    return text;
+  };
+
   config.buttons = [
     {
       // The standalone tweet page after a "Tweet" button has been clicked
@@ -156,15 +172,7 @@
           .find('.tweet-content .tweet-box')
           .html();
 
-        html = html
-          .replace(/<div><br><\/div>/gi, '\n')
-          .replace(/<\/div>/gi, '\n')
-          .replace(/<\/p>/gi, '\n')
-          .replace(/<br>/gi, '\n');
-
-        text = $('<div>')
-          .html(html)
-          .text();
+        text = getTextFromRichtext(html);
 
         return {
           text: text,
@@ -459,6 +467,72 @@
         if( $btn.closest('.in-reply-to').length > 0 ) {
           $btn.find('i').css({'background-position-y': '-21px'});
         }
+      }
+    },
+    {
+      // Retweet modal window
+      name: "retweet",
+      text: "Buffer Retweet",
+      container: '.tweet-form.RetweetDialog-tweetForm .tweet-button',
+      after: '.tweet-counter',
+      className: 'buffer-tweet-button btn',
+      selector: '.buffer-tweet-button',
+      create: function (btnConfig) {
+
+        var a = document.createElement('a');
+        a.setAttribute('class', btnConfig.className);
+        a.setAttribute('href', '#');
+        $(a).text(btnConfig.text);
+
+        return a;
+
+      },
+      data: function (elem) {
+        var $elem = $(elem);
+
+        var $dialog = $elem.closest('.retweet-tweet-dialog, #retweet-dialog, #retweet-tweet-dialog');
+
+        var $tweet = $dialog.find('.js-actionable-tweet').first();
+
+        var screenname = $tweet.attr('data-screen-name');
+        if (!screenname) {
+          screenname = $tweet.find('.js-action-profile-name')
+            .filter(function(i){ return $(this).text()[0] === '@' })
+            .first()
+            .text()
+            .trim()
+            .replace(/^@/, '');
+        }
+        var tweetText = $tweet.find('.js-tweet-text').text().trim();
+        var text = 'RT @' + screenname + ': ' + tweetText + '';
+
+        var commentHtml = $elem.closest('form.is-withComment').find('.tweet-content .tweet-box').html();
+        var comment = commentHtml? getTextFromRichtext(commentHtml) : '';
+
+        return {
+          text: text,
+          placement: 'twitter-retweet',
+          retweeted_tweet_id:          $tweet.attr('data-item-id'),
+          retweeted_user_id:           $tweet.attr('data-user-id'),
+          retweeted_user_name:         $tweet.attr('data-screen-name'),
+          retweeted_user_display_name: $tweet.attr('data-name'),
+          retweet_comment:             comment
+        };
+      },
+      activator: function (elem, btnConfig) {
+        var $elem = $(elem);
+        var $target = $elem.closest('form').find('.tweet-content .tweet-box');
+
+        $target.on('keyup focus blur change paste cut', function(e) {
+          var counter = $elem.siblings('.tweet-counter').text() ||
+            $elem.siblings('.tweet-counter').val();
+
+          if (counter > -1) {
+            $elem.removeClass('disabled');
+          } else {
+            $elem.addClass('disabled');
+          }
+        });
       }
     }
 

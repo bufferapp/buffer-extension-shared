@@ -361,6 +361,15 @@ var getOverlayConfig = function(postData){
       }
     },
     {
+      name: "retweet_comment",
+      get: function (cb) {
+        cb(postData.retweet_comment);
+      },
+      encode: function (val) {
+        return encodeURIComponent(val);
+      }
+    },
+    {
       name: "picture",
       get: function (cb) {
         cb(postData.image);
