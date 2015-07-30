@@ -1,0 +1,11 @@
+/* The main buffer icon
+ *
+ * NOTE - Safari ignores selector specificity with injected stylesheets so
+ * !important's are needed to override the default Twitter styles
+ */
+.icon.icon-buffer:before {
+  content: url('chrome-extension://__MSG_@@extension_id__/data/shared/img/buffer-icon-small.png') !important;
+  padding-right:4px;
+  top: 2px;
+  position: relative;
+}
