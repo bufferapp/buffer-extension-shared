@@ -382,7 +382,8 @@
       // October 2014 profile & home stream changes
       name: "buffer-profile-stream-OCT-2014",
       text: "Add to Buffer",
-      container: '.js-stream-item .js-actions',
+      // NOTE - to avoid injection into AUG 2015 stream (see below)
+      container: '.js-stream-item .js-actions:not(.ProfileTweet-actionList--withCircle)',
       after: '.js-toggleRt, .js-toggle-rt',
       //NOTE: .js-toggleRt is new OCT 2014
       default: '',
@@ -406,6 +407,106 @@
         $(div).append(a);
 
         return div;
+      },
+      data: function (elem) {
+
+        // NOTE: .js-stream-tweet - new in OCT 2014
+        var $tweet = $(elem).closest('.js-tweet, .js-stream-tweet');
+        var $text = $tweet.find('.js-tweet-text').first();
+
+        // Iterate through all links in the text
+        $text.children('a').each(function () {
+          // Don't modify the screennames and the hashtags
+          if( $(this).attr('data-screen-name') ) return;
+          if( $(this).hasClass('twitter-atreply') ) return;
+          if( $(this).hasClass('twitter-hashtag') ) return;
+          // swap the text with the actual link
+          var original = $(this).text();
+          $(this).text($(this).attr("href")).attr('data-original-text', original);
+        });
+
+        // Build the RT text
+        var screenname = $tweet.attr('data-screen-name');
+        if (!screenname) {
+          screenname = $tweet.find('.js-action-profile-name')
+            .filter(function(i){ return $(this).text()[0] === '@' })
+            .first()
+            .text()
+            .trim()
+            .replace(/^@/, '');
+        }
+        var text = 'RT @' + screenname + ': ' + $text.text().trim() + '';
+
+        // Put the right links back
+        $text.children('a').each(function () {
+          if( ! $(this).attr('data-original-text') ) return;
+          $(this).text($(this).attr('data-original-text'));
+        });
+
+        // Send back the data
+        return {
+          text: text,
+          placement: 'twitter-feed',
+          // grab info for retweeting
+          retweeted_tweet_id:          $tweet.attr('data-item-id'),
+          retweeted_user_id:           $tweet.attr('data-user-id'),
+          retweeted_user_name:         $tweet.attr('data-screen-name'),
+          retweeted_user_display_name: $tweet.attr('data-name')
+        };
+      },
+      clear: function (elem) {
+      },
+      activator: function (elem, btnConfig) {
+        var $btn = $(elem);
+
+        // Remove extra margin on the last item in the list to prevent overflow
+        var moreActions = $btn.siblings('.js-more-tweet-actions').get(0);
+        if (moreActions) {
+          moreActions.style.marginRight = '0px';
+        }
+
+        if( $btn.closest('.in-reply-to').length > 0 ) {
+          $btn.find('i').css({'background-position-y': '-21px'});
+        }
+      }
+    },
+    {
+      // August 2015 stream changes (circles)
+      name: "buffer-profile-stream-AUG-2015",
+      text: "Add to Buffer",
+      container: '.js-stream-item .js-actions.ProfileTweet-actionList--withCircle',
+      after: '.js-toggleRt, .js-toggle-rt',
+      default: '',
+      className: 'ProfileTweet-action js-tooltip',
+      selector: '.buffer-action',
+      create: function (btnConfig) {
+
+        /* Desired DOM structure:
+          <div class="ProfileTweet-action ProfileTweet-action--buffer">
+            <button class="ProfileTweet-actionButton js-tooltip" type="button" data-original-title="Add to Buffer">
+              <span class="Icon Icon--buffer"></span>
+              <span class="u-hiddenVisually">Buffer</span>
+            </button>
+          <div>
+        */
+
+        var action = document.createElement('div');
+        action.className = 'ProfileTweet-action ProfileTweet-action--buffer';
+        var button = document.createElement('button');
+        button.className = 'ProfileTweet-actionButton js-tooltip';
+        button.type = 'button';
+        button.setAttribute('data-original-title', btnConfig.text); // tooltip text
+        var icon = document.createElement('span');
+        icon.className = 'Icon Icon--buffer';
+        var text = document.createElement('span');
+        text.className = 'u-hiddenVisually';
+        text.textContent = 'Buffer';
+
+        button.appendChild(icon);
+        button.appendChild(text);
+        action.appendChild(button);
+
+        return action;
       },
       data: function (elem) {
 
