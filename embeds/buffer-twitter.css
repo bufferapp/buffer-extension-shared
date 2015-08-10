@@ -99,6 +99,7 @@
   padding: 7px 8px 6px;
 }
 .buffer-twitter .tweet-button.buffer-inserted .btn.retweet-action {
+  height: 35px;
   padding-top: 2px;
   padding-bottom: 9px;
 }
