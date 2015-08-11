@@ -301,7 +301,8 @@
       name: "buffer-permalink-action-OCT-2014",
       text: "Add to Buffer",
       // NOTE - Possibly switch from permalink one day
-      container: '.permalink .js-actionable-tweet .js-actions',
+      // NOTE - to avoid injection into AUG 2015 stream (see below)
+      container: '.permalink .js-actionable-tweet .js-actions:not(.ProfileTweet-actionList--withCircle)',
       after: '.js-toggleRt',
       default: '',
       className: 'ProfileTweet-action js-tooltip',
@@ -474,7 +475,10 @@
       // August 2015 stream changes (circles)
       name: "buffer-profile-stream-AUG-2015",
       text: "Add to Buffer",
-      container: '.js-stream-item .js-actions.ProfileTweet-actionList--withCircle',
+      container:
+        '.js-stream-tweet .js-actions.ProfileTweet-actionList--withCircle,' +
+        '.permalink .js-actionable-tweet .js-actions.ProfileTweet-actionList--withCircle'
+      ,
       after: '.js-toggleRt, .js-toggle-rt',
       default: '',
       className: 'ProfileTweet-action js-tooltip',
@@ -524,7 +528,7 @@
       data: function (elem) {
 
         // NOTE: .js-stream-tweet - new in OCT 2014
-        var $tweet = $(elem).closest('.js-tweet, .js-stream-tweet');
+        var $tweet = $(elem).closest('.js-tweet, .js-stream-tweet, .js-actionable-tweet');
         var $text = $tweet.find('.js-tweet-text').first();
 
         // Iterate through all links in the text
