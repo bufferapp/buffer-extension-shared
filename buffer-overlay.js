@@ -304,7 +304,7 @@ var getOverlayConfig = function(postData){
             selectedText = selectedText.slice(1, selectedText.length - 1);
           }
 
-          return cb('"' + selectedText + '"');
+          return cb('“' + selectedText + '”');
         }
 
         if (config.pocketWeb){
