@@ -487,11 +487,11 @@
 
         /* Desired DOM structure:
           <div class="ProfileTweet-action ProfileTweet-action--buffer js-toggleState">
-            <button class="ProfileTweet-actionButton" type="button">
+            <button class="ProfileTweet-actionButton js-actionButton" type="button">
               <div class="IconContainer js-tooltip" data-original-title="Add to Buffer">
-                <span class="Icon Icon--buffer"></span>
-                <span class="Icon Icon--circle"></span>
                 <span class="Icon Icon--circleFill"></span>
+                <span class="Icon Icon--circle"></span>
+                <span class="Icon Icon--buffer"></span>
                 <span class="u-hiddenVisually">Buffer</span>
               </div>
             </button>
@@ -501,7 +501,7 @@
         var action = document.createElement('div');
         action.className = 'ProfileTweet-action ProfileTweet-action--buffer js-toggleState';
         var button = document.createElement('button');
-        button.className = 'ProfileTweet-actionButton';
+        button.className = 'ProfileTweet-actionButton js-actionButton';
         button.type = 'button';
         var iconCntr = document.createElement('div');
         iconCntr.className = 'IconContainer js-tooltip';
@@ -516,9 +516,9 @@
         text.className = 'u-hiddenVisually';
         text.textContent = 'Buffer';
 
-        iconCntr.appendChild(icon);
-        iconCntr.appendChild(circle);
         iconCntr.appendChild(circleFill);
+        iconCntr.appendChild(circle);
+        iconCntr.appendChild(icon);
         iconCntr.appendChild(text);
         button.appendChild(iconCntr);
         action.appendChild(button);
