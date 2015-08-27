@@ -57,6 +57,8 @@ var bufferOverlay = function(data, config, port, doneCallback) {
   if( ! doneCallback ) doneCallback = function () {};
   if( ! config ) return;
 
+  _bmq.grabPort(port);
+
   var src = buildSrc(data, config);
   var domain = window.location.hostname;
 
@@ -226,6 +228,10 @@ var createDashboardButton = function() {
 
   var text = document.createTextNode('Go to Buffer');
   button.appendChild(text);
+
+  button.addEventListener('click', function() {
+    _bmq.trackAction(['composer', 'go_to_buffer_button']);
+  }, false);
 
   return button;
 };
@@ -518,3 +524,36 @@ var bufferData = function (port, postData) {
   // gathered all the necessaries
   getData(postData, createOverlay);
 };
+
+// _bmq exposes the same API here as it does in background scripts, but
+// here it only takes care of passing this data to the background script's
+// _bmq where it will be effectively taken care of.
+var _bmq = (function() {
+  var _availableMethods = ['push', 'trackAction'];
+  var _port;
+
+  var _passForward = function(methodName) {
+    var payload = {
+      methodName: methodName,
+      args: Array.prototype.slice.call(arguments, 1)
+    };
+
+    _port.emit('buffer_tracking', payload);
+  };
+
+  var exposed = {};
+
+  // Executed at the very beginning of bufferOverlay()'s execution to
+  // cache the port and avoid passing it around in function calls to
+  // make the API equivalent to the original _bmq object.
+  exposed.grabPort = function(port) {
+    _port = port;
+  };
+
+  // Expose all _availableMethods
+  _availableMethods.forEach(function(methodName) {
+    exposed[methodName] = _passForward.bind(null, methodName);
+  });
+
+  return exposed;
+}());
