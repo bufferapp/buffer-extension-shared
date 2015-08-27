@@ -137,20 +137,12 @@
       share.placement = 'facebook-timeline-status';
     }
 
-    // Facebook does some href switching via js on link rollover
-    // If the user doesn't rollover, we have some leave facebook url
+    // Sometimes, href attributes are dynamically updated by Facebook, so we
+    // have to extract the url from a string that looks like "https://www.facebook.
+    // com/l.php?u=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DBF9TjbdJyUE&h=aAQ[…]"
     if (share.url && share.url.indexOf('facebook.com/l.php?') > -1) {
-
-      var mouseoverAttr = $anchor.attr('onmouseover');
-
-      if (mouseoverAttr.indexOf('LinkshimAsyncLink') > -1) {
-        share.url = mouseoverAttr
-          .split('"')
-          .filter(function(part){
-            return part.indexOf('http') === 0;
-          })[0];
-      }
-
+      var urlMatches = share.url.match(/u=([^&]+)/i); // Capture url inside the u= param
+      if (urlMatches) share.url = decodeURIComponent(urlMatches[1]);
     }
 
     return share;
