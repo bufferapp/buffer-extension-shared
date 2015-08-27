@@ -101,8 +101,12 @@
     // find the message for this attachment, or if none use the attachment caption
     share.text = $(selectors.text, parent).first().text();
 
-    var $thumb = $(selectors.thumb, parent);
-    var image = $thumb.attr('src');
+    var $thumb = $(selectors.thumb, parent).first();
+
+    var image;
+    // Make sure retrieved images are part of the post, not comments below
+    if (!$thumb.closest('.commentable_item').length) image = $thumb.attr('src');
+
     var $videoThumb = $(selectors.videoThumb, parent);
     var $anchor = $(selectors.anchor, parent);
 
