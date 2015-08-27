@@ -65,7 +65,7 @@
       '.spotlight'
     ].join(', '),
 
-    videoThumb: '.uiVideoThumb img',
+    videoThumb: 'video ~ div > img',
 
     // a.shareLink - page timelines, 3/2014
     // .shareLink a:not([href="#"]) - small embeds on user timeline, ex. YouTube, 3/2014
@@ -123,9 +123,9 @@
       // share.url = $('a.uiPhotoThumb, a.photo', parent).attr('href');
       share.placement = 'facebook-timeline-picture';
     } else if ($videoThumb.length) {
-      share.url = url;
-      image = $videoThumb[0].src.replace(/c([0-9]+\.)+[0-9]+\//, '');
-      share.picture = image;
+      share.url = parent.find('h5 + div a').first().attr('href');
+      if (share.url[0] == '/') share.url = 'https://facebook.com' + share.url;
+
       share.placement = 'facebook-timeline-video';
     } else if (url) {
       // find link status
