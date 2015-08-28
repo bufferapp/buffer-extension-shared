@@ -126,9 +126,25 @@
       // Disable this until we add sharing to the image modal
       // share.url = $('a.uiPhotoThumb, a.photo', parent).attr('href');
       share.placement = 'facebook-timeline-picture';
+
+    // The link to the video in video posts can change a bit between regular video
+    // posts, "X liked Y's video", and "X shared Y's video". Since there's no reliable
+    // enough way to get the video link based on class names / other DOM cues, we're
+    // fetching it by going over all the post's links.
+    // Facebook video links can look like 'facebook.com/username/videos/0123456789/'
+    // and 'facebook.com/video.php?v=0123456789'
     } else if ($videoThumb.length) {
-      share.url = parent.find('h5 + div a').first().attr('href');
-      if (share.url[0] == '/') share.url = 'https://facebook.com' + share.url;
+      var $postLinks = parent.find('a');
+      var videoLinkRegex = /(?:\/videos\/\d+\/)|(?:\/video\.php\?v=\d+)/i;
+      var videoLink;
+
+      $postLinks.each(function() {
+        var href = $(this).attr('href') || '';
+        if (videoLinkRegex.test(href)) videoLink = href;
+      });
+
+      if (videoLink) share.url = videoLink;
+      if (share.url && share.url[0] == '/') share.url = 'https://facebook.com' + share.url;
 
       share.placement = 'facebook-timeline-video';
     } else if (url) {
