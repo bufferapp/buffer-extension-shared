@@ -29,14 +29,15 @@ if (typeof isFirefox != 'undefined' && isFirefox) {
     post: function(url, params) {
       var Request = require('sdk/request').Request;
 
-      Request({
-        url: url,
-        content: params,
-        onComplete: function (response) {
-          console.error('YES!');
-          console.error(response);
-        }
-      }).post();
+      var promise = new Promise(function(resolvePromise) {
+        Request({
+          url: url,
+          content: params,
+          onComplete: resolvePromise // One param, the Response object
+        }).post();
+      });
+
+      return promise;
     }
   };
 }
