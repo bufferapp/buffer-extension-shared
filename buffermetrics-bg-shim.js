@@ -53,10 +53,23 @@ jQuery.post = (function() {
   var orig = jQuery.post;
 
   return function() {
+    var values;
+
     // The first argument to $.post() is the URL string
     if (arguments[0] && arguments[0].length) {
       if (arguments[0][0] == '/') arguments[0] = 'https://buffer.com' + arguments[0];
     }
+
+    // The second arg is all the data being passed. We're hijacking that to add an
+    // extra "browser" value to every data point collected.
+    // (This could have been done by piggybacking on _bmq itself, but it felt simpler
+    // to continue changing buffermetrics.js's behavior here.)
+    values = arguments[1].values;
+    values.forEach(function(value) {
+      if (typeof value.extra_data != 'object' || value.extra_data == null) value.extra_data = {};
+      value.extra_data.browser = config.plugin.browser;
+      value.extra_data.extension_version = config.plugin.version;
+    });
 
     return orig.apply(jQuery, arguments);
   };
