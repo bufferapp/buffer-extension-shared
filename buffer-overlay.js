@@ -85,18 +85,24 @@ var bufferOverlay = function(data, config, port, doneCallback) {
   // var qs = src.split('?')[1];
   // iframe.src = xt.data.get('data/shared/extension.html?' + qs);
 
-  document.body.appendChild(iframe);
 
-  var styleTag = createStyleTag();
-  document.body.appendChild(styleTag);
-
+  var rightCnt = createBtnContainer('right');
+  var helpButton = createHelpButton();
   var dashboardButton = createDashboardButton();
-  document.body.appendChild(dashboardButton);
 
+  rightCnt.appendChild(helpButton);
+  rightCnt.appendChild(dashboardButton);
+
+  var leftCnt = createBtnContainer('left');
   var cancelButton = createCancelButton();
-  document.body.appendChild(cancelButton);
 
-  $(document).on('click', '.buffer-floating-cancel-btn', function() {
+  leftCnt.appendChild(cancelButton);
+
+  document.body.appendChild(iframe);
+  document.body.appendChild(rightCnt);
+  document.body.appendChild(leftCnt);
+
+  $(document).on('click', '.buffer-btn-cancel', function() { console.log('close popup');
       closePopup(document, doneCallback);
   });
 
@@ -123,9 +129,7 @@ var bufferOverlay = function(data, config, port, doneCallback) {
     bufferpm.unbind('buffer_loaded');
     iframe.style.backgroundImage = 'none';
 
-    if ($(".buffer-floating-cancel-btn").length) {
-        $(".buffer-floating-cancel-btn").remove();
-    }
+    $(".buffer-btn-cancel").remove();
   });
 };
 
@@ -141,7 +145,7 @@ function ensureOnlyOneOverlayOpen(data, closePopup) {
   if (data.placement == 'toolbar' || data.placement == 'hotkey') {
     if (!isOverlayOpen()) return true;
 
-    $('#buffer_overlay, .buffer-floating-cancel-btn, .buffer-floating-btn').toggle();
+    $('#buffer_overlay, .buffer-btn-container').toggle();
     return false;
   }
 
@@ -154,18 +158,7 @@ function ensureOnlyOneOverlayOpen(data, closePopup) {
 ensureOnlyOneOverlayOpen.isOverlayVisible = function() { return $('#buffer_overlay').is(':visible') };
 
 function closePopup(document, doneCallback, overlayData) {
-
-    if ($("#buffer_overlay").length) {
-        $("#buffer_overlay").remove();
-    }
-
-    if ($(".buffer-floating-cancel-btn").length) {
-        $(".buffer-floating-cancel-btn").remove();
-    }
-
-    if ($(".buffer-floating-btn").length) {
-        $(".buffer-floating-btn").remove();
-    }
+    $('#buffer_overlay, .buffer-btn-container').remove();
 
     bufferpm.unbind('buffermessage');
     bufferpm.unbind('buffer_addbutton');
@@ -179,52 +172,34 @@ function closePopup(document, doneCallback, overlayData) {
     window.focus();
 }
 
-var createStyleTag = function() {
-  var style = document.createElement('style');
-  style.type = 'text/css';
+// position = 'left' || 'right'
+var createBtnContainer = function(position) {
+  var container = document.createElement('div');
+  container.setAttribute('class', 'buffer-btn-container buffer-btn-container-' + position);
 
-  var content = document.createTextNode([
-    '.buffer-floating-btn:hover {',
-      'text-decoration: none;',
-      'color: #323b43;',
-      'cursor: pointer;',
-    '}'
-  ].join(''));
+  return container;
+};
 
-  style.appendChild(content);
+var createHelpButton = function() {
+  var button;
+  var text;
 
-  return style;
+  button = document.createElement('a');
+  button.href = 'https://buffer.com/app#contact-from-extension';
+  button.target = '_blank';
+  button.setAttribute('class', 'buffer-btn-help');
+
+  text = document.createTextNode('Help');
+  button.appendChild(text);
+
+  return button;
 };
 
 var createDashboardButton = function() {
-
-  var css = [
-    'position: fixed;',
-    'top: 10px;',
-    'right: 10px;',
-    'z-index: 2147483647;',
-    'padding: 8px 10px 8px 32px;',
-    'background-color: #fff;',
-    'background-image: url(https://d389zggrogs7qo.cloudfront.net/images/bookmarklet_icon.png);',
-    'background-repeat: no-repeat;',
-    'background-size: 15px;',
-    'background-position: 11px 12px;',
-    'color: #323b43;',
-    'border: 0;',
-    'text-decoration: none;',
-    'border-radius: 2px;',
-    'text-decoration: none;',
-    'font-size: 14px;',
-    'line-height: 1.6;',
-    'font-family: "Open Sans", Roboto, Helvetica, Arial;',
-    'box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);'
-  ].join('');
-
   var button = document.createElement('a');
   button.href = 'https://buffer.com/app';
   button.target = '_blank';
-  button.setAttribute('class', 'buffer-floating-btn');
-  button.setAttribute('style', css);
+  button.setAttribute('class', 'buffer-btn-dashboard');
 
   var text = document.createTextNode('Go to Buffer');
   button.appendChild(text);
@@ -238,28 +213,8 @@ var createDashboardButton = function() {
 
 var createCancelButton = function() {
 
-  var css = [
-    'position: fixed;',
-    'top: 10px;',
-    'left: 10px;',
-    'z-index: 2147483647;',
-    'padding: 8px 10px 8px 10px;',
-    'background-color: #fff;',
-    'background-repeat: no-repeat;',
-    'color: #323b43;',
-    'border: 0;',
-    'text-decoration: none;',
-    'border-radius: 2px;',
-    'text-decoration: none;',
-    'font-size: 14px;',
-    'line-height: 1.6;',
-    'font-family: "Open Sans", Roboto, Helvetica, Arial;',
-    'box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);'
-  ].join('');
-
   var button = document.createElement('button');
-  button.setAttribute('class', 'buffer-floating-btn buffer-floating-cancel-btn');
-  button.setAttribute('style', css);
+  button.setAttribute('class', 'buffer-btn-cancel');
 
   var text = document.createTextNode('Cancel');
   button.appendChild(text);
