@@ -4,7 +4,6 @@
 	right: 10px;
 	z-index: 2147483647;
 	background-color: #fff;
-	font-size: 13px;
 	font-family: "Open Sans", Roboto, Helvetica, Arial;
 	box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 3px;
 	border-radius: 3px;
@@ -20,12 +19,14 @@
 	position: relative;
 	display: inline-block;
 	box-sizing: content-box;
+	margin: 0;
 	padding: 6px 13px;
 	height: 31px;
 	line-height: 31px;
+	font-size: 13px !important;
 	border: 0;
 	background-color: transparent;
-	color: #59626a;
+	color: #59626a !important;
 	cursor: pointer;
 }
 
@@ -47,7 +48,7 @@
 
 .buffer-btn-container a:hover,
 .buffer-btn-container button:hover {
-	text-decoration: none;
+	text-decoration: none !important;
 	color: #323b43;
 }
 
