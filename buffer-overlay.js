@@ -192,6 +192,10 @@ var createHelpButton = function() {
   text = document.createTextNode('Help');
   button.appendChild(text);
 
+  button.addEventListener('click', function() {
+    _bmq.trackAction(['overlay', 'help_button']);
+  }, false);
+
   return button;
 };
 
@@ -205,7 +209,7 @@ var createDashboardButton = function() {
   button.appendChild(text);
 
   button.addEventListener('click', function() {
-    _bmq.trackAction(['composer', 'go_to_buffer_button']);
+    _bmq.trackAction(['overlay', 'go_to_buffer_button']);
   }, false);
 
   return button;
