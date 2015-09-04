@@ -87,8 +87,12 @@
       extraYOffset = 4;
     }
 
+    // In rare situations where a children of body having a top margin other than 0 makes body shift
+    // up or down, account for that additional vertical offset
+    var bodyTopOffset = document.body.getBoundingClientRect().top + window.pageYOffset;
+
     var x = window.pageXOffset + box.left + width - buttonWidth - offset - extraXOffset;
-    var y = window.pageYOffset + box.top + height - buttonHeight - offset - extraYOffset;
+    var y = window.pageYOffset - bodyTopOffset + box.top + height - buttonHeight - offset - extraYOffset;
 
     button.style.top = y + 'px';
     button.style.left = x + 'px';
