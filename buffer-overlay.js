@@ -278,7 +278,7 @@ var getOverlayConfig = function(postData){
           return cb(title);
         }
 
-        var ogTitle = document.head.querySelector('meta[property="og:title"]');
+        var ogTitle = document.head && document.head.querySelector('meta[property="og:title"]');
         if (ogTitle && ogTitle.content && ogTitle.content.length) {
           return cb(ogTitle.content);
         }

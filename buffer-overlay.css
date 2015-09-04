@@ -28,6 +28,7 @@
 	background-color: transparent;
 	color: #59626a !important;
 	cursor: pointer;
+	text-decoration: none !important;
 }
 
 .buffer-btn-container a::after,
