@@ -42,6 +42,7 @@
   var backgroundImage = (dpr && dpr > 1) ?
     xt.data.get('data/shared/img/buffer-hover-icon@2x.png') :
     xt.data.get('data/shared/img/buffer-hover-icon@1x.png');
+  var isButtonVisible = false;
 
   var button = document.createElement('span');
   button.id = 'buffer-extension-hover-button';
@@ -59,8 +60,16 @@
   ].join(''));
 
   var offset = 5;
-  var locateButton = function(e) {
-    var image = e.target;
+  var image;
+
+  var showButton = function(e) {
+    image = e.target;
+    button.style.display = 'block';
+    currentImageUrl = getImageUrl(image);
+    isButtonVisible = true;
+  };
+
+  var locateButton = function() {
     var box = image.getBoundingClientRect();
 
     if (box.height < 250 || box.width < 350) return;
@@ -83,9 +92,6 @@
 
     button.style.top = y + 'px';
     button.style.left = x + 'px';
-    button.style.display = 'block';
-
-    currentImageUrl = getImageUrl(image);
   };
 
   var hoverButton = function() {
@@ -96,6 +102,16 @@
   var hideButton = function(e) {
     button.style.display = 'none';
     button.style.opacity = '0.9';
+    isButtonVisible = false;
+  };
+
+  var onImageMouseEnter = function(e) {
+    showButton(e);
+    locateButton();
+  };
+
+  var onScroll = function() {
+    if (isButtonVisible) locateButton();
   };
 
   var bufferImage = function(e) {
@@ -141,8 +157,11 @@
     document.body.appendChild(button);
 
     $(document)
-      .on('mouseenter', selector, locateButton)
+      .on('mouseenter', selector, onImageMouseEnter)
       .on('mouseleave', selector, hideButton);
+
+    // scroll events don't bubble, so we listen to them during their capturing phase
+    window.addEventListener('scroll', onScroll, true);
   };
 
 
