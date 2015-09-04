@@ -14,6 +14,11 @@
 
         var image = $(elem).closest('.thing').find('.thumbnail img').attr('src');
 
+        // Resolve link if it's relative
+        if (link && link[0] == '/') {
+          link = window.location.protocol + '//' + window.location.host + link;
+        }
+
         return {
           text: title,
           url: link,
