@@ -83,7 +83,7 @@
     // In Gmail, we slide over the button for inline images to not block g+ sharing
     if (site.isGmail &&
         window.getComputedStyle(image).getPropertyValue('position') !== 'absolute') {
-      extraXOffset = 72;
+      extraXOffset = 83;
       extraYOffset = 4;
     }
 
