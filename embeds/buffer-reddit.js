@@ -8,11 +8,25 @@
       className: 'buffer-reddit-button',
       selector: '.buffer-reddit-button',
       data: function (elem) {
-        var article = $(elem).closest('.entry').find('a.title');
-        var title = $(article).text().trim();
-        var link = $(article).attr('href').trim();
+        var $entry = $(elem).closest('.entry');
+        var $articleLink = $entry.find('a.title');
+        var title;
+        var $link;
+        var link;
+        var image;
 
-        var image = $(elem).closest('.thing').find('.thumbnail img').attr('src');
+        // Buffering an article
+        if ($articleLink.length) {
+          title = $articleLink.text().trim();
+          $link = $articleLink;
+        // Buffering a comment
+        } else {
+          $link = $entry.find('a.bylink').first();
+          title = $entry.find('.usertext-body').text();
+        }
+
+        link = $link.attr('href').trim();
+        image = $(elem).closest('.thing').find('.thumbnail img').attr('src');
 
         // Resolve link if it's relative
         if (link && link[0] == '/') {
