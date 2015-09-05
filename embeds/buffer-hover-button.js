@@ -61,18 +61,21 @@
 
   var offset = 5;
   var image;
+  var box;
 
   var showButton = function(e) {
     image = e.target;
+
+    box = image.getBoundingClientRect();
+    if (box.height < 250 || box.width < 350) return;
+
     button.style.display = 'block';
     currentImageUrl = getImageUrl(image);
     isButtonVisible = true;
   };
 
   var locateButton = function() {
-    var box = image.getBoundingClientRect();
-
-    if (box.height < 250 || box.width < 350) return;
+    box = image.getBoundingClientRect();
 
     // Use image.width and height if available
     var width = image.width || box.width,
