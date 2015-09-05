@@ -4,7 +4,6 @@
 	right: 10px;
 	z-index: 2147483647;
 	background-color: #fff;
-	font-family: "Open Sans", Roboto, Helvetica, Arial;
 	box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 3px;
 	border-radius: 3px;
 }
@@ -23,6 +22,7 @@
 	padding: 6px 13px;
 	height: 31px;
 	line-height: 31px;
+	font-family: "Open Sans", Roboto, Helvetica, Arial;
 	font-size: 13px !important;
 	border: 0;
 	background-color: transparent;
