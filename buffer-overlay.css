@@ -15,20 +15,27 @@
 
 .buffer-btn-container a,
 .buffer-btn-container button {
-	position: relative;
-	display: inline-block;
+	position: relative !important;
+	display: inline-block !important;
 	box-sizing: content-box !important;
-	margin: 0;
+	margin: 0 !important;
 	padding: 6px 13px !important;
-	height: 31px;
-	line-height: 31px;
+	height: 31px !important;
+	min-height: 31px !important;
+	line-height: 31px !important;
 	font-family: "Open Sans", Roboto, Helvetica, Arial !important;
 	font-size: 13px !important;
-	border: 0;
-	background-color: transparent;
+	font-weight: normal !important;
+	border: 0 !important;
+	border-radius: 3px !important;
+	border-image: none !important;
+	background-color: #fff !important;
+	background-image: none !important;
 	color: #59626a !important;
-	cursor: pointer;
+	cursor: pointer !important;
 	text-decoration: none !important;
+	text-shadow: none !important;
+	box-shadow: none !important;
 }
 
 .buffer-btn-container a::after,
@@ -50,7 +57,7 @@
 .buffer-btn-container a:hover,
 .buffer-btn-container button:hover {
 	text-decoration: none !important;
-	color: #323b43;
+	color: #323b43 !important;
 }
 
 .buffer-btn-container .buffer-btn-dashboard {
