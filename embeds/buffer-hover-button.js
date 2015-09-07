@@ -90,12 +90,17 @@
       extraYOffset = 4;
     }
 
-    // In rare situations where a children of body having a top margin other than 0 makes body shift
-    // up or down, account for that additional vertical offset
-    var bodyTopOffset = document.body.getBoundingClientRect().top + window.pageYOffset;
-
     var x = window.pageXOffset + box.left + width - buttonWidth - offset - extraXOffset;
-    var y = window.pageYOffset - bodyTopOffset + box.top + height - buttonHeight - offset - extraYOffset;
+    var y = window.pageYOffset + box.top + height - buttonHeight - offset - extraYOffset;
+
+    // If body is positioned, the button will be positioned against it. So, if body is positioned and shifted
+    // up or down, or is being shifted up or down by a children having a top margin other than 0, account for
+    // that additional vertical offset.
+    var isBodyPositioned = window.getComputedStyle(document.body).getPropertyValue('position') != 'static';
+    if (isBodyPositioned) {
+      var bodyTopOffset = document.body.getBoundingClientRect().top + window.pageYOffset;
+      y -= bodyTopOffset;
+    }
 
     button.style.top = y + 'px';
     button.style.left = x + 'px';
