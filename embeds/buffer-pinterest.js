@@ -41,7 +41,7 @@
         return {
           text: text,
           url: source,
-          picture: image,
+          picture: getFullSizeImageUrl(image),
           placement: this.placement
         };
       }
@@ -82,7 +82,7 @@
         return {
           text: text,
           url: source,
-          picture: image,
+          picture: getFullSizeImageUrl(image),
           placement: this.placement
         };
       }
@@ -141,7 +141,7 @@
         return {
           text: text,
           url: source,
-          picture: image,
+          picture: getFullSizeImageUrl(image),
           placement: this.placement
         };
       }
@@ -175,8 +175,15 @@
 
     // Start the loop that will watch for new DOM elements
     pinterestLoop();
-  }
+  };
 
+  // Make sure we get the fullsize image
+  // Example src: 'https://s-media-cache-ak0.pinimg.com/236x/55/1f/ac/551fac47c0dacff21f04012cb5c020cf.jpg'
+  var getFullSizeImageUrl = function(url) {
+    var urlParts = url.split('/');
+    urlParts[3] = '736x'; // 736 is the Pinterest standard for fullsize images
+    return urlParts.join('/');
+  };
 
   // Wait for xt.options to be set
   ;(function check() {
