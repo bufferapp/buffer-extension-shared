@@ -29,15 +29,48 @@
       getData: function(el) {
         var $img = $(el).find('.pinImg');
         var image = $img.attr('src');
-        // Grab text from image alt attribute
-        var text = $img.attr('alt');
+        var pinLink;
+        var pinIdParts;
+        var pinId;
+        var text;
+        var $source;
+        var source;
+        var pageSource;
+        var pinSourceRegex;
+        var pinSourceMatches;
 
-        var $source = $(el).find('.pinNavLink');
-        if($source.length === 0){
+        // Grab text from image alt attribute
+        text = $img.attr('alt');
+
+        $source = $(el).find('.pinNavLink');
+
+        // If we haven't found a link, try to get it from the page's source using
+        // some regex magic
+        if ($source.length === 0) {
+          pinLink = $img.closest('a').attr('href');
+          pinIdParts = pinLink.split('/');
+          pinId = pinIdParts[pinIdParts.length - 2];
+
+          pageSource = document.body.innerHTML;
+
+          // That regex looks into inline JSON to find the "link" field in the pin object
+          // that follows that pin's id field. If we ever need something more robust to make
+          // sure we get the right "link" field, I've come up with this more involved regex:
+          // /"id":\s*"22447698119542969"(?:,\s*"[^"]+":\s*(?:\d+(?:\.\d+)?|\w+|"[^"]+"|{(?:(?:{[^}]*})?|[^}])*}|\[[^]]*]))*,\s*"link":\s*("[^"]+")/i
+          pinSourceRegex = RegExp('"id":\\s*"' + pinId + '".*?"link":\\s*("[^"]+")');
+
+          pinSourceMatches = pageSource.match(pinSourceRegex);
+
+          if (pinSourceMatches) source = JSON.parse(pinSourceMatches[1]);
+        }
+
+        // If we still haven't found a link, default to the domain name
+        if ($source.length === 0 && !source) {
           $source = $(el).find('.pinDomain');
         }
 
-        var source = $source.attr('href') || $source.text();
+        source = source || $source.attr('href') || $source.text();
+
         return {
           text: text,
           url: source,
