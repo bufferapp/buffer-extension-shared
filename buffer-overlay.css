@@ -101,3 +101,33 @@ only screen and (min-device-pixel-ratio: 1.5) {
 .buffer-btn-container .buffer-btn-help:hover::before {
 	background-position: 0 -18px;
 }
+
+.buffer-btn-container .buffer-btn-upgrade,
+.buffer-btn-container .buffer-btn-upgrade:hover {
+	padding-left: 37px !important;
+	color: #168eea !important;
+}
+
+.buffer-btn-container .buffer-btn-upgrade::before {
+	content: '';
+	position: absolute;
+	top: 11px;
+	left: 14px;
+	width: 18px;
+	height: 18px;
+	background-image: url(https://d389zggrogs7qo.cloudfront.net/images/extensions/img/buffer-awesome-button-icon.png);
+	background-size: 18px;
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5),
+only screen and (-moz-min-device-pixel-ratio: 1.5),
+only screen and (-o-min-device-pixel-ratio: 3/2),
+only screen and (min-device-pixel-ratio: 1.5) {
+	.buffer-btn-container .buffer-btn-upgrade::before {
+		background-image: url(https://d389zggrogs7qo.cloudfront.net/images/extensions/img/buffer-awesome-button-icon@2x.png);
+	}
+}
+
+.buffer-btn-container .buffer-btn-upgrade.hidden {
+	display: none !important;
+}

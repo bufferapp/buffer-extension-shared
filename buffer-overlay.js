@@ -70,6 +70,8 @@ var bufferOverlay = function(data, config, port, doneCallback) {
   var shouldContinue = ensureOnlyOneOverlayOpen(data, closePopup.bind(window, document, doneCallback));
   if (!shouldContinue) return;
 
+  port.emit('buffer_overlay_open');
+
   // Create the iframe and add the footer:
   var iframe = document.createElement('iframe');
 
@@ -87,11 +89,17 @@ var bufferOverlay = function(data, config, port, doneCallback) {
 
 
   var rightCnt = createBtnContainer('right');
+  var upgradeButton = createUpgradeButton();
   var helpButton = createHelpButton();
   var dashboardButton = createDashboardButton();
 
+  rightCnt.appendChild(upgradeButton);
   rightCnt.appendChild(helpButton);
   rightCnt.appendChild(dashboardButton);
+
+  getExtensionUserData(function(userData) {
+    upgradeButton.classList.toggle('hidden', !userData.shouldDisplayAwesomeCTA);
+  });
 
   var leftCnt = createBtnContainer('left');
   var cancelButton = createCancelButton();
@@ -102,7 +110,7 @@ var bufferOverlay = function(data, config, port, doneCallback) {
   document.body.appendChild(rightCnt);
   document.body.appendChild(leftCnt);
 
-  $(document).on('click', '.buffer-btn-cancel', function() { console.log('close popup');
+  $(document).on('click', '.buffer-btn-cancel', function() {
       closePopup(document, doneCallback);
   });
 
@@ -222,6 +230,22 @@ var createCancelButton = function() {
 
   var text = document.createTextNode('Cancel');
   button.appendChild(text);
+
+  return button;
+};
+
+var createUpgradeButton = function() {
+  var button = document.createElement('a');
+  button.href = 'https://buffer.com/awesome';
+  button.target = '_blank';
+  button.setAttribute('class', 'buffer-btn-upgrade hidden');
+
+  var text = document.createTextNode('Upgrade to Awesome');
+  button.appendChild(text);
+
+  button.addEventListener('click', function() {
+    _bmq.trackAction(['overlay', 'upgrade_to_awesome_button']);
+  }, false);
 
   return button;
 };
@@ -525,3 +549,10 @@ var _bmq = (function() {
 
   return exposed;
 }());
+
+// Get some user data asynchronously; the callback will be run once immediately if such data has already
+// been cached by the background script, and once shortly after displaying the overlay when new data
+// has been fetched via XHR
+getExtensionUserData = function(cb) {
+  portCache.getPort().on('buffer_user_data', cb);
+};
