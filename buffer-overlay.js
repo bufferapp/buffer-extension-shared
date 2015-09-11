@@ -406,7 +406,7 @@ var getOverlayConfig = function(postData){
     }
   ];
 
-  var loadingImgRel = 'img/white-loading-gif-small.gif';
+  var loadingImgRel = 'img/black-loading-gif-small.gif';
   //TODO - Change to static.buffer when it's set up!
   var loadingImg = typeof chrome !== 'undefined' ?
     chrome.extension.getURL('data/shared/' +  loadingImgRel) :
@@ -430,7 +430,7 @@ var getOverlayConfig = function(postData){
         'max-width: 100%!important;',
         'max-height: 100%!important;',
         'padding: 0!important;',
-        'background: rgba(0, 0, 0, 0.1) url(' + loadingImg +') no-repeat center center;',
+        'background: rgba(245, 245, 245, 0.94) url(' + loadingImg +') no-repeat center center;',
         'background-size: 40px;'
       ].join('');
     }
