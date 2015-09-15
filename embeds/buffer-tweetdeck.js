@@ -238,8 +238,9 @@
     setTimeout(tweetdeckLoop, 500);
   };
 
+  var darkStylesheet = document.head.querySelector('link[title="dark"]');
+
   var checkDarkTheme = function() {
-    var darkStylesheet = document.head.querySelector('link[title="dark"]');
     if (!!darkStylesheet && !darkStylesheet.disabled) {
       document.body.classList.add('buffer-tweetdeck-dark');
     } else {
@@ -252,10 +253,15 @@
     // Add class for css scoping
     document.body.classList.add('buffer-tweetdeck');
 
-    $(document).on('ready', function() {
+    $(document).ready(function() {
       checkDarkTheme();
-      // Check again in case the app hasn't initialized
-      setTimeout(checkDarkTheme, 2000);
+
+      // Observe future changes to the 'disabled' attribute of link[title=dark]
+      // Useful if the app hasn't initialized, or if settings are changed later on
+      if (window.MutationObserver) {
+        var observer = new MutationObserver(checkDarkTheme);
+        observer.observe(darkStylesheet, { attributes: true, attributeFilter: ['disabled'] });
+      }
     });
 
     // Start the loop that will watch for new DOM elements
