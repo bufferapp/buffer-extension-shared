@@ -430,7 +430,7 @@ var getOverlayConfig = function(postData){
         'max-width: 100%!important;',
         'max-height: 100%!important;',
         'padding: 0!important;',
-        'background: rgba(245, 245, 245, 0.94) url(' + loadingImg +') no-repeat center center;',
+        'background: rgba(245, 245, 245, 0.74) url(' + loadingImg +') no-repeat center center;',
         'background-size: 40px;'
       ].join('');
     }
