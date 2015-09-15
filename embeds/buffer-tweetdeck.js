@@ -31,17 +31,27 @@
         var $streamItem = $(el).parents('.js-stream-item');
 
         var $text = $streamItem.find('.js-tweet-text');
-        var $screenname = $streamItem.find('.username');
+        var $screenname = $streamItem.find('.username').first();
         var screenname = $screenname.text().trim().replace(/^@/, '');
         var text = getFullTweetText($text, screenname);
-        var displayName = $streamItem.find('.fullname').text().trim();
+        var displayName = $streamItem.find('.fullname').first().text().trim();
+        var tweetKey = $streamItem.attr('data-key');
+        var $tweetAction;
+        var retweeted_tweet_id;
+
+        // Retweet
+        if (tweetKey.indexOf('quoted_tweet') == 0) {
+          $tweetAction = $streamItem.find('.tweet-action[data-user-id]');
+          retweeted_tweet_id = $tweetAction.attr('data-chirp-id');
+        // Regular tweet
+        } else {
+          retweeted_tweet_id = tweetKey;
+        }
 
         return {
           text: text,
           placement: this.placement,
-          retweeted_tweet_id: $streamItem.attr('data-key'),
-          // NOTE - we may not really need the user id after all...
-          // retweeted_user_id:           $tweet.attr('data-user-id'),
+          retweeted_tweet_id: retweeted_tweet_id,
           retweeted_user_name: screenname,
           retweeted_user_display_name: displayName
         };
