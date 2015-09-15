@@ -28,7 +28,7 @@
         return $newActionItem;
       },
       getData: function(el) {
-        var $streamItem = $(el).parents('.js-stream-item');
+        var $streamItem = $(el).closest('.js-stream-item');
 
         var $text = $streamItem.find('.js-tweet-text');
         var $screenname = $streamItem.find('.username').first();
@@ -81,7 +81,7 @@
         return $newActionItem;
       },
       getData: function(el) {
-        var $streamItem = $(el).parents('.js-stream-item');
+        var $streamItem = $(el).closest('.js-stream-item');
 
         var $text = $streamItem.find('.js-tweet-text');
         var $screenname = $streamItem.find('.username').first();
@@ -116,7 +116,7 @@
           .addClass('buffer-inserted')
           .prepend($newActionItem);
 
-        var $container = $(el).parents('.js-docked-compose');
+        var $container = $(el).closest('.js-docked-compose');
         this.$newActionItem = $newActionItem;
         this.$textarea = $container.find('.js-compose-text');
         this.$charCount = $container.find('.js-character-count');
@@ -136,11 +136,31 @@
         }
       },
       getData: function(el) {
-        var text = this.$textarea.val().trim();
-        return {
-          text: text,
-          placement: this.placement
-        };
+        var $container = $(el).closest('.js-docked-compose');
+        var $quotedTweet = $container.find('.quoted-tweet');
+        var isRTwcomment = !!$quotedTweet.length;
+        var composerText = this.$textarea.val().trim();
+        var $text;
+        var username;
+
+        if (isRTwcomment) {
+          $text = $quotedTweet.find('.js-quoted-tweet-text');
+          username = $quotedTweet.find('.username').text().trim().replace(/^@/, '');
+
+          return {
+            text: getFullTweetText($text, username),
+            placement: this.placement,
+            retweeted_tweet_id: $quotedTweet.attr('data-tweet-id'),
+            retweeted_user_name: username,
+            retweeted_user_display_name: $quotedTweet.find('.fullname').text().trim(),
+            retweet_comment: composerText
+          };
+        } else {
+          return {
+            text: composerText,
+            placement: this.placement
+          };
+        }
       }
     }
 
