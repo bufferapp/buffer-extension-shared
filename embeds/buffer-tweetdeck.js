@@ -39,8 +39,10 @@
         var $tweetAction;
         var retweeted_tweet_id;
 
-        // Retweet
-        if (tweetKey.indexOf('quoted_tweet') == 0) {
+        // Retweet, mention, favorite: non-regular tweet whose data-key attr
+        // is formatted differently, and for which we need to get the tweet_id
+        // from somewhere else
+        if (/^(?:quoted_tweet|favorite|mention)/.test(tweetKey)) {
           $tweetAction = $streamItem.find('.tweet-action[data-user-id]');
           retweeted_tweet_id = $tweetAction.attr('data-chirp-id');
         // Regular tweet
