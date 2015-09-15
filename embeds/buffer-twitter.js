@@ -605,6 +605,11 @@
       this.textContent = this.getAttribute('data-expanded-url');
     });
 
+    // Replace emotes with their unicode representation
+    $clone.find('img.twitter-emoji').each(function(i, el) {
+      $(el).replaceWith(el.getAttribute('alt'));
+    });
+
     return 'RT @' + screenName + ': ' + $clone.text().trim() + '';
   };
 
