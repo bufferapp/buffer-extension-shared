@@ -214,7 +214,7 @@
     var $clone = $text.clone();
 
     // Replace any shortened URL with the full url
-    $clone.find('a').each(function(i, el) {
+    $clone.find('a[data-full-url]').each(function(i, el) {
       el.textContent = el.getAttribute('data-full-url');
     });
 
