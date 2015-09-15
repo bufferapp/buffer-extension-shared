@@ -253,36 +253,21 @@
 
       },
       data: function (elem) {
-        var c = $(elem).closest('.tweet');
+        var $tweet = $(elem).closest('.tweet');
         // Grab the tweet text
-        var text = c.find('.js-tweet-text').first();
-        // Iterate through all links in the text
-        $(text).children('a').each(function () {
-          // Don't modify the screennames and the hashtags
-          if( $(this).attr('data-screen-name') ) return;
-          if( $(this).hasClass('twitter-atreply') ) return;
-          if( $(this).hasClass('twitter-hashtag') ) return;
-          // swap the text with the actual link
-          var original = $(this).text();
-          $(this).text($(this).attr("href")).attr('data-original-text', original);
-        });
+        var $text = $tweet.find('.js-tweet-text').first();
+        var username = $tweet.find('.username').first().text().trim();
         // Build the RT text
-        var rt = 'RT ' + c.find('.username').first().text().trim() + ': ' + $(text).text().trim() + '';
-        // Put the right links back
-        $(text).children('a').each(function () {
-          if( ! $(this).attr('data-original-text') ) return;
-          $(this).text($(this).attr('data-original-text'));
-        });
+        var rt = getFullTweetText($text, username);
 
         // Send back the data
         return {
           text: rt,
           placement: 'twitter-permalink',
-          // grab info for retweeting
-          retweeted_tweet_id: c.attr('data-item-id'),
-          retweeted_user_id: c.data('user-id'),
-          retweeted_user_name: c.data('screen-name'),
-          retweeted_user_display_name: c.data('name')
+          retweeted_tweet_id: $tweet.attr('data-item-id'),
+          retweeted_user_id: $tweet.data('user-id'),
+          retweeted_user_name: $tweet.data('screen-name'),
+          retweeted_user_display_name: $tweet.data('name')
         };
       },
       clear: function (elem) {
@@ -332,14 +317,6 @@
         var $tweet = $(elem).closest('.js-actionable-tweet');
         var $text = $tweet.find('.js-tweet-text').first();
 
-        // Iterate through all links in the text
-        var $textClone = $text.clone();
-        $textClone.find('a[data-expanded-url]').each(function(){
-          var $link = $(this);
-          $link.text($link.attr('data-expanded-url'));
-        });
-        var tweetText = $textClone.text().trim();
-
         // Build the RT text
         var screenname = $tweet.attr('data-screen-name');
         if (!screenname) {
@@ -350,13 +327,12 @@
             .trim()
             .replace(/^@/, '');
         }
-        var text = 'RT @' + screenname + ': ' + tweetText + '';
+        var text = getFullTweetText($text, screenname);
 
         // Send back the data
         return {
           text: text,
           placement: 'twitter-permalink',
-          // grab info for retweeting
           retweeted_tweet_id:          $tweet.attr('data-item-id'),
           retweeted_user_id:           $tweet.attr('data-user-id'),
           retweeted_user_name:         $tweet.attr('data-screen-name'),
@@ -415,17 +391,6 @@
         var $tweet = $(elem).closest('.js-tweet, .js-stream-tweet');
         var $text = $tweet.find('.js-tweet-text').first();
 
-        // Iterate through all links in the text
-        $text.children('a').each(function () {
-          // Don't modify the screennames and the hashtags
-          if( $(this).attr('data-screen-name') ) return;
-          if( $(this).hasClass('twitter-atreply') ) return;
-          if( $(this).hasClass('twitter-hashtag') ) return;
-          // swap the text with the actual link
-          var original = $(this).text();
-          $(this).text($(this).attr("href")).attr('data-original-text', original);
-        });
-
         // Build the RT text
         var screenname = $tweet.attr('data-screen-name');
         if (!screenname) {
@@ -436,19 +401,12 @@
             .trim()
             .replace(/^@/, '');
         }
-        var text = 'RT @' + screenname + ': ' + $text.text().trim() + '';
-
-        // Put the right links back
-        $text.children('a').each(function () {
-          if( ! $(this).attr('data-original-text') ) return;
-          $(this).text($(this).attr('data-original-text'));
-        });
+        var text = getFullTweetText($text, screenname);
 
         // Send back the data
         return {
           text: text,
           placement: 'twitter-feed',
-          // grab info for retweeting
           retweeted_tweet_id:          $tweet.attr('data-item-id'),
           retweeted_user_id:           $tweet.attr('data-user-id'),
           retweeted_user_name:         $tweet.attr('data-screen-name'),
@@ -531,17 +489,6 @@
         var $tweet = $(elem).closest('.js-tweet, .js-stream-tweet, .js-actionable-tweet');
         var $text = $tweet.find('.js-tweet-text').first();
 
-        // Iterate through all links in the text
-        $text.children('a').each(function () {
-          // Don't modify the screennames and the hashtags
-          if( $(this).attr('data-screen-name') ) return;
-          if( $(this).hasClass('twitter-atreply') ) return;
-          if( $(this).hasClass('twitter-hashtag') ) return;
-          // swap the text with the actual link
-          var original = $(this).text();
-          $(this).text($(this).attr("href")).attr('data-original-text', original);
-        });
-
         // Build the RT text
         var screenname = $tweet.attr('data-screen-name');
         if (!screenname) {
@@ -552,19 +499,12 @@
             .trim()
             .replace(/^@/, '');
         }
-        var text = 'RT @' + screenname + ': ' + $text.text().trim() + '';
-
-        // Put the right links back
-        $text.children('a').each(function () {
-          if( ! $(this).attr('data-original-text') ) return;
-          $(this).text($(this).attr('data-original-text'));
-        });
+        var text = getFullTweetText($text, screenname);
 
         // Send back the data
         return {
           text: text,
           placement: 'twitter-feed',
-          // grab info for retweeting
           retweeted_tweet_id:          $tweet.attr('data-item-id'),
           retweeted_user_id:           $tweet.attr('data-user-id'),
           retweeted_user_name:         $tweet.attr('data-screen-name'),
@@ -607,9 +547,7 @@
       },
       data: function (elem) {
         var $elem = $(elem);
-
         var $dialog = $elem.closest('.retweet-tweet-dialog, #retweet-dialog, #retweet-tweet-dialog');
-
         var $tweet = $dialog.find('.js-actionable-tweet').first();
 
         var screenname = $tweet.attr('data-screen-name');
@@ -621,15 +559,15 @@
             .trim()
             .replace(/^@/, '');
         }
-        var tweetText = $tweet.find('.js-tweet-text').text().trim();
-        var text = 'RT @' + screenname + ': ' + tweetText + '';
+        var $text = $tweet.find('.js-tweet-text').first();
+        var text = getFullTweetText($text, screenname);
 
         var commentHtml = $elem.closest('form.is-withComment').find('.tweet-content .tweet-box').html();
         var comment = commentHtml? getTextFromRichtext(commentHtml) : '';
 
         return {
-          text: text,
-          placement: 'twitter-retweet',
+          text:                        text,
+          placement:                   'twitter-retweet',
           retweeted_tweet_id:          $tweet.attr('data-item-id'),
           retweeted_user_id:           $tweet.attr('data-user-id'),
           retweeted_user_name:         $tweet.attr('data-screen-name'),
@@ -655,6 +593,20 @@
     }
 
   ];
+
+  // Parse a tweet a return text representing it
+  // NOTE: some more refactoring can be done here, e.g. taking care of
+  // expanding short links in a single place
+  var getFullTweetText = function($text, screenName) {
+    var $clone = $text.clone();
+
+    // Expand URLs
+    $clone.find('a[data-expanded-url]').each(function() {
+      this.textContent = this.getAttribute('data-expanded-url');
+    });
+
+    return 'RT @' + screenName + ': ' + $clone.text().trim() + '';
+  };
 
   var insertButtons = function () {
 
