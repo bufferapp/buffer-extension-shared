@@ -84,10 +84,10 @@
         var $streamItem = $(el).parents('.js-stream-item');
 
         var $text = $streamItem.find('.js-tweet-text');
-        var $screenname = $streamItem.find('.username');
+        var $screenname = $streamItem.find('.username').first();
         var screenname = $screenname.text().trim().replace(/^@/, '');
         var text = getFullTweetText($text, screenname);
-        var displayName = $streamItem.find('.fullname').text().trim();
+        var displayName = $streamItem.find('.fullname').first().text().trim();
 
         return {
           text: text,
