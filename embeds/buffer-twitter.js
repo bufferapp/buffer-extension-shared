@@ -287,7 +287,7 @@
       text: "Add to Buffer",
       // NOTE - Possibly switch from permalink one day
       // NOTE - to avoid injection into AUG 2015 stream (see below)
-      container: '.permalink .js-actionable-tweet .js-actions:not(.ProfileTweet-actionList--withCircle)',
+      container: '.permalink .js-actionable-tweet .js-actions:not(.ProfileTweet-actionList--withCircle, .ProfileTweet-actionList)',
       after: '.js-toggleRt',
       default: '',
       className: 'ProfileTweet-action js-tooltip',
@@ -360,7 +360,7 @@
       name: "buffer-profile-stream-OCT-2014",
       text: "Add to Buffer",
       // NOTE - to avoid injection into AUG 2015 stream (see below)
-      container: '.js-stream-item .js-actions:not(.ProfileTweet-actionList--withCircle)',
+      container: '.js-stream-item .js-actions:not(.ProfileTweet-actionList--withCircle, .ProfileTweet-actionList)',
       after: '.js-toggleRt, .js-toggle-rt',
       //NOTE: .js-toggleRt is new OCT 2014
       default: '',
@@ -431,15 +431,18 @@
     },
     {
       // August 2015 stream changes (circles)
+      // Sept 2015 changes extended that button-based markup to all versions of twitter.com,
+      // making "--withCircle" a variant of that
       name: "buffer-profile-stream-AUG-2015",
       text: "Add to Buffer",
       container:
+        '.js-stream-tweet .js-actions.ProfileTweet-actionList,' +
+        '.permalink .js-actionable-tweet .js-actions.ProfileTweet-actionList,' +
         '.js-stream-tweet .js-actions.ProfileTweet-actionList--withCircle,' +
         '.permalink .js-actionable-tweet .js-actions.ProfileTweet-actionList--withCircle'
       ,
       after: '.js-toggleRt, .js-toggle-rt',
       default: '',
-      className: 'ProfileTweet-action js-tooltip',
       selector: '.buffer-action',
       create: function (btnConfig) {
 
@@ -447,8 +450,8 @@
           <div class="ProfileTweet-action ProfileTweet-action--buffer js-toggleState">
             <button class="ProfileTweet-actionButton js-actionButton" type="button">
               <div class="IconContainer js-tooltip" data-original-title="Add to Buffer">
-                <span class="Icon Icon--circleFill"></span>
-                <span class="Icon Icon--circle"></span>
+                <span class="Icon Icon--circleFill"></span> <!-- enabled via CSS for circle variant -->
+                <span class="Icon Icon--circle"></span> <!-- enabled via CSS for circle variant -->
                 <span class="Icon Icon--buffer"></span>
                 <span class="u-hiddenVisually">Buffer</span>
               </div>
