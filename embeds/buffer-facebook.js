@@ -102,10 +102,17 @@
     share.text = $(selectors.text, parent).first().text();
 
     var $thumb = $(selectors.thumb, parent).first();
-
     var image;
+
     // Make sure retrieved images are part of the post, not comments below
-    if (!$thumb.closest('.commentable_item').length) image = $thumb.attr('src');
+    if (!$thumb.closest('.commentable_item').length) {
+      var $fullSizeThumbHolder = $thumb.closest('a');
+      var $fullSizeThumbMatches = /(?:;|&)src=([^&]+)&/i.exec($fullSizeThumbHolder.attr('ajaxify'));
+      var $fullSizeThumb = $fullSizeThumbMatches && $fullSizeThumbMatches[1] && decodeURIComponent($fullSizeThumbMatches[1]);
+
+      if ($fullSizeThumb) image = $fullSizeThumb; // Give priority to largest image if found
+        else image = $thumb.attr('src');
+    }
 
     var $videoThumb = $(selectors.videoThumb, parent);
     var $anchor = $(selectors.anchor, parent);
