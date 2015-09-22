@@ -214,6 +214,11 @@
   // Example src: 'https://s-media-cache-ak0.pinimg.com/236x/55/1f/ac/551fac47c0dacff21f04012cb5c020cf.jpg'
   var getFullSizeImageUrl = function(url) {
     var urlParts = url.split('/');
+    var isPinterestImage = urlParts[2].indexOf('pinimg.com') != -1;
+
+    // Non-Pinterest images should already be full-size
+    if (!isPinterestImage) return url;
+
     urlParts[3] = '736x'; // 736 is the Pinterest standard for fullsize images
     return urlParts.join('/');
   };
