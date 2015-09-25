@@ -245,14 +245,11 @@
     setTimeout(tweetdeckLoop, 500);
   };
 
-  var darkStylesheet = document.head.querySelector('link[title="dark"]');
+  var currentStyleIndicator = document.head.querySelector('meta[http-equiv="Default-Style"]');
 
   var checkDarkTheme = function() {
-    if (!!darkStylesheet && !darkStylesheet.disabled) {
-      document.body.classList.add('buffer-tweetdeck-dark');
-    } else {
-      document.body.classList.remove('buffer-tweetdeck-dark');
-    }
+    var isDarkThemeSelected = currentStyleIndicator.getAttribute('content') == 'dark';
+    document.body.classList.toggle('buffer-tweetdeck-dark', isDarkThemeSelected);
   };
 
   var start = function() {
@@ -267,7 +264,7 @@
       // Useful if the app hasn't initialized, or if settings are changed later on
       if (window.MutationObserver) {
         var observer = new MutationObserver(checkDarkTheme);
-        observer.observe(darkStylesheet, { attributes: true, attributeFilter: ['disabled'] });
+        observer.observe(currentStyleIndicator, { attributes: true, attributeFilter: ['content'] });
       }
     });
 
