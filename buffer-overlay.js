@@ -236,7 +236,7 @@ var createCancelButton = function() {
 
 var createUpgradeButton = function() {
   var button = document.createElement('a');
-  button.href = 'https://buffer.com/awesome';
+  button.href = 'https://buffer.com/awesome?utm_campaign=extensions_header&utm_medium=web';
   button.target = '_blank';
   button.setAttribute('class', 'buffer-btn-upgrade hidden');
 
