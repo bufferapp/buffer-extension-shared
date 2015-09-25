@@ -265,6 +265,11 @@
       if (window.MutationObserver) {
         var observer = new MutationObserver(checkDarkTheme);
         observer.observe(currentStyleIndicator, { attributes: true, attributeFilter: ['content'] });
+
+        // Stop observing when add-on is disabled/removed (the detach event is Firefox-specific)
+        xt.port.on('detach', function() {
+          observer.disconnect();
+        });
       }
     });
 
