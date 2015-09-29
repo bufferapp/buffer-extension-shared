@@ -34,6 +34,7 @@
 	color: #59626a !important;
 	cursor: pointer !important;
 	text-decoration: none !important;
+	text-transform: none !important;
 	text-shadow: none !important;
 	box-shadow: none !important;
 }

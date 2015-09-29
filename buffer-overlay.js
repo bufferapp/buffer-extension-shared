@@ -134,6 +134,9 @@ var bufferOverlay = function(data, config, port, doneCallback) {
 
   // Remove the loading image when we hear from the other side
   bufferpm.bind('buffer_loaded', function(data) {
+    // Send user data to background script for caching
+    if (data && data.userData) port.emit('buffer_user_data', data.userData);
+
     bufferpm.unbind('buffer_loaded');
     iframe.style.backgroundImage = 'none';
 
@@ -551,8 +554,8 @@ var _bmq = (function() {
 }());
 
 // Get some user data asynchronously; the callback will be run once immediately if such data has already
-// been cached by the background script, and once shortly after displaying the overlay when new data
-// has been fetched via XHR
+// been cached by the background script, and once shortly after displaying the overlay when the cache
+// has been refreshed from the user data in the iframe
 getExtensionUserData = function(cb) {
   portCache.getPort().on('buffer_user_data', cb);
 };
