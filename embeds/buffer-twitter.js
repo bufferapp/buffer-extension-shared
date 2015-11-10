@@ -444,12 +444,6 @@
       after: '.js-toggleRt, .js-toggle-rt',
       default: '',
       selector: '.buffer-action',
-      // Don't insert the Buffer button when the retweet button is disabled (ideally we would be able
-      // to do that without querying the DOM another time, but the way the markup is structured forces
-      // us to do so; takes a bit more time on *some* insertButtons execs, but it's acceptable)
-      ignore: function($container) {
-        return $container[0].querySelector('.js-toggleRt > .is-disabled, .js-toggle-rt > .is-disabled');
-      },
       create: function (btnConfig) {
 
         /* Desired DOM structure:
