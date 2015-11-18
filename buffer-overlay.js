@@ -1,4 +1,4 @@
-/* globals bufferpm, chrome */
+/* globals bufferpm, chrome, safari */
 
 // Put together a query string for the iframe
 var buildSrc = function(data, config) {
@@ -20,9 +20,10 @@ var buildSrc = function(data, config) {
   return src;
 };
 
-var openPopUp = function(src, doneCallback) {
+var openPopUp = function(src, port, doneCallback) {
 
-  window.open(src, null, 'height=600,width=850');
+  // Open popups from privileged code
+  port.emit('buffer_open_popup', src);
 
   // Bind close listener
   // Listen for when the overlay has closed itself
@@ -41,6 +42,7 @@ var openPopUp = function(src, doneCallback) {
  * to this issue: https://github.com/bufferapp/buffer-chrome/issues/12
  */
 var CSPWhitelist = [
+  'twitter.com',
   'github.com',
   'education.github.com',
   'medium.com',
@@ -48,21 +50,27 @@ var CSPWhitelist = [
   'www.npmjs.com' // DEC 2014
 ];
 
-
 // Build that overlay!
 // Triggered by code working from the button up
-var bufferOverlay = function(data, config, doneCallback) {
+var bufferOverlay = function(data, config, port, doneCallback) {
 
   if( ! doneCallback ) doneCallback = function () {};
   if( ! config ) return;
+
+  portCache.grabPort(port);
 
   var src = buildSrc(data, config);
   var domain = window.location.hostname;
 
   if (xt.options['buffer.op.tpc-disabled'] ||
     CSPWhitelist.indexOf(domain) > -1 ) {
-    return openPopUp(src, doneCallback);
+    return openPopUp(src, port, doneCallback);
   }
+
+  var shouldContinue = ensureOnlyOneOverlayOpen(data, closePopup.bind(window, document, doneCallback));
+  if (!shouldContinue) return;
+
+  port.emit('buffer_overlay_open');
 
   // Create the iframe and add the footer:
   var iframe = document.createElement('iframe');
@@ -79,18 +87,30 @@ var bufferOverlay = function(data, config, doneCallback) {
   // var qs = src.split('?')[1];
   // iframe.src = xt.data.get('data/shared/extension.html?' + qs);
 
-  document.body.appendChild(iframe);
 
-  var styleTag = createStyleTag();
-  document.body.appendChild(styleTag);
-
+  var rightCnt = createBtnContainer('right');
+  var upgradeButton = createUpgradeButton();
+  var helpButton = createHelpButton();
   var dashboardButton = createDashboardButton();
-  document.body.appendChild(dashboardButton);
 
+  rightCnt.appendChild(upgradeButton);
+  rightCnt.appendChild(helpButton);
+  rightCnt.appendChild(dashboardButton);
+
+  getExtensionUserData(function(userData) {
+    upgradeButton.classList.toggle('hidden', !userData.shouldDisplayAwesomeCTA);
+  });
+
+  var leftCnt = createBtnContainer('left');
   var cancelButton = createCancelButton();
-  document.body.appendChild(cancelButton);
 
-  $(document).on('click', '.buffer-floating-cancel-btn', function() {
+  leftCnt.appendChild(cancelButton);
+
+  document.body.appendChild(iframe);
+  document.body.appendChild(rightCnt);
+  document.body.appendChild(leftCnt);
+
+  $(document).on('click', '.buffer-btn-cancel', function() {
       closePopup(document, doneCallback);
   });
 
@@ -103,39 +123,58 @@ var bufferOverlay = function(data, config, doneCallback) {
   /**
    * Listen to ESC key and close the popup when hit.
    */
-  $(document).keyup(function(e) {
+  $(document).on('keyup.bufferOverlay', function(e) {
     if (e.keyCode == 27) {
-        closePopup(document, doneCallback);
+      // When an overlay instance is hidden (but still open), don't let shortcuts close it
+      if (!ensureOnlyOneOverlayOpen.isOverlayVisible()) return;
+
+      closePopup(document, doneCallback);
     }
   });
 
   // Remove the loading image when we hear from the other side
   bufferpm.bind('buffer_loaded', function(data) {
+    // Send user data to background script for caching
+    if (data && data.userData) port.emit('buffer_user_data', data.userData);
+
     bufferpm.unbind('buffer_loaded');
     iframe.style.backgroundImage = 'none';
 
-    if ($(".buffer-floating-cancel-btn").length) {
-        $(".buffer-floating-cancel-btn").remove();
-    }
+    $(".buffer-btn-cancel").remove();
   });
 };
 
+// Returns true if a new overlay should be open, false if we've toggled the visibility of
+// and existing overlay instead.
+function ensureOnlyOneOverlayOpen(data, closePopup) {
+  // State can't be saved in this script, since it gets re-executed multiple times by some browsers
+  // (e.g. Firefox), so we rely on the DOM instead.
+  var isOverlayOpen = function() { return !!$('#buffer_overlay').length };
+
+  // If the open intent comes from the Buffer toolbar button or a keyboard shortcut, toggle the
+  // visibility of the overlay if it's already open, otherwise allow a new one to be open.
+  if (data.placement == 'toolbar' || data.placement == 'hotkey') {
+    if (!isOverlayOpen()) return true;
+
+    $('#buffer_overlay, .buffer-btn-container').toggle();
+    return false;
+  }
+
+  // If the open intent comes from somewhere else, discard any hidden overlay and open a new one
+  closePopup();
+
+  return true;
+};
+
+ensureOnlyOneOverlayOpen.isOverlayVisible = function() { return $('#buffer_overlay').is(':visible') };
+
 function closePopup(document, doneCallback, overlayData) {
-
-    if ($("#buffer_overlay").length) {
-        $("#buffer_overlay").remove();
-    }
-
-    if ($(".buffer-floating-cancel-btn").length) {
-        $(".buffer-floating-cancel-btn").remove();
-    }
-
-    if ($(".buffer-floating-btn").length) {
-        $(".buffer-floating-btn").remove();
-    }
+    $('#buffer_overlay, .buffer-btn-container').remove();
 
     bufferpm.unbind('buffermessage');
     bufferpm.unbind('buffer_addbutton');
+
+    $(document).off('keyup.bufferOverlay');
 
     setTimeout(function () {
       doneCallback(overlayData);
@@ -144,86 +183,72 @@ function closePopup(document, doneCallback, overlayData) {
     window.focus();
 }
 
-var createStyleTag = function() {
-  var style = document.createElement('style');
-  style.type = 'text/css';
+// position = 'left' || 'right'
+var createBtnContainer = function(position) {
+  var container = document.createElement('div');
+  container.setAttribute('class', 'buffer-btn-container buffer-btn-container-' + position);
 
-  var content = document.createTextNode([
-    '.buffer-floating-btn:hover {',
-      'text-decoration: none;',
-      'color: #323b43;',
-      'cursor: pointer;',
-    '}'
-  ].join(''));
+  return container;
+};
 
-  style.appendChild(content);
+var createHelpButton = function() {
+  var button;
+  var text;
 
-  return style;
+  button = document.createElement('a');
+  button.href = 'https://buffer.com/app#contact-from-extension';
+  button.target = '_blank';
+  button.setAttribute('class', 'buffer-btn-help');
+
+  text = document.createTextNode('Help');
+  button.appendChild(text);
+
+  button.addEventListener('click', function() {
+    _bmq.trackAction(['overlay', 'help_button']);
+  }, false);
+
+  return button;
 };
 
 var createDashboardButton = function() {
-
-  var css = [
-    'position: fixed;',
-    'top: 10px;',
-    'right: 10px;',
-    'z-index: 2147483647;',
-    'padding: 8px 10px 8px 32px;',
-    'background-color: #fff;',
-    'background-image: url(https://d389zggrogs7qo.cloudfront.net/images/bookmarklet_icon.png);',
-    'background-repeat: no-repeat;',
-    'background-size: 15px;',
-    'background-position: 11px 12px;',
-    'color: #323b43;',
-    'border: 0;',
-    'text-decoration: none;',
-    'border-radius: 2px;',
-    'text-decoration: none;',
-    'font-size: 14px;',
-    'line-height: 1.6;',
-    'font-family: "Open Sans", Roboto, Helvetica, Arial;',
-    'box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);'
-  ].join('');
-
   var button = document.createElement('a');
   button.href = 'https://buffer.com/app';
   button.target = '_blank';
-  button.setAttribute('class', 'buffer-floating-btn');
-  button.setAttribute('style', css);
+  button.setAttribute('class', 'buffer-btn-dashboard');
 
   var text = document.createTextNode('Go to Buffer');
   button.appendChild(text);
+
+  button.addEventListener('click', function() {
+    _bmq.trackAction(['overlay', 'go_to_buffer_button']);
+  }, false);
 
   return button;
 };
 
 var createCancelButton = function() {
 
-  var css = [
-    'position: fixed;',
-    'top: 10px;',
-    'left: 10px;',
-    'z-index: 2147483647;',
-    'padding: 8px 10px 8px 10px;',
-    'background-color: #fff;',
-    'background-repeat: no-repeat;',
-    'color: #323b43;',
-    'border: 0;',
-    'text-decoration: none;',
-    'border-radius: 2px;',
-    'text-decoration: none;',
-    'font-size: 14px;',
-    'line-height: 1.6;',
-    'font-family: "Open Sans", Roboto, Helvetica, Arial;',
-    'box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);'
-  ].join('');
-
   var button = document.createElement('button');
-  button.setAttribute('class', 'buffer-floating-btn buffer-floating-cancel-btn');
-  button.setAttribute('style', css);
+  button.setAttribute('class', 'buffer-btn-cancel');
 
   var text = document.createTextNode('Cancel');
   button.appendChild(text);
+
+  return button;
+};
+
+var createUpgradeButton = function() {
+  var button = document.createElement('a');
+  button.href = 'https://buffer.com/awesome?utm_campaign=extensions_header&utm_medium=web';
+  button.target = '_blank';
+  button.setAttribute('class', 'buffer-btn-upgrade hidden');
+
+  var text = document.createTextNode('Upgrade to Awesome');
+  button.appendChild(text);
+
+  button.addEventListener('click', function() {
+    _bmq.trackAction(['overlay', 'upgrade_to_awesome_button']);
+  }, false);
 
   return button;
 };
@@ -261,8 +286,17 @@ var getOverlayConfig = function(postData){
     {
       name: "text",
       get: function (cb) {
-        if (document.getSelection().toString().length) {
-          return cb('"' + document.getSelection().toString() + '"');
+        var selectedText = document.getSelection().toString();
+        var quoteChars;
+
+        if (selectedText) {
+          // If quotes surround the selected text, strip them away
+          quoteChars = ['"', '“', '”', '\'', '‘', '’', '«', '»'];
+          if (quoteChars.indexOf(selectedText[0]) != -1 && quoteChars.indexOf(selectedText[selectedText.length - 1]) != -1) {
+            selectedText = selectedText.slice(1, selectedText.length - 1);
+          }
+
+          return cb('“' + selectedText + '”');
         }
 
         if (config.pocketWeb){
@@ -271,7 +305,7 @@ var getOverlayConfig = function(postData){
           return cb(title);
         }
 
-        var ogTitle = document.head.querySelector('meta[property="og:title"]');
+        var ogTitle = document.head && document.head.querySelector('meta[property="og:title"]');
         if (ogTitle && ogTitle.content && ogTitle.content.length) {
           return cb(ogTitle.content);
         }
@@ -313,6 +347,15 @@ var getOverlayConfig = function(postData){
       name: "retweeted_user_display_name",
       get: function (cb) {
         cb(postData.retweeted_user_display_name);
+      },
+      encode: function (val) {
+        return encodeURIComponent(val);
+      }
+    },
+    {
+      name: "retweet_comment",
+      get: function (cb) {
+        cb(postData.retweet_comment);
       },
       encode: function (val) {
         return encodeURIComponent(val);
@@ -366,7 +409,7 @@ var getOverlayConfig = function(postData){
     }
   ];
 
-  var loadingImgRel = 'img/white-loading-gif-small.gif';
+  var loadingImgRel = 'img/black-loading-gif-small.gif';
   //TODO - Change to static.buffer when it's set up!
   var loadingImg = typeof chrome !== 'undefined' ?
     chrome.extension.getURL('data/shared/' +  loadingImgRel) :
@@ -390,7 +433,7 @@ var getOverlayConfig = function(postData){
         'max-width: 100%!important;',
         'max-height: 100%!important;',
         'padding: 0!important;',
-        'background: rgba(0, 0, 0, 0.1) url(' + loadingImg +') no-repeat center center;',
+        'background: rgba(245, 245, 245, 0.74) url(' + loadingImg +') no-repeat center center;',
         'background-size: 40px;'
       ].join('');
     }
@@ -457,7 +500,7 @@ var bufferData = function (port, postData) {
         data.embed = null;
       }
     }
-    bufferOverlay(data, config, function (overlaydata) {
+    bufferOverlay(data, config, port, function (overlaydata) {
       port.emit("buffer_done", overlaydata);
     });
   };
@@ -466,4 +509,53 @@ var bufferData = function (port, postData) {
   // createOverlay is the callback that should fire after getData has
   // gathered all the necessaries
   getData(postData, createOverlay);
+};
+
+// Cache for the port to avoid passing it around in function calls
+var portCache = (function() {
+  var _port;
+
+  var exposed = {
+    // Executed at the very beginning of bufferOverlay()'s execution to
+    // update the cached port
+    grabPort: function(port) {
+      _port = port;
+    },
+
+    getPort: function() { return _port }
+  };
+
+  return exposed;
+})();
+
+// _bmq exposes the same API here as it does in background scripts, but
+// here it only takes care of passing this data to the background script's
+// _bmq where it will be effectively taken care of.
+var _bmq = (function() {
+  var _availableMethods = ['push', 'trackAction'];
+
+  var _passForward = function(methodName) {
+    var payload = {
+      methodName: methodName,
+      args: Array.prototype.slice.call(arguments, 1)
+    };
+
+    portCache.getPort().emit('buffer_tracking', payload);
+  };
+
+  var exposed = {};
+
+  // Expose all _availableMethods
+  _availableMethods.forEach(function(methodName) {
+    exposed[methodName] = _passForward.bind(null, methodName);
+  });
+
+  return exposed;
+}());
+
+// Get some user data asynchronously; the callback will be run once immediately if such data has already
+// been cached by the background script, and once shortly after displaying the overlay when the cache
+// has been refreshed from the user data in the iframe
+getExtensionUserData = function(cb) {
+  portCache.getPort().on('buffer_user_data', cb);
 };

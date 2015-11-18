@@ -33,7 +33,8 @@
       '.UIStandardFrame_Content',
       '.fbPhotoSnowlift',
       '.userContentWrapper',
-      '.timelineUnitContainer'
+      '.timelineUnitContainer',
+      '.tickerDialogContent > .commentable_item' // target the ticker posts' contents - 11/18/15
     ].join(', '),
 
     via: [
@@ -65,7 +66,7 @@
       '.spotlight'
     ].join(', '),
 
-    videoThumb: '.uiVideoThumb img',
+    videoThumb: 'video ~ div > img',
 
     // a.shareLink - page timelines, 3/2014
     // .shareLink a:not([href="#"]) - small embeds on user timeline, ex. YouTube, 3/2014
@@ -78,11 +79,11 @@
       'a.shareLink',
       'a.uiVideoLink',
       '.shareLink a:not([href="#"])',
-      '._52c6',
+      '._52c6:not(.UFIContainer ._52c6)',
     ].join(', '),
 
     // A backup, slower selector logic
-    anchorSecondary: 'div:not(.userContent) a[target="_blank"]:not([data-appname])'
+    anchorSecondary: 'a[target="_blank"]:not([data-appname]):not(.userContent a):not(.UFIContainer a)'
 
   };
 
@@ -101,8 +102,19 @@
     // find the message for this attachment, or if none use the attachment caption
     share.text = $(selectors.text, parent).first().text();
 
-    var $thumb = $(selectors.thumb, parent);
-    var image = $thumb.attr('src');
+    var $thumb = $(selectors.thumb, parent).first();
+    var image;
+
+    // Make sure retrieved images are part of the post, not comments below
+    if (!$thumb.closest('.UFIContainer').length) {
+      var $fullSizeThumbHolder = $thumb.closest('a');
+      var $fullSizeThumbMatches = /(?:;|&)src=([^&]+)&/i.exec($fullSizeThumbHolder.attr('ajaxify'));
+      var $fullSizeThumb = $fullSizeThumbMatches && $fullSizeThumbMatches[1] && decodeURIComponent($fullSizeThumbMatches[1]);
+
+      if ($fullSizeThumb) image = $fullSizeThumb; // Give priority to largest image if found
+        else image = $thumb.attr('src');
+    }
+
     var $videoThumb = $(selectors.videoThumb, parent);
     var $anchor = $(selectors.anchor, parent);
 
@@ -122,10 +134,26 @@
       // Disable this until we add sharing to the image modal
       // share.url = $('a.uiPhotoThumb, a.photo', parent).attr('href');
       share.placement = 'facebook-timeline-picture';
+
+    // The link to the video in video posts can change a bit between regular video
+    // posts, "X liked Y's video", and "X shared Y's video". Since there's no reliable
+    // enough way to get the video link based on class names / other DOM cues, we're
+    // fetching it by going over all the post's links.
+    // Facebook video links can look like 'facebook.com/username/videos/0123456789/'
+    // and 'facebook.com/video.php?v=0123456789'
     } else if ($videoThumb.length) {
-      share.url = url;
-      image = $videoThumb[0].src.replace(/c([0-9]+\.)+[0-9]+\//, '');
-      share.picture = image;
+      var $postLinks = parent.find('a');
+      var videoLinkRegex = /(?:\/videos\/\d+\/)|(?:\/video\.php\?v=\d+)/i;
+      var videoLink;
+
+      $postLinks.each(function() {
+        var href = $(this).attr('href') || '';
+        if (videoLinkRegex.test(href)) videoLink = href;
+      });
+
+      if (videoLink) share.url = videoLink;
+      if (share.url && share.url[0] == '/') share.url = 'https://facebook.com' + share.url;
+
       share.placement = 'facebook-timeline-video';
     } else if (url) {
       // find link status
@@ -137,20 +165,12 @@
       share.placement = 'facebook-timeline-status';
     }
 
-    // Facebook does some href switching via js on link rollover
-    // If the user doesn't rollover, we have some leave facebook url
+    // Sometimes, href attributes are dynamically updated by Facebook, so we
+    // have to extract the url from a string that looks like "https://www.facebook.
+    // com/l.php?u=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DBF9TjbdJyUE&h=aAQ[…]"
     if (share.url && share.url.indexOf('facebook.com/l.php?') > -1) {
-
-      var mouseoverAttr = $anchor.attr('onmouseover');
-
-      if (mouseoverAttr.indexOf('LinkshimAsyncLink') > -1) {
-        share.url = mouseoverAttr
-          .split('"')
-          .filter(function(part){
-            return part.indexOf('http') === 0;
-          })[0];
-      }
-
+      var urlMatches = share.url.match(/u=([^&]+)/i); // Capture url inside the u= param
+      if (urlMatches) share.url = decodeURIComponent(urlMatches[1]);
     }
 
     return share;
@@ -278,8 +298,10 @@
       container: '.commentable_item',
       // after: '.share_action_link',
       // Adjustment made w/ Timeline adjustments noticed by Joel Mar 26 2015
+      // [href^="/ajax/sharer"] selector added on 11/18/15 following Facebook markup
+      // change (all classes are now mangled).
       after: function($container) {
-        var $shareBtn = $container.find('.share_action_link');
+        var $shareBtn = $container.find('.share_root, [href^="/ajax/sharer"]').first();
         // share_action_link's parent, only if the par is div.uiPopover
         if ($shareBtn.parent().hasClass('uiPopover')) return $shareBtn.parent();
         return $shareBtn;
@@ -288,12 +310,16 @@
       create: function(btnConfig) {
 
         var span = document.createElement('span');
-        var spacer = document.createTextNode(' · ');
         var button = document.createElement('a');
 
         button.setAttribute('style', btnConfig.default);
+        button.setAttribute('class', 'buffer-facebook-newsfeed-post-embed');
         button.setAttribute('href', '#');
         button.textContent = btnConfig.text;
+
+        var spacer = document.createElement('span');
+        spacer.appendChild(document.createTextNode(' \u00A0')); // A space, followed by a nbsp
+        spacer.setAttribute('class', 'buffer-facebook-newsfeed-embed-spacer');
 
         span.appendChild(spacer);
         span.appendChild(button);

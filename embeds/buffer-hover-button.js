@@ -42,6 +42,7 @@
   var backgroundImage = (dpr && dpr > 1) ?
     xt.data.get('data/shared/img/buffer-hover-icon@2x.png') :
     xt.data.get('data/shared/img/buffer-hover-icon@1x.png');
+  var isButtonVisible = false;
 
   var button = document.createElement('span');
   button.id = 'buffer-extension-hover-button';
@@ -59,11 +60,22 @@
   ].join(''));
 
   var offset = 5;
-  var locateButton = function(e) {
-    var image = e.target;
-    var box = image.getBoundingClientRect();
+  var image;
+  var box;
 
+  var showButton = function(e) {
+    image = e.target;
+
+    box = image.getBoundingClientRect();
     if (box.height < 250 || box.width < 350) return;
+
+    button.style.display = 'block';
+    currentImageUrl = getImageUrl(image);
+    isButtonVisible = true;
+  };
+
+  var locateButton = function() {
+    box = image.getBoundingClientRect();
 
     // Use image.width and height if available
     var width = image.width || box.width,
@@ -74,18 +86,24 @@
     // In Gmail, we slide over the button for inline images to not block g+ sharing
     if (site.isGmail &&
         window.getComputedStyle(image).getPropertyValue('position') !== 'absolute') {
-      extraXOffset = 72;
+      extraXOffset = 83;
       extraYOffset = 4;
     }
 
     var x = window.pageXOffset + box.left + width - buttonWidth - offset - extraXOffset;
     var y = window.pageYOffset + box.top + height - buttonHeight - offset - extraYOffset;
 
+    // If body is positioned, the button will be positioned against it. So, if body is positioned and shifted
+    // up or down, or is being shifted up or down by a children having a top margin other than 0, account for
+    // that additional vertical offset.
+    var isBodyPositioned = window.getComputedStyle(document.body).getPropertyValue('position') != 'static';
+    if (isBodyPositioned) {
+      var bodyTopOffset = document.body.getBoundingClientRect().top + window.pageYOffset;
+      y -= bodyTopOffset;
+    }
+
     button.style.top = y + 'px';
     button.style.left = x + 'px';
-    button.style.display = 'block';
-
-    currentImageUrl = getImageUrl(image);
   };
 
   var hoverButton = function() {
@@ -97,7 +115,17 @@
     if(document.getElementById("pablo-extension-hover-button").style.display != 'none') {
       button.style.display = 'none';
       button.style.opacity = '0.9';
+      isButtonVisible = false;
     }
+  };
+
+  var onImageMouseEnter = function(e) {
+    showButton(e);
+    locateButton();
+  };
+
+  var onScroll = function() {
+    if (isButtonVisible) locateButton();
   };
 
   var bufferImage = function(e) {
@@ -143,8 +171,11 @@
     document.body.appendChild(button);
 
     $(document)
-      .on('mouseenter', selector, locateButton)
+      .on('mouseenter', selector, onImageMouseEnter)
       .on('mouseleave', selector, hideButton);
+
+    // scroll events don't bubble, so we listen to them during their capturing phase
+    window.addEventListener('scroll', onScroll, true);
   };
 
 

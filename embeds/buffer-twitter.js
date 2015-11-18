@@ -27,6 +27,22 @@
     }
   };
 
+  var getTextFromRichtext = function(html) {
+    var text;
+
+    html = html
+      .replace(/<div><br><\/div>/gi, '\n')
+      .replace(/<\/div>/gi, '\n')
+      .replace(/<\/p>/gi, '\n')
+      .replace(/<br>/gi, '\n');
+
+    text = $('<div>')
+      .html(html)
+      .text();
+
+    return text;
+  };
+
   config.buttons = [
     {
       // The standalone tweet page after a "Tweet" button has been clicked
@@ -156,15 +172,7 @@
           .find('.tweet-content .tweet-box')
           .html();
 
-        html = html
-          .replace(/<div><br><\/div>/gi, '\n')
-          .replace(/<\/div>/gi, '\n')
-          .replace(/<\/p>/gi, '\n')
-          .replace(/<br>/gi, '\n');
-
-        text = $('<div>')
-          .html(html)
-          .text();
+        text = getTextFromRichtext(html);
 
         return {
           text: text,
@@ -245,36 +253,21 @@
 
       },
       data: function (elem) {
-        var c = $(elem).closest('.tweet');
+        var $tweet = $(elem).closest('.tweet');
         // Grab the tweet text
-        var text = c.find('.js-tweet-text').first();
-        // Iterate through all links in the text
-        $(text).children('a').each(function () {
-          // Don't modify the screennames and the hashtags
-          if( $(this).attr('data-screen-name') ) return;
-          if( $(this).hasClass('twitter-atreply') ) return;
-          if( $(this).hasClass('twitter-hashtag') ) return;
-          // swap the text with the actual link
-          var original = $(this).text();
-          $(this).text($(this).attr("href")).attr('data-original-text', original);
-        });
+        var $text = $tweet.find('.js-tweet-text').first();
+        var username = $tweet.find('.username').first().text().trim();
         // Build the RT text
-        var rt = 'RT ' + c.find('.username').first().text().trim() + ': ' + $(text).text().trim() + '';
-        // Put the right links back
-        $(text).children('a').each(function () {
-          if( ! $(this).attr('data-original-text') ) return;
-          $(this).text($(this).attr('data-original-text'));
-        });
+        var rt = getFullTweetText($text, username);
 
         // Send back the data
         return {
           text: rt,
           placement: 'twitter-permalink',
-          // grab info for retweeting
-          retweeted_tweet_id: c.attr('data-item-id'),
-          retweeted_user_id: c.data('user-id'),
-          retweeted_user_name: c.data('screen-name'),
-          retweeted_user_display_name: c.data('name')
+          retweeted_tweet_id: $tweet.attr('data-item-id'),
+          retweeted_user_id: $tweet.data('user-id'),
+          retweeted_user_name: $tweet.data('screen-name'),
+          retweeted_user_display_name: $tweet.data('name')
         };
       },
       clear: function (elem) {
@@ -293,7 +286,8 @@
       name: "buffer-permalink-action-OCT-2014",
       text: "Add to Buffer",
       // NOTE - Possibly switch from permalink one day
-      container: '.permalink .js-actionable-tweet .js-actions',
+      // NOTE - to avoid injection into AUG 2015 stream (see below)
+      container: '.permalink .js-actionable-tweet .js-actions:not(.ProfileTweet-actionList--withCircle, .ProfileTweet-actionList)',
       after: '.js-toggleRt',
       default: '',
       className: 'ProfileTweet-action js-tooltip',
@@ -323,14 +317,6 @@
         var $tweet = $(elem).closest('.js-actionable-tweet');
         var $text = $tweet.find('.js-tweet-text').first();
 
-        // Iterate through all links in the text
-        var $textClone = $text.clone();
-        $textClone.find('a[data-expanded-url]').each(function(){
-          var $link = $(this);
-          $link.text($link.attr('data-expanded-url'));
-        });
-        var tweetText = $textClone.text().trim();
-
         // Build the RT text
         var screenname = $tweet.attr('data-screen-name');
         if (!screenname) {
@@ -341,13 +327,12 @@
             .trim()
             .replace(/^@/, '');
         }
-        var text = 'RT @' + screenname + ': ' + tweetText + '';
+        var text = getFullTweetText($text, screenname);
 
         // Send back the data
         return {
           text: text,
           placement: 'twitter-permalink',
-          // grab info for retweeting
           retweeted_tweet_id:          $tweet.attr('data-item-id'),
           retweeted_user_id:           $tweet.attr('data-user-id'),
           retweeted_user_name:         $tweet.attr('data-screen-name'),
@@ -374,7 +359,8 @@
       // October 2014 profile & home stream changes
       name: "buffer-profile-stream-OCT-2014",
       text: "Add to Buffer",
-      container: '.js-stream-item .js-actions',
+      // NOTE - to avoid injection into AUG 2015 stream (see below)
+      container: '.js-stream-item .js-actions:not(.ProfileTweet-actionList--withCircle, .ProfileTweet-actionList)',
       after: '.js-toggleRt, .js-toggle-rt',
       //NOTE: .js-toggleRt is new OCT 2014
       default: '',
@@ -405,17 +391,6 @@
         var $tweet = $(elem).closest('.js-tweet, .js-stream-tweet');
         var $text = $tweet.find('.js-tweet-text').first();
 
-        // Iterate through all links in the text
-        $text.children('a').each(function () {
-          // Don't modify the screennames and the hashtags
-          if( $(this).attr('data-screen-name') ) return;
-          if( $(this).hasClass('twitter-atreply') ) return;
-          if( $(this).hasClass('twitter-hashtag') ) return;
-          // swap the text with the actual link
-          var original = $(this).text();
-          $(this).text($(this).attr("href")).attr('data-original-text', original);
-        });
-
         // Build the RT text
         var screenname = $tweet.attr('data-screen-name');
         if (!screenname) {
@@ -426,19 +401,12 @@
             .trim()
             .replace(/^@/, '');
         }
-        var text = 'RT @' + screenname + ': ' + $text.text().trim() + '';
-
-        // Put the right links back
-        $text.children('a').each(function () {
-          if( ! $(this).attr('data-original-text') ) return;
-          $(this).text($(this).attr('data-original-text'));
-        });
+        var text = getFullTweetText($text, screenname);
 
         // Send back the data
         return {
           text: text,
           placement: 'twitter-feed',
-          // grab info for retweeting
           retweeted_tweet_id:          $tweet.attr('data-item-id'),
           retweeted_user_id:           $tweet.attr('data-user-id'),
           retweeted_user_name:         $tweet.attr('data-screen-name'),
@@ -460,9 +428,193 @@
           $btn.find('i').css({'background-position-y': '-21px'});
         }
       }
+    },
+    {
+      // August 2015 stream changes (circles)
+      // Sept 2015 changes extended that button-based markup to all versions of twitter.com,
+      // making "--withCircle" a variant of that
+      name: "buffer-profile-stream-AUG-2015",
+      text: "Add to Buffer",
+      container:
+        '.js-stream-tweet .js-actions.ProfileTweet-actionList,' +
+        '.permalink .js-actionable-tweet .js-actions.ProfileTweet-actionList,' +
+        '.js-stream-tweet .js-actions.ProfileTweet-actionList--withCircle,' +
+        '.permalink .js-actionable-tweet .js-actions.ProfileTweet-actionList--withCircle'
+      ,
+      after: '.js-toggleRt, .js-toggle-rt',
+      default: '',
+      selector: '.buffer-action',
+      create: function (btnConfig) {
+
+        /* Desired DOM structure:
+          <div class="ProfileTweet-action ProfileTweet-action--buffer js-toggleState">
+            <button class="ProfileTweet-actionButton js-actionButton" type="button">
+              <div class="IconContainer js-tooltip" data-original-title="Add to Buffer">
+                <span class="Icon Icon--circleFill"></span> <!-- enabled via CSS for circle variant -->
+                <span class="Icon Icon--circle"></span> <!-- enabled via CSS for circle variant -->
+                <span class="Icon Icon--buffer"></span>
+                <span class="u-hiddenVisually">Buffer</span>
+              </div>
+            </button>
+          <div>
+        */
+
+        var action = document.createElement('div');
+        action.className = 'ProfileTweet-action ProfileTweet-action--buffer js-toggleState';
+        var button = document.createElement('button');
+        button.className = 'ProfileTweet-actionButton js-actionButton';
+        button.type = 'button';
+        var iconCntr = document.createElement('div');
+        iconCntr.className = 'IconContainer js-tooltip';
+        iconCntr.setAttribute('data-original-title', btnConfig.text); // tooltip text
+        var icon = document.createElement('span');
+        icon.className = 'Icon Icon--buffer';
+        var circle = document.createElement('span');
+        circle.className = 'Icon Icon--circle';
+        var circleFill = document.createElement('span');
+        circleFill.className = 'Icon Icon--circleFill';
+        var text = document.createElement('span');
+        text.className = 'u-hiddenVisually';
+        text.textContent = 'Buffer';
+
+        iconCntr.appendChild(circleFill);
+        iconCntr.appendChild(circle);
+        iconCntr.appendChild(icon);
+        iconCntr.appendChild(text);
+        button.appendChild(iconCntr);
+        action.appendChild(button);
+
+        return action;
+      },
+      data: function (elem) {
+
+        // NOTE: .js-stream-tweet - new in OCT 2014
+        var $tweet = $(elem).closest('.js-tweet, .js-stream-tweet, .js-actionable-tweet');
+        var $text = $tweet.find('.js-tweet-text').first();
+
+        // Build the RT text
+        var screenname = $tweet.attr('data-screen-name');
+        if (!screenname) {
+          screenname = $tweet.find('.js-action-profile-name')
+            .filter(function(i){ return $(this).text()[0] === '@' })
+            .first()
+            .text()
+            .trim()
+            .replace(/^@/, '');
+        }
+        var text = getFullTweetText($text, screenname);
+
+        // Send back the data
+        return {
+          text: text,
+          placement: 'twitter-feed',
+          retweeted_tweet_id:          $tweet.attr('data-item-id'),
+          retweeted_user_id:           $tweet.attr('data-user-id'),
+          retweeted_user_name:         $tweet.attr('data-screen-name'),
+          retweeted_user_display_name: $tweet.attr('data-name')
+        };
+      },
+      clear: function (elem) {
+      },
+      activator: function (elem, btnConfig) {
+        var $btn = $(elem);
+
+        // Remove extra margin on the last item in the list to prevent overflow
+        var moreActions = $btn.siblings('.js-more-tweet-actions').get(0);
+        if (moreActions) {
+          moreActions.style.marginRight = '0px';
+        }
+
+        if( $btn.closest('.in-reply-to').length > 0 ) {
+          $btn.find('i').css({'background-position-y': '-21px'});
+        }
+      }
+    },
+    {
+      // Retweet modal window
+      name: "retweet",
+      text: "Buffer Retweet",
+      container: '.tweet-form.RetweetDialog-tweetForm .tweet-button',
+      after: '.tweet-counter',
+      className: 'buffer-tweet-button btn',
+      selector: '.buffer-tweet-button',
+      create: function (btnConfig) {
+
+        var a = document.createElement('a');
+        a.setAttribute('class', btnConfig.className);
+        a.setAttribute('href', '#');
+        $(a).text(btnConfig.text);
+
+        return a;
+
+      },
+      data: function (elem) {
+        var $elem = $(elem);
+        var $dialog = $elem.closest('.retweet-tweet-dialog, #retweet-dialog, #retweet-tweet-dialog');
+        var $tweet = $dialog.find('.js-actionable-tweet').first();
+
+        var screenname = $tweet.attr('data-screen-name');
+        if (!screenname) {
+          screenname = $tweet.find('.js-action-profile-name')
+            .filter(function(i){ return $(this).text()[0] === '@' })
+            .first()
+            .text()
+            .trim()
+            .replace(/^@/, '');
+        }
+        var $text = $tweet.find('.js-tweet-text').first();
+        var text = getFullTweetText($text, screenname);
+
+        var commentHtml = $elem.closest('form.is-withComment').find('.tweet-content .tweet-box').html();
+        var comment = commentHtml? getTextFromRichtext(commentHtml) : '';
+
+        return {
+          text:                        text,
+          placement:                   'twitter-retweet',
+          retweeted_tweet_id:          $tweet.attr('data-item-id'),
+          retweeted_user_id:           $tweet.attr('data-user-id'),
+          retweeted_user_name:         $tweet.attr('data-screen-name'),
+          retweeted_user_display_name: $tweet.attr('data-name'),
+          retweet_comment:             comment
+        };
+      },
+      activator: function (elem, btnConfig) {
+        var $elem = $(elem);
+        var $target = $elem.closest('form').find('.tweet-content .tweet-box');
+
+        $target.on('keyup focus blur change paste cut', function(e) {
+          var counter = $elem.siblings('.tweet-counter').text() ||
+            $elem.siblings('.tweet-counter').val();
+
+          if (counter > -1) {
+            $elem.removeClass('disabled');
+          } else {
+            $elem.addClass('disabled');
+          }
+        });
+      }
     }
 
   ];
+
+  // Parse a tweet a return text representing it
+  // NOTE: some more refactoring can be done here, e.g. taking care of
+  // expanding short links in a single place
+  var getFullTweetText = function($text, screenName) {
+    var $clone = $text.clone();
+
+    // Expand URLs
+    $clone.find('a[data-expanded-url]').each(function() {
+      this.textContent = this.getAttribute('data-expanded-url');
+    });
+
+    // Replace emotes with their unicode representation
+    $clone.find('img.twitter-emoji').each(function(i, el) {
+      $(el).replaceWith(el.getAttribute('alt'));
+    });
+
+    return 'RT @' + screenName + ': ' + $clone.text().trim() + '';
+  };
 
   var insertButtons = function () {
 

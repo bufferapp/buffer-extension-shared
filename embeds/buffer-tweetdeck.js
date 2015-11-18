@@ -28,20 +28,32 @@
         return $newActionItem;
       },
       getData: function(el) {
-        var $streamItem = $(el).parents('.js-stream-item');
+        var $streamItem = $(el).closest('.js-stream-item');
 
         var $text = $streamItem.find('.js-tweet-text');
-        var $screenname = $streamItem.find('.username');
+        var $screenname = $streamItem.find('.username').first();
         var screenname = $screenname.text().trim().replace(/^@/, '');
         var text = getFullTweetText($text, screenname);
-        var displayName = $streamItem.find('.fullname').text().trim();
+        var displayName = $streamItem.find('.fullname').first().text().trim();
+        var tweetKey = $streamItem.attr('data-key');
+        var $tweetAction;
+        var retweeted_tweet_id;
+
+        // Retweet, mention, favorite: non-regular tweet whose data-key attr
+        // is formatted differently, and for which we need to get the tweet_id
+        // from somewhere else
+        if (/^(?:quoted_tweet|favorite|mention)/.test(tweetKey)) {
+          $tweetAction = $streamItem.find('.tweet-action[data-user-id]');
+          retweeted_tweet_id = $tweetAction.attr('data-chirp-id');
+        // Regular tweet
+        } else {
+          retweeted_tweet_id = tweetKey;
+        }
 
         return {
           text: text,
           placement: this.placement,
-          retweeted_tweet_id: $streamItem.attr('data-key'),
-          // NOTE - we may not really need the user id after all...
-          // retweeted_user_id:           $tweet.attr('data-user-id'),
+          retweeted_tweet_id: retweeted_tweet_id,
           retweeted_user_name: screenname,
           retweeted_user_display_name: displayName
         };
@@ -71,13 +83,13 @@
         return $newActionItem;
       },
       getData: function(el) {
-        var $streamItem = $(el).parents('.js-stream-item');
+        var $streamItem = $(el).closest('.js-stream-item');
 
         var $text = $streamItem.find('.js-tweet-text');
-        var $screenname = $streamItem.find('.username');
+        var $screenname = $streamItem.find('.username').first();
         var screenname = $screenname.text().trim().replace(/^@/, '');
         var text = getFullTweetText($text, screenname);
-        var displayName = $streamItem.find('.fullname').text().trim();
+        var displayName = $streamItem.find('.fullname').first().text().trim();
 
         return {
           text: text,
@@ -106,7 +118,7 @@
           .addClass('buffer-inserted')
           .prepend($newActionItem);
 
-        var $container = $(el).parents('.js-docked-compose');
+        var $container = $(el).closest('.js-docked-compose');
         this.$newActionItem = $newActionItem;
         this.$textarea = $container.find('.js-compose-text');
         this.$charCount = $container.find('.js-character-count');
@@ -126,11 +138,31 @@
         }
       },
       getData: function(el) {
-        var text = this.$textarea.val().trim();
-        return {
-          text: text,
-          placement: this.placement
-        };
+        var $container = $(el).closest('.js-docked-compose');
+        var $quotedTweet = $container.find('.quoted-tweet');
+        var isRTwcomment = !!$quotedTweet.length;
+        var composerText = this.$textarea.val().trim();
+        var $text;
+        var username;
+
+        if (isRTwcomment) {
+          $text = $quotedTweet.find('.js-quoted-tweet-text');
+          username = $quotedTweet.find('.username').text().trim().replace(/^@/, '');
+
+          return {
+            text: getFullTweetText($text, username),
+            placement: this.placement,
+            retweeted_tweet_id: $quotedTweet.attr('data-tweet-id'),
+            retweeted_user_name: username,
+            retweeted_user_display_name: $quotedTweet.find('.fullname').text().trim(),
+            retweet_comment: composerText
+          };
+        } else {
+          return {
+            text: composerText,
+            placement: this.placement
+          };
+        }
       }
     }
 
@@ -182,8 +214,13 @@
     var $clone = $text.clone();
 
     // Replace any shortened URL with the full url
-    $clone.find('a').each(function(i, el) {
+    $clone.find('a[data-full-url]').each(function(i, el) {
       el.textContent = el.getAttribute('data-full-url');
+    });
+
+    // Replace emotes with their unicode representation
+    $clone.find('img.emoji').each(function(i, el) {
+      $(el).replaceWith(el.getAttribute('alt'));
     });
 
     return 'RT @' + screenname + ': ' + $clone.text().trim() + '';
@@ -208,13 +245,11 @@
     setTimeout(tweetdeckLoop, 500);
   };
 
+  var currentStyleIndicator = document.head.querySelector('meta[http-equiv="Default-Style"]');
+
   var checkDarkTheme = function() {
-    var darkStylesheet = document.head.querySelector('link[title="dark"]');
-    if (!!darkStylesheet && !darkStylesheet.disabled) {
-      document.body.classList.add('buffer-tweetdeck-dark');
-    } else {
-      document.body.classList.remove('buffer-tweetdeck-dark');
-    }
+    var isDarkThemeSelected = currentStyleIndicator.getAttribute('content') == 'dark';
+    document.body.classList.toggle('buffer-tweetdeck-dark', isDarkThemeSelected);
   };
 
   var start = function() {
@@ -222,10 +257,20 @@
     // Add class for css scoping
     document.body.classList.add('buffer-tweetdeck');
 
-    $(document).on('ready', function() {
+    $(document).ready(function() {
       checkDarkTheme();
-      // Check again in case the app hasn't initialized
-      setTimeout(checkDarkTheme, 2000);
+
+      // Observe future changes to the 'disabled' attribute of link[title=dark]
+      // Useful if the app hasn't initialized, or if settings are changed later on
+      if (window.MutationObserver) {
+        var observer = new MutationObserver(checkDarkTheme);
+        observer.observe(currentStyleIndicator, { attributes: true, attributeFilter: ['content'] });
+
+        // Stop observing when add-on is disabled/removed (the detach event is Firefox-specific)
+        xt.port.on('detach', function() {
+          observer.disconnect();
+        });
+      }
     });
 
     // Start the loop that will watch for new DOM elements
