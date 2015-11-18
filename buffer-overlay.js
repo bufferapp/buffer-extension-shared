@@ -44,6 +44,7 @@ var openPopUp = function(src, port, doneCallback) {
 var CSPWhitelist = [
   'twitter.com',
   'github.com',
+  'gist.github.com',
   'education.github.com',
   'medium.com',
   'www.npmjs.org',
