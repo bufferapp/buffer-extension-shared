@@ -33,7 +33,8 @@
       '.UIStandardFrame_Content',
       '.fbPhotoSnowlift',
       '.userContentWrapper',
-      '.timelineUnitContainer'
+      '.timelineUnitContainer',
+      '.tickerDialogContent > .commentable_item' // target the ticker posts' contents - 11/18/15
     ].join(', '),
 
     via: [
@@ -78,11 +79,11 @@
       'a.shareLink',
       'a.uiVideoLink',
       '.shareLink a:not([href="#"])',
-      '._52c6',
+      '._52c6:not(.UFIContainer ._52c6)',
     ].join(', '),
 
     // A backup, slower selector logic
-    anchorSecondary: 'div:not(.userContent) a[target="_blank"]:not([data-appname])'
+    anchorSecondary: 'a[target="_blank"]:not([data-appname]):not(.userContent a):not(.UFIContainer a)'
 
   };
 
@@ -105,7 +106,7 @@
     var image;
 
     // Make sure retrieved images are part of the post, not comments below
-    if (!$thumb.closest('.commentable_item').length) {
+    if (!$thumb.closest('.UFIContainer').length) {
       var $fullSizeThumbHolder = $thumb.closest('a');
       var $fullSizeThumbMatches = /(?:;|&)src=([^&]+)&/i.exec($fullSizeThumbHolder.attr('ajaxify'));
       var $fullSizeThumb = $fullSizeThumbMatches && $fullSizeThumbMatches[1] && decodeURIComponent($fullSizeThumbMatches[1]);
