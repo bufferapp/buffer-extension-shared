@@ -297,8 +297,10 @@
       container: '.commentable_item',
       // after: '.share_action_link',
       // Adjustment made w/ Timeline adjustments noticed by Joel Mar 26 2015
+      // [href^="/ajax/sharer"] selector added on 11/18/15 following Facebook markup
+      // change (all classes are now mangled).
       after: function($container) {
-        var $shareBtn = $container.find('.share_root');
+        var $shareBtn = $container.find('.share_root, [href^="/ajax/sharer"]').first();
         // share_action_link's parent, only if the par is div.uiPopover
         if ($shareBtn.parent().hasClass('uiPopover')) return $shareBtn.parent();
         return $shareBtn;
@@ -314,16 +316,11 @@
         button.setAttribute('href', '#');
         button.textContent = btnConfig.text;
 
-        var timelineSpacer = document.createElement('span');
-        timelineSpacer.appendChild(document.createTextNode(' \u00A0')); // A space, followed by a nbsp
-        timelineSpacer.setAttribute('class', 'buffer-facebook-newsfeed-embed-spacer');
+        var spacer = document.createElement('span');
+        spacer.appendChild(document.createTextNode(' \u00A0')); // A space, followed by a nbsp
+        spacer.setAttribute('class', 'buffer-facebook-newsfeed-embed-spacer');
 
-        var tickerSpacer = document.createElement('span');
-        tickerSpacer.appendChild(document.createTextNode(' · '));
-        tickerSpacer.setAttribute('class', 'buffer-facebook-ticker-embed-spacer');
-
-        span.appendChild(timelineSpacer);
-        span.appendChild(tickerSpacer);
+        span.appendChild(spacer);
         span.appendChild(button);
 
         return span;
