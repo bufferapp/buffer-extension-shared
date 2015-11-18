@@ -94,8 +94,10 @@
   };
 
   var hideButton = function(e) {
-    button.style.display = 'none';
-    button.style.opacity = '0.9';
+    if(document.getElementById("pablo-extension-hover-button").style.display != 'none') {
+      button.style.display = 'none';
+      button.style.opacity = '0.9';
+    }
   };
 
   var bufferImage = function(e) {
