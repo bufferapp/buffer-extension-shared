@@ -109,6 +109,7 @@
   var hoverButton = function() {
     button.style.opacity = '1.0';
     button.style.display = 'block';
+    setPabloButtonVisibilityState(true);
   };
 
   var hideButton = function(e) {
@@ -117,9 +118,27 @@
     isButtonVisible = false;
   };
 
+  var onMouseleaveButton = function() {
+    setPabloButtonVisibilityState(false);
+    hideButton();
+  };
+
   var onImageMouseEnter = function(e) {
     showButton(e);
     locateButton();
+  };
+
+  // If the Pablo extension is active on that page, manage its visibility state
+  // by dispatching events to the underlying image
+  var setPabloButtonVisibilityState = function(shouldMakeVisible) {
+    // Check if the Pablo extension is active on that page
+    var pabloHoverButton = document.getElementById('pablo-extension-hover-button');
+    if (!pabloHoverButton) return;
+
+    // jQuery listens to mouseover to emulate mouseenter, and mouseout to emulate mouseleave
+    var eventName = shouldMakeVisible ? 'mouseover' : 'mouseout';
+    var event = new Event(eventName, { bubbles: true });
+    image.dispatchEvent(event);
   };
 
   var onScroll = function() {
@@ -140,7 +159,7 @@
   $(button)
     .on('click', bufferImage)
     .on('mouseenter', hoverButton)
-    .on('mouseleave', hideButton);
+    .on('mouseleave', onMouseleaveButton);
 
 
   var getImageUrl = (function(domain){
