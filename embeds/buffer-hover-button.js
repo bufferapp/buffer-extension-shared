@@ -112,11 +112,9 @@
   };
 
   var hideButton = function(e) {
-    if(document.getElementById("pablo-extension-hover-button").style.display != 'none') {
-      button.style.display = 'none';
-      button.style.opacity = '0.9';
-      isButtonVisible = false;
-    }
+    button.style.display = 'none';
+    button.style.opacity = '0.9';
+    isButtonVisible = false;
   };
 
   var onImageMouseEnter = function(e) {
