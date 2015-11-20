@@ -48,7 +48,8 @@ var CSPWhitelist = [
   'education.github.com',
   'medium.com',
   'www.npmjs.org',
-  'www.npmjs.com' // DEC 2014
+  'www.npmjs.com',
+  'www.flickr.com'
 ];
 
 // Build that overlay!
