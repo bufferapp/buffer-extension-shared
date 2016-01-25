@@ -109,8 +109,7 @@
         // Grab text from image alt attribute
         var text = $img.attr('alt');
 
-        var $source = $(el).children('.repinLike').find('.NavigateButton.website');
-        var source = $source.attr('href');
+        var source = $(el).closest('.Closeup').find('.paddedPinLink').attr('href');
 
         return {
           text: text,
