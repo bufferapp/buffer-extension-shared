@@ -147,9 +147,13 @@
         // Grab text from image alt attribute
         var text = $img.attr('alt');
 
-        // Grab full url from page behind modal
+        // Grab full url from board behind modal
         var $source = $(document).find('img[src="'+image+'"]').parents('.pinHolder').siblings('.pinNavLink');
         var source = $source.attr('href');
+
+        // If that didn't work, the Pin may have been open directly (there's no board in the
+        // background): there may be a pinterestapp:source meta tag we'll try to get it from
+        if (!source) source = $('meta[name=\'pinterestapp:source\']').attr('content');
 
         if(!source){
           if(window.location.search){
