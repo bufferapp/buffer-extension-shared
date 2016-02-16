@@ -266,6 +266,7 @@ var getOverlayConfig = function(postData){
   var segments = window.location.pathname.split('/');
 
   config.pocketWeb = ( window.location.host.indexOf('getpocket') !== -1 && segments[2] === 'read' );
+  config.isYoutubeVideo = ( window.location.host.indexOf('.youtube.com') !== -1 && segments[1] === 'watch' );
 
   // Specification for gathering data for the overlay
   config.attributes = [
@@ -304,6 +305,14 @@ var getOverlayConfig = function(postData){
         if (config.pocketWeb){
           var headline = document.querySelectorAll('.reader_head h1')[0];
           var title = headline && headline.textContent;
+          return cb(title);
+        }
+
+        // In some situations (e.g. YT's autoplay feature), the page is updated via xhr, the
+        // title attribute too, but not the og:title meta tag: default to retrieving the title
+        // of the page from the title attr for YouTube videos, and format it a bit
+        if (config.isYoutubeVideo) {
+          var title = document.title.replace('- YouTube', '');
           return cb(title);
         }
 
