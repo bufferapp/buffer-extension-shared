@@ -226,64 +226,41 @@
       name: "status",
       text: "",
       // container: '#pagelet_composer form, .fbTimelineComposerUnit form',
-      container: 'form[action^="/ajax/updatestatus"]',
-      after: 'ul.uiList > li:first',
+      container: '.composerAudienceWrapper',
+      after: '',
       className: 'buffer-facebook-button',
       selector: '.buffer-facebook-button',
-      elements:
-          ['li', 'pls uiList uiListHorizontalItemBorder uiListHorizontalItem', '',
-            ['label', '', '',
-              ['a', 'buffer-facebook-button']
-            ]
-          ],
       default: [
         'width: 15px;',
         'height: 20px;',
         'display: inline-block;',
         'vertical-align: middle;',
-        'line-height: 22px;',
         'background: transparent;',
         'background-image: url("https://d389zggrogs7qo.cloudfront.net/images/app/buffer-menu-icon-new.png");',
-        'color: white !important;',
-        'text-shadow: rgba(0, 0, 0, 0.2) 0px -1px 0px;',
-        'font-size: 12px;',
-        'font-family: Helvetica, Arial, "lucida grande",tahoma,verdana,arial,sans-serif;',
-        '-webkit-font-smoothing: antialiased;',
         'background-position: -22px 1px;',
-        'text-decoration: none !important;',
-        'top: 1px;',
-        'position: relative;'
+        'top: -1px;',
+        'position: relative;',
+        'margin-left: 10px;'
       ].join(''),
       hover: 'text-decoration: none !important;',
       create: function (btnConfig) {
-        var temp = buildElement(btnConfig.elements);
+        var button = document.createElement('a');
 
-        // If on a timeline page, reduce the font size. Temp hack for now
-        if ( $('#pagelet_composer').length === 0) {
-          btnConfig.default += 'font-size: 11px;';
-        }
+        button.setAttribute('style', btnConfig.default);
+        button.setAttribute('class', 'buffer-facebook-button');
+        button.setAttribute('href', '#');
+        button.textContent = btnConfig.text;
 
-        var a = $(temp).find(btnConfig.selector)[0];
-        a.setAttribute('style', btnConfig.default);
-        a.setAttribute('href', '#');
-        $(a).text(btnConfig.text);
-
-        $(a).mousedown(function () {
-          if( $(this).hasClass("disabled") ) return;
-          $(this).attr('style', btnConfig.default + btnConfig.active);
-        });
-
-        $(a).mouseup(function () {
-          if( $(this).hasClass("disabled") ) return;
-          $(this).attr('style', btnConfig.default + btnConfig.hover);
-        });
-
-        return temp;
-
+        return button;
       },
       data: function (elem) {
+        var contenteditable = $(elem).closest('#pagelet_composer').find('[contenteditable]')[0];
+        // innerText is prefered for its ability to include line breaks; will fallback to
+        // textContent, that doesn't support line breaks, in Firefox < 45
+        var text = contenteditable.innerText || contenteditable.textContent;
+
         return {
-          text: $(elem).parents('form').find('textarea.textInput').val(),
+          text: $.trim(text) || " ",
           placement: 'facebook-composer'
         };
       },
