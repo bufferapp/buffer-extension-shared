@@ -49,7 +49,8 @@ var CSPWhitelist = [
   'medium.com',
   'www.npmjs.org',
   'www.npmjs.com',
-  'www.flickr.com'
+  'www.flickr.com',
+  'www.oculus.com'
 ];
 
 // Build that overlay!
