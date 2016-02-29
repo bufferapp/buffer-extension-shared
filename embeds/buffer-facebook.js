@@ -226,8 +226,13 @@
       name: "status",
       text: "",
       // container: '#pagelet_composer form, .fbTimelineComposerUnit form',
-      container: '.composerAudienceWrapper',
-      after: '',
+      container: function() {
+        var $container = $('.composerAudienceWrapper').first().parent().parent();
+
+        if ($container.has('> button')) return $container;
+          else return $();
+      },
+      before: '> button',
       className: 'buffer-facebook-button',
       selector: '.buffer-facebook-button',
       default: [
@@ -240,7 +245,7 @@
         'background-position: -22px 1px;',
         'top: -1px;',
         'position: relative;',
-        'margin-left: 10px;'
+        'margin-right: 10px;'
       ].join(''),
       hover: 'text-decoration: none !important;',
       create: function (btnConfig) {
