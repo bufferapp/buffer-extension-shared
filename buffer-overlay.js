@@ -50,7 +50,8 @@ var CSPWhitelist = [
   'www.npmjs.org',
   'www.npmjs.com',
   'www.flickr.com',
-  'www.oculus.com'
+  'www.oculus.com',
+  'letsecure.me'
 ];
 
 // Build that overlay!
