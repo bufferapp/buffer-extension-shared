@@ -142,6 +142,9 @@
       },
       getData: function(el) {
         var $img = $(el).parents('.boardsWrapper').siblings('.pinContainer').find('.pinImg');
+        if (!$img) { // Default to grab .pinImg from a top-down approach rather than navigating from $(el) if that does not find it
+          $img = $('.pinImg');
+        }
 
         var image = $img.attr('src');
         // Grab text from image alt attribute
