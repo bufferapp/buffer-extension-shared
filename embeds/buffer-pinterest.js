@@ -141,7 +141,7 @@
         return $newActionItem;
       },
       getData: function(el) {
-        var $img = $(el).parents('.boardsWrapper').siblings('.pinContainer').find('.pinImg');
+        var $img = $('.modalContent .pinContainer .pinImg');
 
         var image = $img.attr('src');
         // Grab text from image alt attribute
