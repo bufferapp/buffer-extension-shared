@@ -435,19 +435,19 @@ var getOverlayConfig = function(postData){
     localendpoint: "https://local.buffer.com/add/",
     getCSS: function () {
       return [
-        'border: none;',
-        'height: 100%;',
-        'width: 100%;',
-        'position: fixed!important;',
-        'z-index: 2147483646;',
-        'top:0;',
-        'left:0;',
-        'display: block!important;',
-        'max-width: 100%!important;',
-        'max-height: 100%!important;',
-        'padding: 0!important;',
-        'background: rgba(245, 245, 245, 0.74) url(' + loadingImg +') no-repeat center center;',
-        'background-size: 40px;'
+        'border: none !important;',
+        'height: 100% !important;',
+        'width: 100% !important;',
+        'position: fixed !important;',
+        'z-index: 2147483646 !important;',
+        'top:0 !important;',
+        'left:0 !important;',
+        'display: block !important;',
+        'max-width: 100% !important;',
+        'max-height: 100% !important;',
+        'padding: 0 !important;',
+        'background: rgba(245, 245, 245, 0.74) url(' + loadingImg +') no-repeat center center !important;',
+        'background-size: 40px !important;'
       ].join('');
     }
   };
