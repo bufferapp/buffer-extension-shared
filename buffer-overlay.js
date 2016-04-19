@@ -281,7 +281,7 @@ var getOverlayConfig = function(postData){
           cb(link);
         }
         else{
-          cb(window.location.href);
+          cb(window.location.href.split('#')[0]);
         }
       },
       encode: function (val) {
