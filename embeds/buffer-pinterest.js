@@ -7,11 +7,10 @@
       placement: 'pinterest-stream-pins',
       selector: '.Pin.Module:not(.buffer-inserted, .hideHoverUI)',
       $button: $([
-        '<div class="pin-action-item Button btn">',
-          '<a class="js-buffer-action pin-action position-rel" href="#" rel="buffer">',
-            '<i class="icon icon-buffer"></i>',
-          '</a>',
-        '</div>'
+        '<button class="Button BufferButton Module btn rounded" type="button">',
+          '<em></em>',
+          '<span class="accessibilityText">Buffer</span>',
+        '</button>'
       ].join('')),
       insert: function(el) {
         var $actions = $(el);
@@ -21,8 +20,12 @@
           .addClass('buffer-inserted');
 
         $actions
-          .find('.pinImageActionButtonWrapper')
+          .find('.rightSideButtonsWrapper')
           .prepend($newActionItem);
+
+        if ($newActionItem.next().hasClass('isBrioFlat')) {
+          $newActionItem.addClass('isBrioFlat');
+        }
 
         return $newActionItem;
       },
@@ -84,19 +87,21 @@
       placement: 'pinterest-single-pin',
       selector: '.PinActionBar:not(.buffer-inserted)',
       $button: $([
-        '<div class="pin-action-item action-bar Button btn">',
-          '<a class="js-buffer-action pin-action position-rel" href="#" rel="buffer">',
-            '<i class="icon icon-buffer"></i>',
-          '</a>',
-        '</div>'
+        '<button class="Button BufferButton Module btn rounded pinActionBarButton hasText medium" type="button">',
+          '<em></em>' + ' ',
+          '<span class="buttonText">Buffer</span>',
+        '</button>'
       ].join('')),
       insert: function(el) {
         var $actions = $(el);
         var $newActionItem = this.$button.clone();
 
-        $actions
-          .addClass('buffer-inserted')
-          .prepend($newActionItem);
+        var showModalButton = $actions.find('.Button.ShowModalButton:first()');
+
+        $actions.addClass('buffer-inserted');
+
+        if (showModalButton.hasClass('isBrioFlat')) $newActionItem.addClass('isBrioFlat');
+        showModalButton.after($newActionItem);
 
         return $newActionItem;
       },
@@ -124,11 +129,10 @@
       placement: 'pinterest-pin-popup',
       selector: '.SelectList li.item .BoardLabel:not(.buffer-inserted)',
       $button: $([
-        '<div class="pin-action-item action-bar Button btn">',
-          '<a class="js-buffer-action pin-action position-rel" href="#" rel="buffer">',
-            '<i class="icon icon-buffer"></i>',
-          '</a>',
-        '</div>'
+        '<button class="Button BufferButton Module btn rounded" type="button">',
+          '<em></em>' + ' ',
+          '<span class="accessibilityText">Buffer</span>',
+        '</button>'
       ].join('')),
       insert: function(el) {
         var $actions = $(el);
@@ -137,6 +141,10 @@
         $actions
           .addClass('buffer-inserted')
           .prepend($newActionItem);
+
+          if ($newActionItem.next().hasClass('isBrioFlat')) {
+            $newActionItem.addClass('isBrioFlat');
+          }
 
         return $newActionItem;
       },
