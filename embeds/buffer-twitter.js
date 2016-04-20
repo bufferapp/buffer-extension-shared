@@ -613,6 +613,11 @@
       $(el).replaceWith(el.getAttribute('alt'));
     });
 
+    // Replace emotes with their unicode representation
+    $clone.find('[data-pre-embedded="true"]').each(function() {
+      this.textContent = ' ' + this.textContent;
+    });
+
     return 'RT @' + screenName + ': ' + $clone.text().trim() + '';
   };
 
