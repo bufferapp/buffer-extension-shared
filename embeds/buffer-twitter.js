@@ -613,8 +613,8 @@
       $(el).replaceWith(el.getAttribute('alt'));
     });
 
-    // Replace emotes with their unicode representation
-    $clone.find('[data-pre-embedded="true"]').each(function() {
+    // Prepend space separator to hidden links
+    $clone.find('.twitter-timeline-link.u-hidden').each(function() {
       this.textContent = ' ' + this.textContent;
     });
 
