@@ -10,7 +10,7 @@
       placement: 'tweekdeck-stream',
       selector: '.js-stream-item .js-tweet-actions:not(.buffer-inserted)',
       $button: $([
-        '<li class="tweet-action-item">',
+        '<li class="tweet-action-item pull-left margin-r--13">',
           '<a class="js-buffer-action tweet-action position-rel" href="#" rel="buffer">',
             '<i class="icon icon-buffer txt-right"></i>',
             '<span class="is-vishidden">Buffer</span> ',
