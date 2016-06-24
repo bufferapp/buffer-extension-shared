@@ -52,7 +52,8 @@ var CSPWhitelist = [
   'www.flickr.com',
   'www.oculus.com',
   'letsecure.me',
-  'rework.withgoogle.com'
+  'rework.withgoogle.com',
+  'threatpost.com'
 ];
 
 // Build that overlay!
