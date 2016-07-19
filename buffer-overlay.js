@@ -20,10 +20,10 @@ var buildSrc = function(data, config) {
   return src;
 };
 
-var openPopUp = function(src, port, doneCallback) {
+var openPopUp = function(src, port, doneCallback, isSmallPopup) {
 
   // Open popups from privileged code
-  port.emit('buffer_open_popup', src);
+  port.emit('buffer_open_popup', { src: src, isSmallPopup: isSmallPopup });
 
   // Bind close listener
   // Listen for when the overlay has closed itself
@@ -56,6 +56,16 @@ var CSPWhitelist = [
   'threatpost.com'
 ];
 
+var shouldOpenSmallPopupForUrl = function(url) {
+  var hostname = window.location.hostname;
+  var pathname = window.location.pathname;
+
+  var isTwitterIntent = /twitter.com$/.test(hostname) && /^\/intent/.test(pathname);
+
+  if (isTwitterIntent) return true;
+  else return false;
+}
+
 // Build that overlay!
 // Triggered by code working from the button up
 var bufferOverlay = function(data, config, port, doneCallback) {
@@ -68,9 +78,14 @@ var bufferOverlay = function(data, config, port, doneCallback) {
   var src = buildSrc(data, config);
   var domain = window.location.hostname;
 
-  if (xt.options['buffer.op.tpc-disabled'] ||
-    CSPWhitelist.indexOf(domain) > -1 ) {
-    return openPopUp(src, port, doneCallback);
+  if (shouldOpenSmallPopupForUrl(window.location.href)) {
+    openPopUp(src, port, doneCallback, true);
+    return;
+  }
+
+  if (xt.options['buffer.op.tpc-disabled'] || CSPWhitelist.indexOf(domain) > -1 ) {
+    openPopUp(src, port, doneCallback);
+    return;
   }
 
   var shouldContinue = ensureOnlyOneOverlayOpen(data, closePopup.bind(window, document, doneCallback));
