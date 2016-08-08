@@ -457,7 +457,7 @@ var getOverlayConfig = function(postData){
         'height: 100% !important;',
         'width: 100% !important;',
         'position: fixed !important;',
-        'z-index: 2147483646 !important;',
+        'z-index: 999999999999 !important;',
         'top:0 !important;',
         'left:0 !important;',
         'display: block !important;',
