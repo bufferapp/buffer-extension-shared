@@ -54,7 +54,8 @@ var CSPWhitelist = [
   'letsecure.me',
   'rework.withgoogle.com',
   'threatpost.com',
-  'www.websec.be'
+  'www.websec.be',
+  'adblockplus.org'
 ];
 
 var shouldOpenSmallPopupForUrl = function(url) {
