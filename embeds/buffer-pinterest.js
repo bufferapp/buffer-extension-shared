@@ -1,5 +1,16 @@
 ;(function() {
 
+  var getDecodedAttribute = function(element, attrName) {
+    var attrValue = element.getAttribute(attrName);
+    var textarea = document.createElement('textarea');
+    var decodedAttribute;
+
+    textarea.innerHTML = attrValue;
+    decodedAttribute = textarea.value;
+
+    return decodedAttribute;
+  };
+
   var config = [
 
     // Stream Pins
@@ -42,8 +53,7 @@
         var pinSourceRegex;
         var pinSourceMatches;
 
-        // Grab text from image alt attribute
-        text = $img.attr('alt');
+        text = getDecodedAttribute($img[0], 'alt');
 
         $source = $(el).find('.pinNavLink');
 
@@ -112,7 +122,7 @@
 
         var image = $img.attr('src');
         // Grab text from image alt attribute
-        var text = $img.attr('alt');
+        var text = getDecodedAttribute($img[0], 'alt');
 
         var source = $(el).closest('.Closeup').find('.paddedPinLink').attr('href');
 
@@ -153,7 +163,7 @@
 
         var image = $img.attr('src');
         // Grab text from image alt attribute
-        var text = $img.attr('alt');
+        var text = getDecodedAttribute($img[0], 'alt');
 
         // Grab full url from board behind modal
         var $source = $(document).find('img[src="'+image+'"]').parents('.pinHolder').siblings('.pinNavLink');
