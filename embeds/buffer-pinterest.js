@@ -2,11 +2,11 @@
 
   var getDecodedAttribute = function(element, attrName) {
     var attrValue = element.getAttribute(attrName);
-    var textarea = document.createElement('textarea');
+    var div = document.createElement('div');
     var decodedAttribute;
 
-    textarea.innerHTML = attrValue;
-    decodedAttribute = textarea.value;
+    div.innerHTML = attrValue;
+    decodedAttribute = div.textContent;
 
     return decodedAttribute;
   };
