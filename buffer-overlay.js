@@ -56,7 +56,8 @@ var CSPWhitelist = [
   'threatpost.com',
   'www.websec.be',
   'adblockplus.org',
-  'www.change.org'
+  'www.change.org',
+  'www.paypal.com',
 ];
 
 var shouldOpenSmallPopupForUrl = function(url) {
