@@ -159,7 +159,7 @@
         return $newActionItem;
       },
       getData: function(el) {
-        var $img = $('.modalContent .pinContainer .pinImg');
+        var $img = $('.TwoPaneModal .pinContainer .pinImg');
 
         var image = $img.attr('src');
         // Grab text from image alt attribute
