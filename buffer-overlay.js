@@ -58,6 +58,7 @@ var CSPWhitelist = [
   'adblockplus.org',
   'www.change.org',
   'www.paypal.com',
+  'securelist.com'
 ];
 
 var shouldOpenSmallPopupForUrl = function(url) {
