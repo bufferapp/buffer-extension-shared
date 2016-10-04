@@ -59,7 +59,8 @@ var CSPWhitelist = [
   'www.change.org',
   'www.paypal.com',
   'securelist.com',
-  'inbox.google.com'
+  'inbox.google.com',
+  'www.periscope.tv'
 ];
 
 var shouldOpenSmallPopupForUrl = function(url) {
