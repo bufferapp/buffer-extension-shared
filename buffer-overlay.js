@@ -43,6 +43,7 @@ var openPopUp = function(src, port, doneCallback, isSmallPopup) {
  */
 var CSPWhitelist = [
   'twitter.com',
+  'dashboard.twitter.com',
   'github.com',
   'gist.github.com',
   'education.github.com',
