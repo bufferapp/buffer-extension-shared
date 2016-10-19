@@ -64,7 +64,8 @@ var CSPWhitelist = [
   'www.periscope.tv',
   'innovationdepot.org',
   'mail.google.com',
-  'www.edweek.org'
+  'www.edweek.org',
+  'blog.google'
 ];
 
 var shouldOpenSmallPopupForUrl = function(url) {
