@@ -65,7 +65,8 @@ var CSPWhitelist = [
   'innovationdepot.org',
   'mail.google.com',
   'www.edweek.org',
-  'blog.google'
+  'blog.google',
+  'www.novoco.com'
 ];
 
 var shouldOpenSmallPopupForUrl = function(url) {
