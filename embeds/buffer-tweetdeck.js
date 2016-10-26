@@ -179,11 +179,12 @@
     ].join('')),
     insert: function(el) {
       var $rtButton = $(el);
-      $rtButton.addClass('buffer-inserted');
-      var $actions = $rtButton.parent();
-
       var $newActionItem = this.$button.clone();
-      $actions.append($newActionItem);
+
+      $rtButton
+        .addClass('buffer-inserted')
+        .before($newActionItem)
+        .before(' ');
 
       return $newActionItem;
     },
