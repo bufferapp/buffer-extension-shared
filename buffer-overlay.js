@@ -66,6 +66,7 @@ var CSPWhitelist = [
   'mail.google.com',
   'www.edweek.org',
   'blog.google',
+  'www.blog.google',
   'www.novoco.com'
 ];
 
