@@ -122,7 +122,6 @@ var bufferOverlay = function(data, config, port, doneCallback) {
   // var qs = src.split('?')[1];
   // iframe.src = xt.data.get('data/shared/extension.html?' + qs);
 
-
   var rightCnt = createBtnContainer('right');
   var upgradeButton = createUpgradeButton();
   var helpButton = createHelpButton();
@@ -134,6 +133,7 @@ var bufferOverlay = function(data, config, port, doneCallback) {
 
   getExtensionUserData(function(userData) {
     upgradeButton.classList.toggle('hidden', !userData.shouldDisplayAwesomeCTA);
+    helpButton.classList.toggle('hidden', !userData.shouldDisplayHelpButton);
   });
 
   var leftCnt = createBtnContainer('left');
@@ -233,7 +233,7 @@ var createHelpButton = function() {
   button = document.createElement('a');
   button.href = 'https://buffer.com/app#contact-from-extension';
   button.target = '_blank';
-  button.setAttribute('class', 'buffer-btn-help');
+  button.setAttribute('class', 'buffer-btn-help hidden');
 
   text = document.createTextNode('Help');
   button.appendChild(text);

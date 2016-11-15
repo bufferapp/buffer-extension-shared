@@ -129,6 +129,7 @@ only screen and (min-device-pixel-ratio: 1.5) {
 	}
 }
 
-.buffer-btn-container .buffer-btn-upgrade.hidden {
+.buffer-btn-container .buffer-btn-upgrade.hidden,
+.buffer-btn-container .buffer-btn-help.hidden {
 	display: none !important;
 }
