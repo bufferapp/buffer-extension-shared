@@ -67,7 +67,8 @@ var CSPWhitelist = [
   'www.edweek.org',
   'blog.google',
   'www.blog.google',
-  'www.novoco.com'
+  'www.novoco.com',
+  'uwaterloo.ca'
 ];
 
 var shouldOpenSmallPopupForUrl = function(url) {
