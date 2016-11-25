@@ -68,7 +68,8 @@ var CSPWhitelist = [
   'blog.google',
   'www.blog.google',
   'www.novoco.com',
-  'uwaterloo.ca'
+  'uwaterloo.ca',
+  'quickdraw.withgoogle.com'
 ];
 
 var shouldOpenSmallPopupForUrl = function(url) {
