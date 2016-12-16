@@ -302,6 +302,7 @@ var getOverlayConfig = function(postData){
 
   config.pocketWeb = ( window.location.host.indexOf('getpocket') !== -1 && segments[2] === 'read' );
   config.isYoutubeVideo = ( window.location.host.indexOf('.youtube.com') !== -1 && segments[1] === 'watch' );
+  config.isImgur = ( window.location.host.indexOf('imgur.com') !== -1 && segments[1] === 'gallery' );
 
   // Specification for gathering data for the overlay
   config.attributes = [
@@ -348,6 +349,15 @@ var getOverlayConfig = function(postData){
         // of the page from the title attr for YouTube videos, and format it a bit
         if (config.isYoutubeVideo) {
           var title = document.title.replace('- YouTube', '');
+          return cb(title);
+        }
+
+        // Similarly to YouTube above, in some situations (e.g. navigating from one picture to
+        // another), the page is updated via xhr, the title attribute too, but not the
+        // og:title meta tag: let's default to retrieving the title of the page from the title attr
+        // for YouTube videos, and format it a bit
+        if (config.isImgur) {
+          var title = document.title.replace('- Imgur', '');
           return cb(title);
         }
 
