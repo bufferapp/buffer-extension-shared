@@ -227,7 +227,10 @@
       text: "",
       // container: '#pagelet_composer form, .fbTimelineComposerUnit form',
       container: function() {
+        // Selector for composer in main dashboard + fb profile
         var $container = $('.composerAudienceWrapper').first().parent().parent();
+        // Selector for composer in fb page
+        if ($container.length === 0) $container = $('#PageComposerPagelet_ button').last().closest('span').children('div').first();
 
         if ($container.has('> button')) return $container;
           else return $();
@@ -260,7 +263,10 @@
         return button;
       },
       data: function (elem) {
-        var contenteditable = $(elem).closest('#pagelet_composer').find('[contenteditable]')[0];
+        var contenteditable =
+          $(elem)
+            .closest('#pagelet_composer, #PageComposerPagelet_, .fbTimelineComposerUnit')
+            .find('[contenteditable]')[0];
         // innerText is prefered for its ability to include line breaks; will fallback to
         // textContent, that doesn't support line breaks, in Firefox < 45
         var text = contenteditable.innerText || contenteditable.textContent;
