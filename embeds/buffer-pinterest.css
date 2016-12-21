@@ -93,10 +93,6 @@
   margin-left: 0;
 }
 
-.Pin.summary .rightSideButtonsWrapper .Button.BufferButton.isBrioFlat {
-  margin-right: 0;
-}
-
 .Button.btn.BufferButton:not(.isBrioFlat) {
   padding: 7px 8px 7px 9px;
 }

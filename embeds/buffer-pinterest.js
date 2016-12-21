@@ -34,7 +34,7 @@
           .find('.rightSideButtonsWrapper')
           .prepend($newActionItem);
 
-        if ($newActionItem.next().hasClass('isBrioFlat')) {
+        if ($newActionItem.nextAll('button').first().hasClass('isBrioFlat')) {
           $newActionItem.addClass('isBrioFlat');
         }
 
