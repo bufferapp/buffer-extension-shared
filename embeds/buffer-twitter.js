@@ -38,6 +38,11 @@
 
     text = $('<div>')
       .html(html)
+      .find('[data-pictograph-text]')
+        .replaceWith(function() {
+          return $(this).attr('data-pictograph-text');
+        })
+        .end()
       .text();
 
     return text;
