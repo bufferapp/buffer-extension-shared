@@ -614,7 +614,7 @@
     });
 
     // Replace emotes with their unicode representation
-    $clone.find('img.twitter-emoji').each(function(i, el) {
+    $clone.find('img.twitter-emoji, img.Emoji').each(function(i, el) {
       $(el).replaceWith(el.getAttribute('alt'));
     });
 
