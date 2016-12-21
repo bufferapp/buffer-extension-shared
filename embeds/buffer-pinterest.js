@@ -41,7 +41,7 @@
         return $newActionItem;
       },
       getData: function(el) {
-        var $img = $(el).find('.pinImg');
+        var $img = $(el).find('.pinImg, .pinImage').first();
         var image = $img.attr('src');
         var pinLink;
         var pinIdParts;
