@@ -91,9 +91,8 @@
 }
 
 @media only screen and (-webkit-min-device-pixel-ratio: 1.5),
-only screen and (-moz-min-device-pixel-ratio: 1.5),
 only screen and (-o-min-device-pixel-ratio: 3/2),
-only screen and (min-device-pixel-ratio: 1.5) {
+only screen and (min-resolution: 2dppx) {
 	.buffer-btn-container .buffer-btn-help::before {
 		background-image: url(https://d389zggrogs7qo.cloudfront.net/images/extensions/img/buffer-help-button-icon@2x.png) !important;
 	}
@@ -121,9 +120,8 @@ only screen and (min-device-pixel-ratio: 1.5) {
 }
 
 @media only screen and (-webkit-min-device-pixel-ratio: 1.5),
-only screen and (-moz-min-device-pixel-ratio: 1.5),
 only screen and (-o-min-device-pixel-ratio: 3/2),
-only screen and (min-device-pixel-ratio: 1.5) {
+only screen and (min-resolution: 2dppx) {
 	.buffer-btn-container .buffer-btn-upgrade::before {
 		background-image: url(https://d389zggrogs7qo.cloudfront.net/images/extensions/img/buffer-awesome-button-icon@2x.png) !important;
 	}
