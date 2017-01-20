@@ -72,7 +72,8 @@ var CSPWhitelist = [
   'quickdraw.withgoogle.com',
   'movement.uber.com',
   'www.uber.com',
-  'uber.com'
+  'uber.com',
+  'web.whatsapp.com'
 ];
 
 var shouldOpenSmallPopupForUrl = function(url) {
