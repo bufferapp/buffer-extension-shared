@@ -34,7 +34,8 @@
       '.fbPhotoSnowlift',
       '.userContentWrapper',
       '.timelineUnitContainer',
-      '.tickerDialogContent > .commentable_item' // target the ticker posts' contents - 11/18/15
+      '.tickerDialogContent > .commentable_item', // target the ticker posts' contents - 11/18/15
+      '.fbUserContent'
     ].join(', '),
 
     via: [
@@ -87,8 +88,6 @@
 
   };
 
-  // TODO
-  //  - Fix status updates w/ articles inline? Chris Day's profile
   function getClosestShareData(elem) {
 
     var parent = $(elem).closest(selectors.timelineItem);
