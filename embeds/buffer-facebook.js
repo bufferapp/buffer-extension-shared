@@ -84,7 +84,7 @@
     ].join(', '),
 
     // A backup, slower selector logic
-    anchorSecondary: 'a[target="_blank"]:not([data-appname]):not(.userContent a):not(.UFIContainer a)'
+    anchorSecondary: 'a[target="_blank"]:not([data-appname]):not(.userContent a):not(.UFIContainer a):not([data-tooltip-content])'
 
   };
 
