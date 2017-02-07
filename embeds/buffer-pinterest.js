@@ -1,14 +1,22 @@
 ;(function() {
 
+  /**
+   * Example attribute value (contains both html tags and html entities):
+   *
+   * "The 10 Buffer Values and How We Act on Them Every Day <a href=\"https://open.buffer.com/buffer-values/?utm_content=buffer3e42a&utm_medium=social&utm_source=pinterest.com&utm_campaign=buffer\" rel=\"nofollow\" target=\"_blank\">open.buffer.com/...</a> / Here&#39;s how to cook..."
+   */
   var getDecodedAttribute = function(element, attrName) {
     var attrValue = element.getAttribute(attrName);
-    var div = document.createElement('div');
-    var decodedAttribute;
 
-    div.innerHTML = attrValue;
-    decodedAttribute = div.textContent;
+    // Strip html tags from attr value (Pinterest stores some html tags in attributes)
+    // Using a regex is by no means perfect, but Pinterest only stores simple html tags
+    // in there, so it should be solid enough.
+    attrValue = attrValue.replace(/<\/?[^>]+(>|$)/g, '');
 
-    return decodedAttribute;
+    // Decode html entities
+    attrValue = he.decode(attrValue);
+
+    return attrValue;
   };
 
   var config = [
