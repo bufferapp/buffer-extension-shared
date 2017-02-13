@@ -619,3 +619,17 @@ var _bmq = (function() {
 getExtensionUserData = function(cb) {
   portCache.getPort().on('buffer_user_data', cb);
 };
+
+// On buffer.com/add, listen to messages coming from the page straight away: don't
+// wait for the overlay being open, since we're already on the share dialog's new tab.
+var isBufferShareTab = (
+  document.location.href.indexOf('https://buffer.com/add') === 0 ||
+  document.location.href.indexOf('https://local.buffer.com/add') === 0
+);
+
+if (isBufferShareTab) {
+  bufferpm.bind('buffermessage', function() {
+    // Close popup from privileged code
+    chrome.runtime.sendMessage({ type: 'buffer_close_popup' });
+  });
+}
