@@ -65,6 +65,11 @@
 
         $source = $(el).find('.pinNavLink');
 
+        // If we haven't found a link yet, try another selector
+        if ($source.length === 0) {
+          $source = $(el).find('.NavigateButton');
+        }
+
         // If we haven't found a link, try to get it from the page's source using
         // some regex magic
         if ($source.length === 0) {
