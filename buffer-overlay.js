@@ -139,7 +139,13 @@ var bufferOverlay = function(data, config, port, doneCallback) {
 
   getExtensionUserData(function(userData) {
     upgradeButton.classList.toggle('hidden', !userData.shouldDisplayAwesomeCTA);
-    helpButton.classList.toggle('hidden', !userData.shouldDisplayHelpButton);
+
+    // That feature has evolved a bit since it was first named: it's not about
+    // hiding the button anymore, but redirecting to the FAQ instead of opening
+    // up a contact window.
+    if (!userData.shouldDisplayHelpButton) {
+      helpButton.setAttribute('href', helpButton.getAttribute('data-faq-href'));
+    }
   });
 
   var leftCnt = createBtnContainer('left');
@@ -236,16 +242,22 @@ var createHelpButton = function() {
   var button;
   var text;
 
+  var contactHref = 'https://buffer.com/app#contact-from-extension';
+  var faqHref = 'https://faq.buffer.com/category/567-composer';
+
   button = document.createElement('a');
-  button.href = 'https://buffer.com/app#contact-from-extension';
+  button.href = contactHref;
   button.target = '_blank';
-  button.setAttribute('class', 'buffer-btn-help hidden');
+  button.setAttribute('data-faq-href', faqHref);
+  button.setAttribute('class', 'buffer-btn-help');
 
   text = document.createTextNode('Help');
   button.appendChild(text);
 
   button.addEventListener('click', function() {
-    _bmq.trackAction(['overlay', 'help_button']);
+    _bmq.trackAction(['overlay', 'help_button'], {
+      button_action: button.href === contactHref ? 'contact' : 'faq',
+    });
   }, false);
 
   return button;
