@@ -11,6 +11,7 @@ function receiveNestedFrameData() {
     if (e.source !== window.parent && !e.data.src) return;
 
     iframe.src = e.data.src;
+    iframe.style.cssText = e.data.css;
     window.removeEventListener('message', handler);
   };
 

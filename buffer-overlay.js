@@ -126,6 +126,7 @@ var bufferOverlay = function(data, config, port, doneCallback) {
   iframe.addEventListener('load', () => {
     iframe.contentWindow.postMessage({
       src: src,
+      css: config.overlay.getCSS(true),
     }, '*');
   });
 
@@ -493,12 +494,12 @@ var getOverlayConfig = function(postData){
   config.overlay = {
     endpoint: "https://buffer.com/add/",
     localendpoint: "https://local.buffer.com/add/",
-    getCSS: function () {
+    getCSS: function (forDeepestFrame) {
       return [
         'border: none !important;',
         'height: 100% !important;',
         'width: 100% !important;',
-        'position: fixed !important;',
+        forDeepestFrame ? '' : 'position: fixed !important;',
         'z-index: 999999999999 !important;',
         'top:0 !important;',
         'left:0 !important;',
@@ -506,8 +507,8 @@ var getOverlayConfig = function(postData){
         'max-width: 100% !important;',
         'max-height: 100% !important;',
         'padding: 0 !important;',
-        'background: rgba(245, 245, 245, 0.74) url(' + loadingImg +') no-repeat center center !important;',
-        'background-size: 40px !important;'
+        forDeepestFrame ? '' : 'background: rgba(245, 245, 245, 0.74) url(' + loadingImg +') no-repeat center center !important;',
+        forDeepestFrame ? '' : 'background-size: 40px !important;'
       ].join('');
     }
   };
