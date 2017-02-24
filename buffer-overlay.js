@@ -121,8 +121,8 @@ var bufferOverlay = function(data, config, port, doneCallback) {
   iframe.id = 'buffer_overlay';
   iframe.name = 'buffer_overlay';
   iframe.style.cssText = config.overlay.getCSS();
+  iframe.src = xt.data.get('data/shared/buffer-frame-container.html');
 
-  iframe.src = chrome.runtime.getURL('data/shared/buffer-frame-container.html');
   iframe.addEventListener('load', function() {
     iframe.contentWindow.postMessage({
       src: src,
@@ -483,14 +483,7 @@ var getOverlayConfig = function(postData){
     }
   ];
 
-  var loadingImgRel = 'img/black-loading-gif-small.gif';
-  //TODO - Change to static.buffer when it's set up!
-  var loadingImg = typeof chrome !== 'undefined' ?
-    chrome.extension.getURL('data/shared/' +  loadingImgRel) :
-    document.location.protocol === 'http:' ?
-      'http://static.bufferapp.com/images/extensions/' + loadingImgRel :
-      'https://d389zggrogs7qo.cloudfront.net/images/extensions/' + loadingImgRel;
-
+  var loadingImg = xt.data.get('data/shared/img/black-loading-gif-small.gif');
   config.overlay = {
     endpoint: "https://buffer.com/add/",
     localendpoint: "https://local.buffer.com/add/",
@@ -644,6 +637,6 @@ var isBufferShareTab = (
 if (isBufferShareTab) {
   bufferpm.bind('buffermessage', function() {
     // Close popup from privileged code
-    chrome.runtime.sendMessage({ type: 'buffer_close_popup' });
+    if (window.chrome) chrome.runtime.sendMessage({ type: 'buffer_close_popup' });
   });
 }
