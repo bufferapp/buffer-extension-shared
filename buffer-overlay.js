@@ -241,19 +241,22 @@ var createBtnContainer = function(position) {
 };
 
 var createHelpButton = function() {
-  var button;
-  var text;
-
   var contactHref = 'https://buffer.com/app#contact-from-extension';
   var faqHref = 'https://faq.buffer.com/category/567-composer';
 
-  button = document.createElement('a');
+  const button = document.createElement('a');
   button.href = contactHref;
   button.target = '_blank';
   button.setAttribute('data-faq-href', faqHref);
   button.setAttribute('class', 'buffer-btn-help');
 
-  text = document.createTextNode('Help');
+  const icon = document.createElement('span');
+  icon.classList.add('icon');
+  const iconUrl = xt.data.get('data/shared/img/buffer-help-button-icon@2x.png');
+  icon.style.cssText = 'background-image: url(' + iconUrl + ') !important;';
+  button.appendChild(icon);
+
+  const text = document.createTextNode('Help');
   button.appendChild(text);
 
   button.addEventListener('click', function() {
@@ -297,6 +300,12 @@ var createUpgradeButton = function() {
   button.href = 'https://buffer.com/awesome?utm_campaign=extensions_header&utm_medium=web';
   button.target = '_blank';
   button.setAttribute('class', 'buffer-btn-upgrade hidden');
+
+  const icon = document.createElement('span');
+  icon.classList.add('icon');
+  const iconUrl = xt.data.get('data/shared/img/buffer-awesome-button-icon@2x.png');
+  icon.style.cssText = 'background-image: url(' + iconUrl + ') !important;';
+  button.appendChild(icon);
 
   var text = document.createTextNode('Upgrade to Awesome');
   button.appendChild(text);

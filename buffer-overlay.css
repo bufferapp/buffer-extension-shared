@@ -79,39 +79,15 @@
 	padding-left: 45px !important;
 }
 
-.buffer-btn-container .buffer-btn-help::before {
+.buffer-btn-container .buffer-btn-help .icon {
 	content: '' !important;
 	position: absolute !important;
 	top: 11px !important;
 	left: 14px !important;
 	width: 23px !important;
 	height: 18px !important;
-  background-image: url('chrome-extension://__MSG_@@extension_id__/data/shared/img/buffer-help-button-icon.png') !important;
+  /* background-image: set programmatically from buffer-overlay.js */
 	background-size: 23px 36px !important;
-}
-
-@-moz-document url-prefix() {
-  .buffer-btn-container .buffer-btn-help::before {
-    background-image: url('moz-extension://__MSG_@@extension_id__/data/shared/img/buffer-help-button-icon.png') !important;
-  }
-}
-
-@media only screen and (-webkit-min-device-pixel-ratio: 1.5),
-only screen and (-o-min-device-pixel-ratio: 3/2),
-only screen and (min-resolution: 2dppx) {
-	.buffer-btn-container .buffer-btn-help::before {
-		background-image: url('chrome-extension://__MSG_@@extension_id__/data/shared/img/buffer-help-button-icon@2x.png') !important;
-	}
-}
-
-@-moz-document url-prefix() {
-  @media only screen and (-webkit-min-device-pixel-ratio: 1.5),
-  only screen and (-o-min-device-pixel-ratio: 3/2),
-  only screen and (min-resolution: 2dppx) {
-    .buffer-btn-container .buffer-btn-help::before {
-      background-image: url('moz-extension://__MSG_@@extension_id__/data/shared/img/buffer-help-button-icon@2x.png') !important;
-    }
-  }
 }
 
 .buffer-btn-container .buffer-btn-help:hover::before {
@@ -124,39 +100,15 @@ only screen and (min-resolution: 2dppx) {
 	color: #168eea !important;
 }
 
-.buffer-btn-container .buffer-btn-upgrade::before {
+.buffer-btn-container .buffer-btn-upgrade .icon {
 	content: '' !important;
 	position: absolute !important;
 	top: 11px !important;
 	left: 14px !important;
 	width: 18px !important;
 	height: 18px !important;
-	background-image: url('chrome-extension://__MSG_@@extension_id__/data/shared/img/buffer-awesome-button-icon.png') !important;
+  /* background-image: set programmatically from buffer-overlay.js */
 	background-size: 18px !important;
-}
-
-@-moz-document url-prefix() {
-  .buffer-btn-container .buffer-btn-upgrade::before {
-    background-image: url('moz-extension://__MSG_@@extension_id__/data/shared/img/buffer-awesome-button-icon.png') !important;
-  }
-}
-
-@media only screen and (-webkit-min-device-pixel-ratio: 1.5),
-only screen and (-o-min-device-pixel-ratio: 3/2),
-only screen and (min-resolution: 2dppx) {
-	.buffer-btn-container .buffer-btn-upgrade::before {
-		background-image: url('chrome-extension://__MSG_@@extension_id__/data/shared/img/buffer-awesome-button-icon@2x.png') !important;
-	}
-}
-
-@-moz-document url-prefix() {
-  @media only screen and (-webkit-min-device-pixel-ratio: 1.5),
-  only screen and (-o-min-device-pixel-ratio: 3/2),
-  only screen and (min-resolution: 2dppx) {
-  	.buffer-btn-container .buffer-btn-upgrade::before {
-      background-image: url('moz-extension://__MSG_@@extension_id__/data/shared/img/buffer-awesome-button-icon@2x.png') !important;
-    }
-  }
 }
 
 .buffer-btn-container .buffer-btn-upgrade.hidden,
