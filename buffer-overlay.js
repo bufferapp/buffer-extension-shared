@@ -123,7 +123,7 @@ var bufferOverlay = function(data, config, port, doneCallback) {
   iframe.style.cssText = config.overlay.getCSS();
 
   iframe.src = chrome.runtime.getURL('data/shared/buffer-frame-container.html');
-  iframe.addEventListener('load', () => {
+  iframe.addEventListener('load', function() {
     iframe.contentWindow.postMessage({
       src: src,
       css: config.overlay.getCSS(true),
