@@ -36,46 +36,6 @@ var openPopUp = function(src, port, doneCallback, isSmallPopup) {
   });
 };
 
-/**
- * This is a list of domains that have a strict Content Security Policy
- * This is a temporary work around while we figure out a long term solution
- * to this issue: https://github.com/bufferapp/buffer-chrome/issues/12
- */
-var CSPWhitelist = [
-  'twitter.com',
-  'dashboard.twitter.com',
-  'github.com',
-  'gist.github.com',
-  'education.github.com',
-  'www.npmjs.org',
-  'www.npmjs.com',
-  'www.flickr.com',
-  'www.oculus.com',
-  'letsecure.me',
-  'rework.withgoogle.com',
-  'threatpost.com',
-  'www.websec.be',
-  'adblockplus.org',
-  'www.change.org',
-  'www.paypal.com',
-  'securelist.com',
-  'inbox.google.com',
-  'www.periscope.tv',
-  'innovationdepot.org',
-  'mail.google.com',
-  'www.edweek.org',
-  'blog.google',
-  'www.blog.google',
-  'www.novoco.com',
-  'uwaterloo.ca',
-  'quickdraw.withgoogle.com',
-  'movement.uber.com',
-  'www.uber.com',
-  'uber.com',
-  'web.whatsapp.com',
-  'www.glooberry.com'
-];
-
 var shouldOpenSmallPopupForUrl = function(url) {
   var hostname = window.location.hostname;
   var pathname = window.location.pathname;
@@ -103,7 +63,7 @@ var bufferOverlay = function(data, config, port, doneCallback) {
     return;
   }
 
-  if (xt.options['buffer.op.tpc-disabled'] || CSPWhitelist.indexOf(domain) > -1 ) {
+  if (xt.options['buffer.op.tpc-disabled']) {
     openPopUp(src, port, doneCallback);
     return;
   }
