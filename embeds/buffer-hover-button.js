@@ -47,7 +47,7 @@
   var button = document.createElement('span');
   button.id = 'buffer-extension-hover-button';
 
-  button.setAttribute('style', [
+  button.style.cssText = [
     'display: none;',
     'position: absolute;',
     'z-index: 8675309;',
@@ -57,7 +57,7 @@
     'background-size: ' + buttonWidth +'px ' + buttonHeight + 'px;',
     'opacity: 0.9;',
     'cursor: pointer;'
-  ].join(''));
+  ].join('');
 
   var offset = 5;
   var image;
