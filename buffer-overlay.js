@@ -122,11 +122,12 @@ var bufferOverlay = function(data, config, port, doneCallback) {
   iframe.name = 'buffer_overlay';
   iframe.style.cssText = config.overlay.getCSS();
 
-  iframe.src = src;
-
-  // Testing CSP issues w/ sandboxed iframe
-  // var qs = src.split('?')[1];
-  // iframe.src = xt.data.get('data/shared/extension.html?' + qs);
+  iframe.src = chrome.runtime.getURL('data/shared/buffer-frame-container.html');
+  iframe.addEventListener('load', () => {
+    iframe.contentWindow.postMessage({
+      src: src,
+    }, '*');
+  });
 
   var rightCnt = createBtnContainer('right');
   var upgradeButton = createUpgradeButton();
