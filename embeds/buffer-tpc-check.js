@@ -28,13 +28,7 @@
 
       var iframe = document.createElement('iframe');
       iframe.id = 'buffer_tpc_check';
-
-      if (typeof window.chrome !== 'undefined') {
-        iframe.src = chrome.extension.getURL('data/shared/tpc-check.html');
-      } else {
-        iframe.src = 'https://d3ijcis4e2ziok.cloudfront.net/tpc-check.html';
-      }
-
+      iframe.src = xt.data.get('data/shared/tpc-check.html');
       iframe.style.display="none";
       document.body.appendChild(iframe);
     } else {
