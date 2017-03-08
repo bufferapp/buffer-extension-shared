@@ -63,7 +63,7 @@ var bufferOverlay = function(data, config, port, doneCallback) {
     return;
   }
 
-  if (xt.options['buffer.op.tpc-disabled']) {
+  if (xt.options['buffer.op.tpc-disabled'] || xt.options['buffer.op.open-as'] === 'new-tab') {
     openPopUp(src, port, doneCallback);
     return;
   }
