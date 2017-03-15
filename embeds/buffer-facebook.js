@@ -291,9 +291,7 @@
       // .share_action_link selector added on 1/11/16 following Fb markup change
       after: function($container) {
         var $shareBtn = $container.find('.share_root, .share_action_link, [href^="/ajax/sharer"]').first();
-        // share_action_link's parent, only if the par is div.uiPopover
-        if ($shareBtn.parent().hasClass('uiPopover')) return $shareBtn.parent();
-        return $shareBtn;
+        return $shareBtn.parent();
       },
       default: [].join(''),
       create: function(btnConfig) {
