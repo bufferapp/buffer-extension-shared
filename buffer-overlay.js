@@ -147,7 +147,7 @@ var bufferOverlay = function(data, config, port, doneCallback) {
     if (data && data.userData) port.emit('buffer_user_data', data.userData);
 
     bufferpm.unbind('buffer_loaded');
-    iframe.style.backgroundImage = 'none';
+    iframe.style.cssText += 'background-image: none !important';
 
     $(".buffer-btn-cancel").remove();
   });
