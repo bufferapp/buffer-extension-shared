@@ -30,11 +30,15 @@
   var getTextFromRichtext = function(html) {
     var text;
 
+    // Browsers have different ways of handling contenteditable divs, and the
+    // underlying markup is different as a result. Blink/Webkit use divs, Firefox
+    // uses brs. ps are here for legacy reasons and can be removed in a few months.
     html = html
       .replace(/<div><br><\/div>/gi, '\n')
-      .replace(/<\/div>/gi, '\n')
+      .replace(/<\/div>(\s?)<div>/gi, '\n$1')
       .replace(/<\/p>/gi, '\n')
-      .replace(/<br>/gi, '\n');
+      .replace(/<br>(?!$)/gi, '\n')
+      .replace(/<br>(?=$)/gi, '');
 
     text = $('<div>')
       .html(html)
