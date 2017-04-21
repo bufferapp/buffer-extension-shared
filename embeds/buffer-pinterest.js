@@ -24,7 +24,7 @@
     // Stream Pins
     {
       placement: 'pinterest-stream-pins',
-      selector: '.Pin.Module:not(.buffer-inserted, .hideHoverUI)',
+      selector: '.Pin.Module .rightSideButtonsWrapper:not(.buffer-inserted)',
       $button: $([
         '<button class="Button BufferButton Module btn rounded" type="button">',
           '<em></em>',
@@ -33,23 +33,27 @@
       ].join('')),
       insert: function(el) {
         var $actions = $(el);
+
+        // In some cases, Pinterest's DOM manipulations make us lose the .buffer-inserted
+        // marker: make sure there's no Buffer button already before inserting a new one.
+        var existingButton = $actions.find('.BufferButton:first');
+        if (existingButton.length > 0) return existingButton.first();
+
         var $newActionItem = this.$button.clone();
 
         $actions
-          .addClass('buffer-inserted');
+          .addClass('buffer-inserted')
+          .append($newActionItem);
 
-        $actions
-          .find('.rightSideButtonsWrapper')
-          .prepend($newActionItem);
-
-        if ($newActionItem.nextAll('button').first().hasClass('isBrioFlat')) {
+        if ($actions.find('.isBrioFlat:first').length > 0) {
           $newActionItem.addClass('isBrioFlat');
         }
 
         return $newActionItem;
       },
       getData: function(el) {
-        var $img = $(el).find('.pinImg, .pinImage').first();
+        var $pin = $(el).closest('.Pin.Module');
+        var $img = $pin.find('img').first();
         var image = $img.attr('src');
         var pinLink;
         var pinIdParts;
@@ -63,12 +67,7 @@
 
         text = getDecodedAttribute($img[0], 'alt');
 
-        $source = $(el).find('.pinNavLink');
-
-        // If we haven't found a link yet, try another selector
-        if ($source.length === 0) {
-          $source = $(el).find('.NavigateButton');
-        }
+        $source = $pin.find('.pinNavLink, .NavigateButton, .navigateLink').first();
 
         // If we haven't found a link, try to get it from the page's source using
         // some regex magic
@@ -92,7 +91,7 @@
 
         // If we still haven't found a link, default to the domain name
         if ($source.length === 0 && !source) {
-          $source = $(el).find('.pinDomain');
+          $source = $pin.find('.pinDomain');
         }
 
         source = source || $source.attr('href') || $source.text();
@@ -175,8 +174,7 @@
         var $img = $('.TwoPaneModal .pinContainer .pinImg');
 
         var image = $img.attr('src');
-        // Grab text from image alt attribute
-        var text = getDecodedAttribute($img[0], 'alt');
+        var text = $('.pinDescriptionInput').val();
 
         // Grab full url from board behind modal
         var $source = $(document).find('img[src="'+image+'"]').parents('.pinHolder').siblings('.pinNavLink');
@@ -232,7 +230,15 @@
 
   var pinterestLoop = function() {
     insertButtons();
-    setTimeout(pinterestLoop, 500);
+
+    /**
+     * Pinterest mutates the DOM on hover, and we need to insert the button after
+     * it has done so. To minimize the visual impact of the Buffer button appearing
+     * after hovering, we need to insert the button as fast as possible. This value
+     * has proven to be a good tradeof between perceived speed and minimizing the
+     * performance impact on the overall page.
+     */
+    setTimeout(pinterestLoop, 50);
   };
 
   var start = function() {

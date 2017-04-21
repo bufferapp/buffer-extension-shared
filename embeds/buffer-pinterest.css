@@ -98,8 +98,13 @@
 }
 
 .Button.btn.BufferButton.isBrioFlat {
+  margin-left: 4px;
   padding: 10px;
   line-height: 16px;
+}
+
+.sendShareFlyout + .Button.btn.BufferButton.isBrioFlat {
+  margin-left: 0;
 }
 
 .BufferButton em {
