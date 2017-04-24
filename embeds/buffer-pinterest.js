@@ -1,6 +1,16 @@
 ;(function() {
 
   /**
+   * On Safari, this gets injected in all pages. Since we've got a somewhat intensive
+   * loop in there, only run the script on Pinterest sites:
+   *
+   * - www.pinterest.com
+   * - www.pinterest.pt
+   */
+  var hostname = document.location.hostname;
+  if (!/^([^\.]+\.)?pinterest\.(com|pt)$/.test(hostname)) return;
+
+  /**
    * Example attribute value (contains both html tags and html entities):
    *
    * "The 10 Buffer Values and How We Act on Them Every Day <a href=\"https://open.buffer.com/buffer-values/?utm_content=buffer3e42a&utm_medium=social&utm_source=pinterest.com&utm_campaign=buffer\" rel=\"nofollow\" target=\"_blank\">open.buffer.com/...</a> / Here&#39;s how to cook..."
