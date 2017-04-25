@@ -26,7 +26,10 @@ function setupMessageRelay() {
       return;
     }
 
-    window.parent.postMessage(e.data, '*');
+    // Sanitize any html that could be going through here in the future,
+    // pass-through for all other stringified values
+    var sanitizedData = DOMPurify.sanitize(e.data);
+    window.parent.postMessage(sanitizedData, '*');
   });
 }
 
