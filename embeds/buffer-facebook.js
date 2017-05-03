@@ -99,7 +99,7 @@
     share.via = $(selectors.via, parent).first().text();
 
     // find the message for this attachment, or if none use the attachment caption
-    share.text = $(selectors.text, parent).first().text();
+    share.text = $(selectors.text, parent).first().clone().find('br').replaceWith('\n').end().text();
 
     var $thumb = $(selectors.thumb, parent).first();
     var image;
