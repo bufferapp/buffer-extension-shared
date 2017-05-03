@@ -6,9 +6,10 @@
    *
    * - www.pinterest.com
    * - www.pinterest.pt
+   * - www.pinterest.de
    */
   var hostname = document.location.hostname;
-  if (!/^([^\.]+\.)?pinterest\.(com|pt)$/.test(hostname)) return;
+  if (!/^([^\.]+\.)?pinterest\.(com|pt|de)$/.test(hostname)) return;
 
   /**
    * Example attribute value (contains both html tags and html entities):
