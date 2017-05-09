@@ -23,6 +23,8 @@
       iframe.id = 'buffer_tpc_check';
       iframe.src = xt.data.get('data/shared/tpc-check.html');
       iframe.style.display="none";
+      iframe.setAttribute('data-info', 'The Buffer extension uses this iframe to automatically ' +
+        'detect the browser\'s third-party cookies settings and offer the best experience based on those');
       document.body.appendChild(iframe);
     } else {
       setTimeout(check, 50);
