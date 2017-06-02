@@ -160,9 +160,10 @@
     // Pin Action Popup Pin
     {
       placement: 'pinterest-pin-popup',
-      selector: '.SelectList li.item .BoardLabel:not(.buffer-inserted)',
+      // Classes get overriden on each render here, so we can't rely on the presence of .buffer-inserted
+      selector: 'ul > div > div:not(:has(> .BufferButton))',
       $button: $([
-        '<button class="Button BufferButton Module btn rounded" type="button">',
+        '<button class="Button BufferButton Module btn rounded isBrioFlat BufferPinPopup" type="button">',
           '<em></em>' + ' ',
           '<span class="accessibilityText">Buffer</span>',
         '</button>'
@@ -171,29 +172,31 @@
         var $actions = $(el);
         var $newActionItem = this.$button.clone();
 
-        $actions
-          .addClass('buffer-inserted')
-          .prepend($newActionItem);
-
-          if ($newActionItem.next().hasClass('isBrioFlat')) {
-            $newActionItem.addClass('isBrioFlat');
-          }
+        $actions.append($newActionItem);
 
         return $newActionItem;
       },
       getData: function(el) {
-        var $img = $('.TwoPaneModal .pinContainer .pinImg');
+        var $img = $('.pinToBoard > div > div > div > div > img');
 
         var image = $img.attr('src');
-        var text = $('.pinDescriptionInput').val();
+        var text = getDecodedAttribute($img[0], 'alt');
 
-        // Grab full url from board behind modal
-        var $source = $(document).find('img[src="'+image+'"]').parents('.pinHolder').siblings('.pinNavLink');
+        // Grab full url from board behind modal if this is an overlay dialog on top of a Pinterest feed
+        var $source = $('img[alt="' + text + '"]').first().closest('.pinWrapper').find('.navigateLink');
         var source = $source.attr('href');
 
         // If that didn't work, the Pin may have been open directly (there's no board in the
         // background): there may be a pinterestapp:source meta tag we'll try to get it from
-        if (!source) source = $('meta[name=\'pinterestapp:source\']').attr('content');
+        if (!source) {
+          var $meta = $('meta[name="al:ios:url"][content^="pinterest://add_pin/"]');
+          if ($meta.length) {
+            var metaContent = $meta.attr('content');
+            var matches = metaContent.match(/&source_url=([^&]+)/);
+
+            if (matches) source = matches[1];
+          }
+        }
 
         if(!source){
           if(window.location.search){
