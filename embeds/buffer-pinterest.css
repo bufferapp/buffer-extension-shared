@@ -103,6 +103,40 @@
   line-height: 16px;
 }
 
+.Button.btn.BufferButton.isBrioFlat.BufferPinPopup {
+  display: none;
+  float: right;
+  margin-top: 6px;
+  margin-right: 6px;
+  height: 36px;
+  background-color: #efefef;
+  background-image: none;
+  border: 0;
+  border-radius: 4px;
+  box-shadow: none;
+  color: #555;
+  text-shadow: none;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.Button.btn.BufferButton.isBrioFlat.BufferPinPopup:hover {
+  background-color: #e3e3e3;
+  border: 0;
+}
+
+.Button.btn.BufferButton.isBrioFlat.BufferPinPopup:focus {
+  outline: none;
+}
+
+div._3CNi6 > .Button.btn.BufferButton.isBrioFlat.BufferPinPopup {
+  display: block;
+}
+
+.Button.btn.BufferButton.isBrioFlat.BufferPinPopup .accessibilityText {
+  display: none;
+}
+
 .sendShareFlyout + .Button.btn.BufferButton.isBrioFlat {
   margin-left: 0;
 }
@@ -116,6 +150,13 @@
   background-repeat: no-repeat;
   background-size: 14px 14px; /* Natural is 40x40 */
   background-position: 0 0;
+}
+
+.BufferButton.BufferPinPopup em {
+  display: inline-block;
+  outline: none;
+  position: relative;
+  vertical-align: middle;
 }
 
 .BufferButton.isBrioFlat em {

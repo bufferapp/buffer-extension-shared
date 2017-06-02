@@ -224,7 +224,16 @@
       $(el).replaceWith(el.getAttribute('alt'));
     });
 
-    return 'RT @' + screenname + ': ' + $clone.text().trim() + '';
+    var text = $clone.text().trim();
+
+    // Append link to the tweet's image if there's an image displayed below
+    var $imageBelow = $text.siblings('.js-media, .js-tweet-media').first();
+    if ($imageBelow.length > 0) {
+      var $link = $imageBelow.find('.js-media-image-link').first();
+      if ($link.length > 0) text += ' ' + $link.attr('href');
+    }
+
+    return 'RT @' + screenname + ': ' + text + '';
   };
 
   var insertButton = function(target) {
