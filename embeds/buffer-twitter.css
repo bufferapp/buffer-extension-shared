@@ -89,40 +89,40 @@
 
 /* The Buffer button on the composer */
 .buffer-twitter .btn.buffer-tweet-button {
-  height: 20px !important;
-  margin-right: 2px;
-  vertical-align: top;
-  line-height: 19px !important;
-
+  box-sizing: border-box !important;
+  height: 38px !important;
+  margin-right: 2px !important;
+  padding: 8px 16px !important;
+  vertical-align: top !important;
   background: #4C9E46 !important;
   border: 1px solid rgba(0,0,0,0) !important;
   color: white !important;
-  font-weight: bold;
-  text-shadow: rgba(0, 0, 0, 0.246094) 0px -1px 0px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  font-weight: bold !important;
+  border-radius: 100px !important;
+  line-height: 20px !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  transition: box-shadow .15s ease-in-out !important;
 }
 
 .buffer-twitter .btn.buffer-tweet-button.disabled {
-  background: #4C9E46;
-  border-color: transparent;
-  opacity: 0.2;
-  text-shadow: none;
-  box-shadow: none;
+  background: #4C9E46 !important;
+  border-color: transparent !important;
+  opacity: 0.3 !important;
+  text-shadow: none !important;
+  box-shadow: none !important;
 }
 
-.buffer-twitter .btn.buffer-tweet-button:not(.disabled):hover {
-  background: #40873B !important;
-  background-image: -webkit-linear-gradient(rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15));
-  background-image: -moz-linear-gradient(rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15));
-  background-image: linear-gradient(rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15)) !important;
+.buffer-twitter .btn.buffer-tweet-button:hover {
+  background: #40873b !important;
 }
 
 .buffer-twitter .btn.buffer-tweet-button:not(.disabled):focus {
-  box-shadow: 0 0 0 1px #fff, 0 0 0 3px rgba(76, 158, 70, 0.76) !important;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(76, 158, 70, 0.26) !important;
 }
 
 .buffer-twitter .btn.buffer-tweet-button:not(.disabled):active {
-  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 0 1px #fff, 0 0 0 3px rgba(76, 158, 70, 0.76) !important;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(76, 158, 70, 0.76) !important;
   background: #40873B !important;
   text-decoration: none !important;
 }
@@ -145,15 +145,6 @@
 }
 .buffer-twitter .tweet-box-extras .geo-picker {
   margin-right: 0px;
-}
-
-/* In the modal, we leave the padding normal (scope=.RetweetDialog) */
-.buffer-twitter .RetweetDialog .tweet-button.buffer-inserted .btn {
-  padding: 3px 16px 8px !important; /* default twitter styling */
-}
-.buffer-twitter .RetweetDialog .tweet-button.buffer-inserted .btn.buffer-tweet-button {
-  height: 22px !important;
-  line-height: 27px !important;
 }
 
 
