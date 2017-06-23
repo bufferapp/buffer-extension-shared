@@ -118,36 +118,36 @@
     // Single Pins
     {
       placement: 'pinterest-single-pin',
-      selector: '.PinActionBar:not(.buffer-inserted)',
+      selector: '.closeupActionBar:not(:has(.BufferButtonSinglePin))',
       $button: $([
-        '<button class="Button BufferButton Module btn rounded pinActionBarButton hasText medium" type="button">',
-          '<em></em>' + ' ',
-          '<span class="buttonText">Buffer</span>',
-        '</button>'
+        '<div class="mr1">',
+            '<div style="position:relative;">',
+                '<div style="margin-right:4px;">',
+                    '<button aria-label="Buffer" class="Button BufferButtonSinglePin _hk block no-border p0 pointer"></button>',
+                '</div>',
+            '</div>',
+        '</div>',
       ].join('')),
       insert: function(el) {
         var $actions = $(el);
         var $newActionItem = this.$button.clone();
 
-        var showModalButton = $actions.find('.Button.ShowModalButton:first()');
+        var lastButton = $actions.find('.mr1:last()');
 
-        $actions.addClass('buffer-inserted');
-
-        if (showModalButton.hasClass('isBrioFlat')) $newActionItem.addClass('isBrioFlat');
-        showModalButton.after($newActionItem);
+        if (lastButton.hasClass('isBrioFlat')) $newActionItem.addClass('isBrioFlat');
+        lastButton.after($newActionItem);
 
         return $newActionItem;
       },
       getData: function(el) {
-        var $img = $(el).parents('.closeupActionBarContainer')
-                        .siblings('.closeupContainer')
-                        .find('.pinImage');
+        var $img = $(el).closest('.closeupContainer')
+                        .find('img:first()');
 
         var image = $img.attr('src');
         // Grab text from image alt attribute
         var text = getDecodedAttribute($img[0], 'alt');
 
-        var source = $(el).closest('.Closeup').find('.paddedPinLink').attr('href');
+        var source = $(el).closest('.closeupContainer').find('.imageLink').attr('href');
 
         return {
           text: text,
