@@ -291,7 +291,7 @@
       // .share_action_link selector added on 1/11/16 following Fb markup change
       after: function($container) {
         var $shareBtn = $container.find('.share_root, .share_action_link, [href^="/ajax/sharer"]').first();
-        return $shareBtn.parent();
+        return $shareBtn.closest('div').children('span:last');
       },
       default: [].join(''),
       create: function(btnConfig) {
@@ -304,11 +304,6 @@
         button.setAttribute('href', '#');
         button.textContent = btnConfig.text;
 
-        var spacer = document.createElement('span');
-        spacer.appendChild(document.createTextNode(' \u00A0')); // A space, followed by a nbsp
-        spacer.setAttribute('class', 'buffer-facebook-newsfeed-embed-spacer');
-
-        span.appendChild(spacer);
         span.appendChild(button);
 
         return span;
