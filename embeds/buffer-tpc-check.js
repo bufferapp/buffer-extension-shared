@@ -10,10 +10,14 @@
 
   ;(function check() {
     //if the 3rd party cookies check is done, remove the iframe
-    if((self.port) || (xt && xt.options)) {
-      bufferpm.bind("buffer_3pc_done", function(){
+    if (self.port || (xt && xt.options)) {
+      bufferpm.bind("buffer_3pc_done", function() {
         var elem = document.getElementById('buffer_tpc_check');
-        if(elem) { elem.parentNode.removeChild(elem); }
+        if (elem) {
+          setTimeout(function() {
+            elem.parentNode.removeChild(elem);
+          }, 0);
+        }
         return false;
       });
 
