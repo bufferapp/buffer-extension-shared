@@ -159,17 +159,19 @@
         '.tweet-form:not(.dm-tweetbox):not(.RetweetDialog-tweetForm) .tweet-button'
       ].join(','),
       after: '.tweet-counter',
-      className: 'buffer-tweet-button btn disabled',
+      className: 'buffer-tweet-button tweet-action EdgeButton EdgeButton--primary',
       selector: '.buffer-tweet-button',
       create: function (btnConfig) {
+        var button = document.createElement('button');
+        button.setAttribute('class', btnConfig.className);
 
-        var a = document.createElement('a');
-        var $a = $(a);
-        a.setAttribute('class', btnConfig.className);
-        a.setAttribute('href', '#');
-        $a.text(btnConfig.text);
+        var span = document.createElement('span');
+        span.setAttribute('class', 'button-text tweeting-text');
+        span.innerText = btnConfig.text;
 
-        return a;
+        button.appendChild(span);
+
+        return button;
       },
       ignore: function(container) {
         return $(container).closest('.dm-dialog').length ? true : false;
