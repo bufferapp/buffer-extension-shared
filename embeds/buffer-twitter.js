@@ -159,7 +159,7 @@
         '.tweet-form:not(.dm-tweetbox):not(.RetweetDialog-tweetForm) .tweet-button'
       ].join(','),
       after: '.tweet-counter',
-      className: 'buffer-tweet-button tweet-action EdgeButton EdgeButton--primary',
+      className: 'buffer-tweet-button EdgeButton EdgeButton--primary',
       selector: '.buffer-tweet-button',
       create: function (btnConfig) {
         var button = document.createElement('button');
