@@ -156,7 +156,7 @@
       text: "Buffer",
       container: [ // Two containers:
         'div.tweet-button-sub-container',
-        '.tweet-form:not(.dm-tweetbox):not(.RetweetDialog-tweetForm) .tweet-button'
+        '.tweet-form:not(.dm-tweetbox):not(.RetweetDialog-tweetForm):not(.is-reply) .tweet-button'
       ].join(','),
       after: '.tweet-counter',
       className: 'buffer-tweet-button EdgeButton EdgeButton--primary',

@@ -184,3 +184,7 @@ div.stream-item-footer > ul.tweet-actions > li.action-buffer-container {
   background: #40873B !important;
   text-decoration: none !important;
 }
+
+.tweet-form.is-reply .buffer-tweet-button {
+  display: none;
+}
