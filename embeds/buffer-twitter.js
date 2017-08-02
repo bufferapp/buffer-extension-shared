@@ -156,20 +156,27 @@
       text: "Buffer",
       container: [ // Two containers:
         'div.tweet-button-sub-container',
-        '.tweet-form:not(.dm-tweetbox):not(.RetweetDialog-tweetForm) .tweet-button'
+        '.tweet-form:not(.dm-tweetbox):not(.RetweetDialog-tweetForm):not(.is-reply) .tweet-button'
       ].join(','),
       after: '.tweet-counter',
-      className: 'buffer-tweet-button btn disabled',
+      className: 'buffer-tweet-button EdgeButton EdgeButton--primary',
       selector: '.buffer-tweet-button',
       create: function (btnConfig) {
+        var button = document.createElement('button');
+        button.setAttribute('class', btnConfig.className);
 
-        var a = document.createElement('a');
-        var $a = $(a);
-        a.setAttribute('class', btnConfig.className);
-        a.setAttribute('href', '#');
-        $a.text(btnConfig.text);
+        var spanTweet = document.createElement('span');
+        spanTweet.setAttribute('class', 'button-text tweeting-text');
+        spanTweet.innerText = btnConfig.text;
 
-        return a;
+        var spanReply = document.createElement('span');
+        spanReply.setAttribute('class', 'button-text replying-text');
+        spanReply.innerText = btnConfig.text;
+
+        button.appendChild(spanTweet);
+        button.appendChild(spanReply);
+
+        return button;
       },
       ignore: function(container) {
         return $(container).closest('.dm-dialog').length ? true : false;

@@ -160,4 +160,31 @@
 #profile_popup-body > ol > li > div > div.content > ,
 div.stream-item-footer > ul.tweet-actions > li.action-buffer-container {
   display: none;
-},
+}
+
+.buffer-tweet-button.EdgeButton {
+  background: #4C9E46 !important;
+  border: 1px solid rgba(0,0,0,0) !important;
+}
+
+.buffer-tweet-button.EdgeButton.disabled {
+  background: #4C9E46 !important;
+}
+
+.buffer-tweet-button.EdgeButton:hover {
+  background: #40873b !important;
+}
+
+.buffer-tweet-button.EdgeButton:not(.disabled):focus {
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(76, 158, 70, 0.26) !important;
+}
+
+.buffer-tweet-button.EdgeButton:not(.disabled):active {
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(76, 158, 70, 0.76) !important;
+  background: #40873B !important;
+  text-decoration: none !important;
+}
+
+.tweet-form.is-reply .buffer-tweet-button {
+  display: none;
+}

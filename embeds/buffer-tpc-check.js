@@ -9,7 +9,18 @@
   if (window !== window.top) return;
 
   ;(function check() {
-    if((self.port) || (xt && xt.options)) {
+    //if the 3rd party cookies check is done, remove the iframe
+    if (self.port || (xt && xt.options)) {
+      bufferpm.bind("buffer_3pc_done", function() {
+        var elem = document.getElementById('buffer_tpc_check');
+        if (elem) {
+          setTimeout(function() {
+            elem.parentNode.removeChild(elem);
+          }, 0);
+        }
+        return false;
+      });
+
       //if the 3rd party cookies check is disabled, store it
       bufferpm.bind("buffer_3pc_disabled", function(){
         if(xt && xt.options) {
