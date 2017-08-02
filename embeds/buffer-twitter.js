@@ -165,11 +165,16 @@
         var button = document.createElement('button');
         button.setAttribute('class', btnConfig.className);
 
-        var span = document.createElement('span');
-        span.setAttribute('class', 'button-text tweeting-text');
-        span.innerText = btnConfig.text;
+        var spanTweet = document.createElement('span');
+        spanTweet.setAttribute('class', 'button-text tweeting-text');
+        spanTweet.innerText = btnConfig.text;
 
-        button.appendChild(span);
+        var spanReply = document.createElement('span');
+        spanReply.setAttribute('class', 'button-text replying-text');
+        spanReply.innerText = btnConfig.text;
+
+        button.appendChild(spanTweet);
+        button.appendChild(spanReply);
 
         return button;
       },
