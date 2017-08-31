@@ -284,7 +284,7 @@
       // Buffer link under timeline post content: Like · Comment · Share · Buffer
       name: 'timeline-post-buffer',
       text: 'Buffer',
-      container: '.commentable_item',
+      container: '.commentable_item:not(:has(._610i))',
       // after: '.share_action_link',
       // Adjustment made w/ Timeline adjustments noticed by Joel Mar 26 2015
       // [href^="/ajax/sharer"] selector added on 11/18/15 following Facebook markup
@@ -319,136 +319,51 @@
       clear: function() {
         share = {};
       }
-
-    }
-    /* Disabled May 2014 as this doesn't create a native share on facebook,
-       it creates a new post from that user. This is planned to eliminate
-       user confusion until
+    },
     {
-      name: "share",
-      text: "Buffer",
-      container: 'form[action^="/ajax/sharer/submit/"] div.uiOverlayFooter',
-      before: '.layerConfirm',
-      className: 'buffer-facebook-button',
-      selector: '.buffer-facebook-button',
-      elements: ['a', 'buffer-facebook-button uiOverlayButton'],
-      default: [
-        'display: inline-block;',
-        'vertical-align: middle;',
-        'padding: 0 8px;',
-        'margin-right:5px;',
-        'line-height: 22px;',
-        'background: hsl(116, 39%, 45%);',
-        'border: 1px solid #40873B;',
-        'border-color: #45963F #45963F #40873B;',
-        'border-radius: 2px;',
-        'color: white !important;',
-        'text-shadow: rgba(0, 0, 0, 0.2) 0px -1px 0px;',
-        'font-size: 12px;',
-        'font-family: "Helvetica Neue", Helvetica, Arial, "lucida grande", tahoma, verdana, arial, sans-serif;',
-        'text-decoration: none !important'
-      ].join(''),
-      style: '',
-      hover: '',
-      active:  'background: hsl(116, 39%, 40%); text-decoration: none;',
-      create: function (btnConfig) {
+      // Buffer link under timeline post content: Like · Comment · Share · Buffer
+      // New newsfeed UI (August 2017)
+      name: 'timeline-post-buffer-new-ui',
+      text: 'Buffer',
+      container: '.commentable_item:has(._610i)',
+      // after: '.share_action_link',
+      // Adjustment made w/ Timeline adjustments noticed by Joel Mar 26 2015
+      // [href^="/ajax/sharer"] selector added on 11/18/15 following Facebook markup
+      // change (all classes are now mangled).
+      // .share_action_link selector added on 1/11/16 following Fb markup change
+      after: function($container) {
+        var $shareBtn = $container.find('.share_root, .share_action_link, [href^="/ajax/sharer"]').first();
+        return $shareBtn.closest('div').children('span:last');
+      },
+      default: [].join(''),
+      create: function(btnConfig) {
 
-        var temp = buildElement(btnConfig.elements);
+        var span = document.createElement('span');
+        var button = document.createElement('a');
 
-        var a = $(temp).find(btnConfig.selector)[0];
-        if( ! a ) a = temp; // EXT
-        a.setAttribute('style', btnConfig.default);
-        a.setAttribute('href', '#');
-        $(a).text(btnConfig.text); // EXT
+        button.setAttribute('style', btnConfig.default);
+        button.setAttribute('class', 'buffer-facebook-newsfeed-post-embed new-ui');
+        button.setAttribute('href', '#');
+        button.textContent = btnConfig.text;
 
-        $(a).mousedown(function () {
-          if( $(this).hasClass("disabled") ) return;
-          $(this).attr('style', btnConfig.default + btnConfig.active);
-        });
+        span.setAttribute('class', '_3h-u');
 
-        $(a).mouseup(function () {
-          if( $(this).hasClass("disabled") ) return;
-          $(this).attr('style', btnConfig.default + btnConfig.hover);
-        });
+        span.appendChild(button);
 
-        return temp;
-
+        return span;
       },
       data: function (elem) {
-        var $parent, text;
-        // This occurs when the item is shared from the main news feed
-        // and/or no share data is/was found. So now we try
-        // and grab from the data from the FB share modal instead.
-        if(isDataFromModal){
 
-          $parent = $(elem).parents('.uiOverlayFooter').parent().parent().find('.mentionsTextarea');
-          text = $parent.val();
-          if( text === "Write something..." ) text = undefined;
-          if( text ) share.text = text;
+        var $elem = $(elem);
+        var share = getClosestShareData(elem);
 
-          var photoshare = $('.UIShareStage_Image img').attr('src');
-          var thumb = $('input[name="attachment[params][images][0]');
-
-          if(thumb.length > 0){
-            if($('.UIShareStage_Title')[0].innerText === "Status Update"){
-              //Only add text from status update
-              share.text = $('.UIShareStage_Summary')[0].innerText;
-              //if(share.text === "Write something..." ) text = undefined;
-              share.placement = 'facebook-share-status';
-            }
-            else{
-              share.placement = 'facebook-share-link';
-            }
-          }
-          else if(photoshare){
-            // Is this maybe a status update share?
-            if($('.UIShareStage_Title')[0].innerText === "Status Update"){
-              //Only add text from status update
-              share.text = $('.UIShareStage_Summary')[0].innerText;
-              share.placement = 'facebook-share-status';
-            }
-            else{
-              //Nope it's a photo. So let's share a photo.
-              share.placement = 'facebook-share-picture';
-            }
-          }
-        }
-        else{
-          $parent = $(elem).parents('.uiOverlayFooter').parent().parent().find('.mentionsTextarea');
-
-          // if the user has written a message, allow this to override the default text
-
-          text = $parent.val();
-          if( text === "Write something..." ) text = undefined;
-          if( text ) share.text = text;
-        }
-
-        // Facebook does some href switching via js on link rollover
-        // If the user doesn't rollover, we have some leave facebook url
-        if (share.url && share.url.indexOf('http://www.facebook.com/l.php?') === 0) {
-
-          var params = share.url.replace('http://www.facebook.com/l.php?','')
-            .split('&');
-
-          // Find the real url we want behind the 'u' parameter:
-          for ( var i = 0; i < params.length; i++ ){
-            if ( params[i].indexOf('u=') === 0 ){
-              share.url = params[i].replace('u=','');
-              break;
-            }
-          }
-
-        }
-
-        // fallback placement when we don't know if the attachment is a picture, link or status
-        if( !share.placement ) share.placement = 'facebook-share';
-        console.log("Share:", share);
         return share;
       },
-      clear: function (elem) {
+      clear: function() {
         share = {};
       }
-    }*/
+
+    }
   ];
 
   var bufferEmbed = function bufferEmbed() {
