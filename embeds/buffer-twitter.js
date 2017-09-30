@@ -552,17 +552,24 @@
       text: "Buffer Retweet",
       container: '.tweet-form.RetweetDialog-tweetForm .tweet-button',
       after: '.tweet-counter',
-      className: 'buffer-tweet-button btn',
+      className: 'buffer-tweet-button EdgeButton EdgeButton--primary',
       selector: '.buffer-tweet-button',
       create: function (btnConfig) {
+        var button = document.createElement('button');
+        button.setAttribute('class', btnConfig.className);
 
-        var a = document.createElement('a');
-        a.setAttribute('class', btnConfig.className);
-        a.setAttribute('href', '#');
-        $(a).text(btnConfig.text);
+        var spanTweet = document.createElement('span');
+        spanTweet.setAttribute('class', 'button-text tweeting-text');
+        spanTweet.innerText = btnConfig.text;
 
-        return a;
+        var spanReply = document.createElement('span');
+        spanReply.setAttribute('class', 'button-text replying-text');
+        spanReply.innerText = btnConfig.text;
 
+        button.appendChild(spanTweet);
+        button.appendChild(spanReply);
+
+        return button;
       },
       data: function (elem) {
         var $elem = $(elem);
