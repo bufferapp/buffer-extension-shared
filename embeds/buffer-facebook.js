@@ -36,7 +36,8 @@
       '.timelineUnitContainer',
       '.tickerDialogContent > .commentable_item', // target the ticker posts' contents - 11/18/15
       '.fbUserContent',
-      '.fbUserPost'
+      '.fbUserPost',
+      '.fbUserStory'
     ].join(', '),
 
     via: [
@@ -90,7 +91,6 @@
   };
 
   function getClosestShareData(elem) {
-
     var parent = $(elem).closest(selectors.timelineItem);
 
     // reset share object on every 'share' button click
