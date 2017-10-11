@@ -10,7 +10,7 @@
    * - ...
    */
   var hostname = document.location.hostname;
-  if (!/^([^\.]+\.)?pinterest\.(com|pt|de|com\.mx|ie|co\.uk|fr|es|nl|ca|dk|at|se)$/.test(hostname)) return;
+  if (!/^([^\.]+\.)?pinterest\.(com|pt|de|com\.mx|ie|co\.uk|fr|es|nl|ca|dk|at|se|ch)$/.test(hostname)) return;
 
   /**
    * Example attribute value (contains both html tags and html entities):
