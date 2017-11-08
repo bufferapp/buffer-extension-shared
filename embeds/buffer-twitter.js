@@ -546,7 +546,7 @@
       name: "retweet",
       text: "Buffer Retweet",
       container: '.tweet-form.RetweetDialog-tweetForm .tweet-button',
-      after: '.tweet-counter',
+      before: '.retweet-action',
       className: 'buffer-tweet-button EdgeButton EdgeButton--primary',
       selector: '.buffer-tweet-button',
       create: function (btnConfig) {
@@ -601,14 +601,10 @@
         var $target = $elem.closest('form').find('.tweet-content .tweet-box');
 
         $target.on('keyup focus blur change paste cut', function(e) {
-          var counter = $elem.siblings('.tweet-counter').text() ||
-            $elem.siblings('.tweet-counter').val();
-
-          if (counter > -1) {
-            $elem.removeClass('disabled');
-          } else {
-            $elem.addClass('disabled');
-          }
+          setTimeout(function() {
+            var isTweetButtonDisabled = $elem.siblings('.retweet-action').is(':disabled');
+            $elem.toggleClass('disabled', isTweetButtonDisabled);
+          }, 0);
         });
       }
     }
