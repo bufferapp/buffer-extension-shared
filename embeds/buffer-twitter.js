@@ -158,7 +158,7 @@
         'div.tweet-button-sub-container',
         '.tweet-form:not(.dm-tweetbox):not(.RetweetDialog-tweetForm):not(.is-reply) .tweet-button'
       ].join(','),
-      after: '.tweet-counter',
+      before: '.js-tweet-btn',
       className: 'buffer-tweet-button EdgeButton EdgeButton--primary',
       selector: '.buffer-tweet-button',
       create: function (btnConfig) {
@@ -222,15 +222,10 @@
             .find('.tweet-content .tweet-box');
 
         $target.on('keyup focus blur change paste cut', function (e) {
-          var val = $(this).text();
-          var counter = $elem.siblings('.tweet-counter').text() ||
-            $elem.siblings('.tweet-counter').val();
-
-          if ( val.length > 0 && counter > -1 && val !== 'Compose new Tweet...') {
-            $elem.removeClass('disabled');
-          } else {
-            $elem.addClass('disabled');
-          }
+          setTimeout(function() {
+            var isTweetButtonDisabled = $elem.siblings('.js-tweet-btn').is(':disabled');
+            $elem.toggleClass('disabled', isTweetButtonDisabled);
+          }, 0);
         });
       }
     },
@@ -551,7 +546,7 @@
       name: "retweet",
       text: "Buffer Retweet",
       container: '.tweet-form.RetweetDialog-tweetForm .tweet-button',
-      after: '.tweet-counter',
+      before: '.retweet-action',
       className: 'buffer-tweet-button EdgeButton EdgeButton--primary',
       selector: '.buffer-tweet-button',
       create: function (btnConfig) {
@@ -606,14 +601,10 @@
         var $target = $elem.closest('form').find('.tweet-content .tweet-box');
 
         $target.on('keyup focus blur change paste cut', function(e) {
-          var counter = $elem.siblings('.tweet-counter').text() ||
-            $elem.siblings('.tweet-counter').val();
-
-          if (counter > -1) {
-            $elem.removeClass('disabled');
-          } else {
-            $elem.addClass('disabled');
-          }
+          setTimeout(function() {
+            var isTweetButtonDisabled = $elem.siblings('.retweet-action').is(':disabled');
+            $elem.toggleClass('disabled', isTweetButtonDisabled);
+          }, 0);
         });
       }
     }
@@ -662,7 +653,8 @@
 
         var btn = btnConfig.create(btnConfig);
 
-        $container.find(btnConfig.after).after(btn);
+        if (btnConfig.after) $container.find(btnConfig.after).after(btn);
+        else if (btnConfig.before) $container.find(btnConfig.before).before(btn);
 
         if ( !! btnConfig.activator) btnConfig.activator(btn, btnConfig);
 

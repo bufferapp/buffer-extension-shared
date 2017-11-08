@@ -65,12 +65,18 @@
 
   var showButton = function(e) {
     image = e.target;
+    var imageUrl = getImageUrl(image);
+
+    var imageExtensionMatch = imageUrl.match(/\.[a-z]{3,4}$/i);
+    if (imageExtensionMatch !== null && !/\.(jpg|jpeg|gif|png)/i.test(imageExtensionMatch[0])) {
+      return;
+    }
 
     box = image.getBoundingClientRect();
     if (box.height < 250 || box.width < 350) return;
 
     button.style.display = 'block';
-    currentImageUrl = getImageUrl(image);
+    currentImageUrl = imageUrl;
     isButtonVisible = true;
   };
 
