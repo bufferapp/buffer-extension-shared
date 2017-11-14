@@ -1,5 +1,4 @@
 ;(function() {
-
   // Only run this script on tweetdeck:
   if ( window.location.host.indexOf('tweetdeck.twitter.com') !== 0 ) return;
 
@@ -255,10 +254,8 @@
     setTimeout(tweetdeckLoop, 500);
   };
 
-  var currentStyleIndicator = document.head.querySelector('meta[http-equiv="Default-Style"]');
-
   var checkDarkTheme = function() {
-    var isDarkThemeSelected = currentStyleIndicator.getAttribute('content') == 'dark';
+    var isDarkThemeSelected = $(document.documentElement).hasClass('dark');
     document.body.classList.toggle('buffer-tweetdeck-dark', isDarkThemeSelected);
   };
 
@@ -274,7 +271,7 @@
       // Useful if the app hasn't initialized, or if settings are changed later on
       if (window.MutationObserver) {
         var observer = new MutationObserver(checkDarkTheme);
-        observer.observe(currentStyleIndicator, { attributes: true, attributeFilter: ['content'] });
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
         // Stop observing when add-on is disabled/removed (the detach event is Firefox-specific)
         xt.port.on('detach', function() {
