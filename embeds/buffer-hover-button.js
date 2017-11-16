@@ -67,10 +67,7 @@
     image = e.target;
     var imageUrl = getImageUrl(image);
 
-    var imageExtensionMatch = imageUrl.match(/\.[a-z]{3,4}$/i);
-    if (imageExtensionMatch !== null && !/\.(jpg|jpeg|gif|png)/i.test(imageExtensionMatch[0])) {
-      return;
-    }
+    if (!isValidImageUrl(imageUrl)) return;
 
     box = image.getBoundingClientRect();
     if (box.height < 250 || box.width < 350) return;
@@ -213,3 +210,9 @@
   }());
 
 }());
+
+// Returns true if the extension matches /(jpg|jpeg|gif|png)/, or if url has no extension
+var isValidImageUrl = function(url) {
+  var imageExtensionMatch = url.match(/\.([a-z]{3,4})(?:[?#:][^/]*)?$/i);
+  return imageExtensionMatch === null || /(jpg|jpeg|gif|png)/i.test(imageExtensionMatch[1]);
+};
