@@ -134,20 +134,17 @@
         window.close();
       },
       activator: function (elem, btnConfig) {
-        var target = $(elem).parents('.ft').siblings('.bd').find('#status');
-        var activate = function () {
-          var val = $(target).val();
-          var counter = $(elem).siblings('#char-count').val();
-          if ( val && val.length > 0 && counter > -1) {
-            $(elem).removeClass('disabled').attr('style', btnConfig.style);
-          } else {
-            $(elem).addClass('disabled').attr('style', btnConfig.default);
-          }
-        };
-        $(target).on('keyup focus blur change paste cut', function (e) {
-          activate();
+        var $elem = $(elem);
+        var $target = $elem
+            .parents('form')
+            .find('textarea#status');
+
+        $target.on('keyup focus blur change paste cut', function (e) {
+          setTimeout(function() {
+            var isTweetButtonDisabled = $elem.siblings('input[value=Tweet]').is(':disabled');
+            $elem.toggleClass('disabled', isTweetButtonDisabled);
+          }, 0);
         });
-        activate();
       }
     },
     {
