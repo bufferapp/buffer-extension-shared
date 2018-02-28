@@ -609,3 +609,9 @@ if (isBufferShareTab) {
     if (window.chrome) chrome.runtime.sendMessage({ type: 'buffer_close_popup' });
   });
 }
+
+// Pass this through to background script
+// xt.port is supposed to be defined in all situations, but a bit of caution doesn't hurt
+bufferpm.bind('buffer_data_collection_setting_change', function(data) {
+  xt && xt.port && xt.port.emit('buffer_data_collection_setting_change', data);
+});
