@@ -22,7 +22,7 @@ function receiveNestedFrameData() {
 function setupMessageRelay() {
   window.addEventListener('message', function(e) {
     var origin = e.origin || e.originalEvent.origin;
-    if (origin !== 'https://buffer.com' || e.source !== iframe.contentWindow) {
+    if ((origin !== 'https://buffer.com' && origin !== 'https://local.buffer.com') || e.source !== iframe.contentWindow) {
       return;
     }
 
