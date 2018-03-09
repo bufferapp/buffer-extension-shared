@@ -106,6 +106,18 @@
   line-height: 16px;
 }
 
+.Button.btn.BufferButton.isBrioFlat.isBrioFlat {
+  float: right;
+  height: 40px;
+  width: 40px;
+  margin-right: 4px;
+  background-color: #fff;
+}
+
+.Pin.Module .buffer-inserted .SaveButton {
+  float: right;
+}
+
 .Button.btn.BufferButton.isBrioFlat.BufferPinPopup {
   display: none;
   float: right;
