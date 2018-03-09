@@ -449,6 +449,15 @@ var getOverlayConfig = function(postData){
       encode: function (val) {
         return encodeURIComponent(val);
       }
+    },
+    {
+      name: "disable-telemetry",
+      get: function (cb) {
+        cb(postData['disable-telemetry']);
+      },
+      encode: function (val) {
+        return encodeURIComponent(val);
+      }
     }
   ];
 

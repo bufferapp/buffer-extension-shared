@@ -116,6 +116,88 @@
         };
       }
     },
+    // Stream Pins (March 2018 Pinterest changes, leaving previous version for
+    // backward compat)
+    {
+      placement: 'pinterest-stream-pins',
+      selector: '.Pin.Module .rightSideButtonsWrapper:not(.buffer-inserted)',
+      selector: '.Pin.Module .SaveButton:not(.buffer-inserted)',
+      $button: $([
+        '<button class="Button BufferButton Module btn rounded isBrioFlat isBrioFlatNew" type="button">',
+          '<em></em>',
+          '<span class="accessibilityText">Buffer</span>',
+        '</button>'
+      ].join('')),
+      insert: function(el) {
+        var $el = $(el);
+        var $actions = $el.parent();
+
+        // In some cases, Pinterest's DOM manipulations make us lose the .buffer-inserted
+        // marker: make sure there's no Buffer button already before inserting a new one.
+        var existingButton = $actions.find('.BufferButton:first');
+        if (existingButton.length > 0) return existingButton.first();
+
+        var $newActionItem = this.$button.clone();
+
+        $actions
+          .addClass('buffer-inserted')
+          .append($newActionItem);
+
+        return $newActionItem;
+      },
+      getData: function(el) {
+        var $pin = $(el).closest('.Pin.Module');
+        var $img = $pin.find('img').first();
+        var image = $img.attr('src');
+        var pinLink;
+        var pinIdParts;
+        var pinId;
+        var text;
+        var $source;
+        var source;
+        var pageSource;
+        var pinSourceRegex;
+        var pinSourceMatches;
+
+        text = getDecodedAttribute($img[0], 'alt');
+
+        $source = $pin.find('.pinNavLink, .NavigateButton, .navigateLink').first();
+
+        // If we haven't found a link, try to get it from the page's source using
+        // some regex magic
+        if ($source.length === 0) {
+          pinLink = $img.closest('a').attr('href');
+          pinIdParts = pinLink.split('/');
+          pinId = pinIdParts[pinIdParts.length - 2];
+
+          pageSource = document.body.innerHTML;
+
+          // That regex looks into inline JSON to find the "link" field in the pin object
+          // that follows that pin's id field. If we ever need something more robust to make
+          // sure we get the right "link" field, I've come up with this more involved regex:
+          // /"id":\s*"22447698119542969"(?:,\s*"[^"]+":\s*(?:\d+(?:\.\d+)?|\w+|"[^"]+"|{(?:(?:{[^}]*})?|[^}])*}|\[[^]]*]))*,\s*"link":\s*("[^"]+")/i
+          pinSourceRegex = RegExp('"id":\\s*"' + pinId + '".*?"link":\\s*("[^"]+")');
+
+          pinSourceMatches = pageSource.match(pinSourceRegex);
+
+          if (pinSourceMatches) source = JSON.parse(pinSourceMatches[1]);
+        }
+
+        // If we still haven't found a link, default to the domain name
+        if ($source.length === 0 && !source) {
+          $source = $pin.find('.pinDomain');
+        }
+
+        source = source || $source.attr('href') || $source.text();
+
+        return {
+          text: text,
+          url: source,
+          picture: getFullSizeImageUrl(image),
+          placement: this.placement
+        };
+      }
+    },
     // Single Pins
     {
       placement: 'pinterest-single-pin',
