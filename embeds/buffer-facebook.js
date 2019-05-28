@@ -282,62 +282,18 @@
     },
     {
       // Buffer link under timeline post content: Like · Comment · Share · Buffer
-      name: 'timeline-post-buffer',
-      text: 'Buffer',
-      container: '.commentable_item:not(:has(._610i))',
-      // after: '.share_action_link',
-      // Adjustment made w/ Timeline adjustments noticed by Joel Mar 26 2015
-      // [href^="/ajax/sharer"] selector added on 11/18/15 following Facebook markup
-      // change (all classes are now mangled).
-      // .share_action_link selector added on 1/11/16 following Fb markup change
-      after: function($container) {
-        var $shareBtn = $container.find('.share_root, .share_action_link, [href^="/ajax/sharer"]').first();
-        return $shareBtn.closest('div').children('span:last');
-      },
-      default: [].join(''),
-      create: function(btnConfig) {
-
-        var span = document.createElement('span');
-        var button = document.createElement('a');
-
-        button.setAttribute('style', btnConfig.default);
-        button.setAttribute('class', 'buffer-facebook-newsfeed-post-embed');
-        button.setAttribute('href', '#');
-        button.textContent = btnConfig.text;
-
-        span.appendChild(button);
-
-        return span;
-      },
-      data: function (elem) {
-
-        var $elem = $(elem);
-        var share = getClosestShareData(elem);
-
-        return share;
-      },
-      clear: function() {
-        share = {};
-      }
-    },
-    {
-      // Buffer link under timeline post content: Like · Comment · Share · Buffer
-      // New newsfeed UI (August 2017)
+      // New newsfeed UI (May 2019)
       name: 'timeline-post-buffer-new-ui',
       text: 'Buffer',
-      container: '.commentable_item:has(._610i)',
-      // after: '.share_action_link',
-      // Adjustment made w/ Timeline adjustments noticed by Joel Mar 26 2015
-      // [href^="/ajax/sharer"] selector added on 11/18/15 following Facebook markup
-      // change (all classes are now mangled).
-      // .share_action_link selector added on 1/11/16 following Fb markup change
+      container: '.commentable_item',
       after: function($container) {
-        var $shareBtn = $container.find('.share_root, .share_action_link, [href^="/ajax/sharer"]').first();
-        return $shareBtn.closest('div').children('span:last');
+        var $shareBtn = $container.find('a[title="Send this to friends or post it on your timeline."]').first();
+        return $shareBtn.parent('span').parent('span');
       },
-      default: [].join(''),
+      default: [
+        'color: #606770',
+      ].join(''),
       create: function(btnConfig) {
-
         var span = document.createElement('span');
         var button = document.createElement('a');
 
@@ -346,7 +302,7 @@
         button.setAttribute('href', '#');
         button.textContent = btnConfig.text;
 
-        span.setAttribute('class', '_3h-u');
+        span.setAttribute('class', '_18vi');
 
         span.appendChild(button);
 
@@ -370,7 +326,7 @@
 
     var insertButtons = function () {
 
-      config.buttons.forEach(function(btnConfig, i){
+      config.buttons.forEach(function(btnConfig, i) {
 
         // Container can be a selector or a function that returns a
         // jQuery object
@@ -379,10 +335,12 @@
             $(btnConfig.container);
 
         $container.each(function () {
-
           var $container = $(this);
 
-          if ( $container.hasClass('buffer-inserted') ) return;
+          var bufferButtonAlreadyInserted = $container.hasClass('buffer-inserted');
+          if (bufferButtonAlreadyInserted) {
+            return;
+          }
 
           $container.addClass('buffer-inserted');
 
