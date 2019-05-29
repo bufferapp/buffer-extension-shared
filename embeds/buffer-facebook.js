@@ -287,8 +287,8 @@
       text: 'Buffer',
       container: '.commentable_item',
       after: function($container) {
-        var $shareBtn = $container.find('a[title="Send this to friends or post it on your timeline."]').first();
-        return $shareBtn.parent('span').parent('span');
+        var $shareBtn = $container.find('a[role="button"]').last();
+        return $shareBtn.closest('span').parent('span');
       },
       default: [
         'color: #606770',
