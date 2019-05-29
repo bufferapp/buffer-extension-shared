@@ -287,12 +287,20 @@
       text: 'Buffer',
       container: '.commentable_item',
       after: function($container) {
-        var $shareBtn = $container.find('a[role="button"]').last();
-        return $shareBtn.closest('span').parent('span');
+        var shareBtn = $container.find('a[role="button"]').last().closest('span').parent('span');
+        if ($(shareBtn).length) {
+          return shareBtn;
+        } else {
+          return $container.find('._18vi').last();
+        }
       },
       default: [
         'color: #606770',
-      ].join(''),
+        'font-size: 13px',
+        'font-weight: 600',
+        "font-family: system-ui, -apple-system, BlinkMacSystemFont, '.SFNSText-Regular', sans-serif",
+        "margin-left: -16px"
+      ].join(';'),
       create: function(btnConfig) {
         var span = document.createElement('span');
         var button = document.createElement('a');
@@ -327,7 +335,6 @@
     var insertButtons = function () {
 
       config.buttons.forEach(function(btnConfig, i) {
-
         // Container can be a selector or a function that returns a
         // jQuery object
         var $container = typeof btnConfig.container === 'function' ?
