@@ -619,15 +619,15 @@
 
 	  	// Find the Tweet container
   	  	var $tweet = $(elem).closest('article');
-        // var $tweetContent = $tweet.find("[data-testid='tweet']");
+        var $tweetContent = $tweet.find("[data-testid=tweet] > div:nth-child(2) > div:first");
 
   	  	// Fetch the single time element, from there we can grab the href from the parent to get the screen name and status id.
   	  	var $link = $tweet.find('time').parent();
-  	  	var tweetURL = $link.attr('href');
+  	  	var tweetStatusURL = $link.attr('href');
   	  	// result : /mjtsai/status/1131268140887883779
 
-  	  	var statusID = tweetURL.split(/\//)[3];
-  	  	var screenname = tweetURL.split(/\//)[1];
+  	  	var statusID = tweetStatusURL.split(/\//)[3];
+  	  	var screenname = tweetStatusURL.split(/\//)[1];
 
   	  	// Fetch the avatar src which gives us the user id...
   	  	var avatarURL = $tweet.find('img').first().attr('src');
@@ -636,11 +636,21 @@
 
   	  	// Not depending on dynamic classes, but dom structure may change often...
   	  	// Grab the display name
-        var display_name = $tweet.find('[data-testid=tweet] > div:nth-child(2) > div:first > div:first > div:first > div:first > a > div > div:first > div:first > span > span').text();
+        var display_name = $tweetContent.find('div:first > div:first > div:first > a > div > div:first > div:first > span > span').text();
   	  	// Grab the status text...
-        var text = $tweet.find('[data-testid=tweet] > div:nth-child(2) > div:first > div:nth-child(2) > span').text();
+        var text = $tweetContent.find('div:nth-child(2) > span').text();
+        if (text.charAt(0) === '·'){
+          text = text.substr(1);
+        }
+        var tweetContentLink = $tweetContent.find('div:nth-child(3) > div > div > a[role=link]');
+        var tweetContentURL = tweetContentLink.attr('href');
+        if (tweetContentURL) {
+          tweetContentURL = ' ' + tweetContentURL;
+        } else {
+          tweetContentURL = '';
+        }
   	  	// Construct the text...
-  	  	var formattedText = 'RT @' + screenname + ': ' + text.trim() + '';
+        var formattedText = 'RT @' + screenname + ': ' + text.trim() + tweetContentURL;
 
         // Send back the data
         return {
@@ -704,7 +714,6 @@
         button.style.background = "none";
         button.style.border = "none";
         button.style.marginTop = "12px";
-        button.style.marginRight = '30px';
         button.style.cursor = "pointer";
         button.className = 'ProfileTweet-actionButton js-actionButton';
         button.type = 'button';
@@ -767,10 +776,15 @@
         var display_name = $tweet.find('li > div > div:last > div > div:first > a > div > div:first > div:first > span > span').text();
   	  	// Grab the status text...
       	var text = $tweet.find('div:nth-child(3) > span').text();
-
+        var tweetContentLink = $tweet.find('div:nth-child(4) > div > div > a[role=link]');
+        var tweetContentURL = tweetContentLink.attr('href');
+        if (tweetContentURL) {
+          tweetContentURL = ' ' + tweetContentURL;
+        } else {
+          tweetContentURL = '';
+        }
   	  	// Construct the text...
-  	  	var formattedText = 'RT @' + screenname + ': ' + text.trim() + '';
-
+        var formattedText = 'RT @' + screenname + ': ' + text.trim() + tweetContentURL;
         // Send back the data
         return {
           text: formattedText,
@@ -866,7 +880,6 @@
     }
 
   ];
-
   // Parse a tweet a return text representing it
   // NOTE: some more refactoring can be done here, e.g. taking care of
   // expanding short links in a single place
@@ -887,7 +900,6 @@
     $clone.find('.twitter-timeline-link.u-hidden').each(function() {
       this.textContent = ' ' + this.textContent;
     });
-
     return 'RT @' + screenName + ': ' + $clone.text().trim() + '';
   };
 
@@ -986,6 +998,4 @@
       setTimeout(check, 2000);
     }
   }());
-
-
 }());
