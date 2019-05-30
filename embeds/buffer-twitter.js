@@ -573,10 +573,10 @@
         var button = document.createElement('button');
         button.style.backgroundColor = 'none';
         button.style.background = "none";
-    		button.style.border = "none";
-    		button.style.marginTop = "3px";
+        button.style.border = "none";
+        button.style.marginTop = "3px";
         button.style.marginRight = "40px";
-    		button.style.cursor = "pointer";
+        button.style.cursor = "pointer";
         button.className = 'ProfileTweet-actionButton js-actionButton';
         button.type = 'button';
 
@@ -702,10 +702,10 @@
         var button = document.createElement('button');
         button.style.backgroundColor = 'none';
         button.style.background = "none";
-    		button.style.border = "none";
-    		button.style.marginTop = "12px";
+        button.style.border = "none";
+        button.style.marginTop = "12px";
         button.style.marginRight = '30px';
-    		button.style.cursor = "pointer";
+        button.style.cursor = "pointer";
         button.className = 'ProfileTweet-actionButton js-actionButton';
         button.type = 'button';
 
