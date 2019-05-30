@@ -638,12 +638,14 @@
   	  	// Grab the display name
         var display_name = $tweetContent.find('div:first > div:first > div:first > a > div > div:first > div:first > span > span').text();
   	  	// Grab the status text...
-        var text = $tweetContent.find('div:nth-child(2) > span').text();
-        if (text.charAt(0) === '·'){
-          text = text.substr(1);
+        var text = $tweet.find('[data-testid=tweet] > div:nth-child(2) > div:first > div:nth-child(2)').text();
+        // If it's a reply to a tweet, check if it contains Replying to, and grab the next div if so
+        if (text && text.includes('Replying to')) {
+          text = $tweet.find('[data-testid=tweet] > div:nth-child(2) > div:first > div:nth-child(3)').text();
         }
         var tweetContentLink = $tweetContent.find('div:nth-child(3) > div > div > a[role=link]');
         var tweetContentURL = tweetContentLink.attr('href');
+        //if not undefined, add a space before the url. If undefined, return empty string
         if (tweetContentURL) {
           tweetContentURL = ' ' + tweetContentURL;
         } else {
@@ -682,7 +684,7 @@
       // 2019 "New Twitter" Individual Tweet
       name: "buffer-profile-tweet-MAY-2019",
       text: "Add to Buffer",
-      container: "#react-root > div > div > div:last-child > main > div > div:nth-child(2) > div > div > div > div > div > div > section > div > div > div > div:nth-child(1) > div > article > div:last",
+      container: "article[data-testid='tweetDetail'] > div:last",
       after: 'div:nth-child(2)',
       default: '',
       selector: '.buffer-action',
@@ -775,7 +777,7 @@
   	  	// Grab the display name
         var display_name = $tweet.find('li > div > div:last > div > div:first > a > div > div:first > div:first > span > span').text();
   	  	// Grab the status text...
-      	var text = $tweet.find('div:nth-child(3) > span').text();
+      	var text = $tweet.find('li').next().text();
         var tweetContentLink = $tweet.find('div:nth-child(4) > div > div > a[role=link]');
         var tweetContentURL = tweetContentLink.attr('href');
         if (tweetContentURL) {
