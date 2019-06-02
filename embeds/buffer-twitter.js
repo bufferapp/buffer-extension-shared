@@ -654,14 +654,13 @@
         var tweetContentLink = $tweetContent.find('div:nth-child(3) > div > div > a[role=link]');
         var tweetContentURL = tweetContentLink.attr('href');
         //if not undefined, add a space before the url. If undefined, return empty string
-        if (tweetContentURL) {
+        if (tweetContentURL && !tweetContentURL.startsWith('/')) {
           tweetContentURL = ' ' + tweetContentURL;
         } else {
           tweetContentURL = '';
         }
   	  	// Construct the text...
         var formattedText = 'RT @' + screenname + ': ' + text.trim() + tweetContentURL;
-
         // Send back the data
         return {
           text: formattedText,
@@ -792,7 +791,7 @@
         }
         var tweetContentLink = $tweet.find('div:nth-child(4) > div > div > a[role=link]');
         var tweetContentURL = tweetContentLink.attr('href');
-        if (tweetContentURL) {
+        if (tweetContentURL && !tweetContentURL.startsWith('/')) {
           tweetContentURL = ' ' + tweetContentURL;
         } else {
           tweetContentURL = '';
