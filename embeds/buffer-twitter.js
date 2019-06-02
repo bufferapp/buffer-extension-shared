@@ -638,15 +638,17 @@
   	  	// Grab the display name
         var display_name = $tweetContent.find('div:first > div:first > div:first > a > div > div:first > div:first > span > span').text();
   	  	// Grab the status text...
-        var text = $tweet.find('[data-testid=tweet] > div:nth-child(2) > div:first > div:nth-child(2) > span[area-hidden!=true]').text();
-        var textTitleLink = $tweet.find('[data-testid=tweet] > div:nth-child(2) > div:first > div:nth-child(2) > a[title]');
-        var textURL = textTitleLink.attr('title');
+        var text = $tweet.find('[data-testid=tweet] > div:nth-child(2) > div:first > div:nth-child(2)').text();
         // If it's a reply to a tweet, check if it contains Replying to, and grab the next div if so
-        if (text && text.includes('Replying to')) {
-          text = $tweet.find('[data-testid=tweet] > div:nth-child(2) > div:first > div:nth-child(3)').text();
-        }
-        if (textURL) {
-          text = text + ' ' + textURL;
+        if (text) {
+          if (text.includes('Replying to')) {
+            text = $tweet.find('[data-testid=tweet] > div:nth-child(2) > div:first > div:nth-child(3)').text();
+          }
+          if (text.includes('(link:')){
+            //removes the twitter link data that is hidden in the dom on twitter but still gets picked up in selector
+            // (link:google.com) google.com
+            text = text.replace(/ *\(link[^)]*\) */g, " ");
+          }
         }
 
         var tweetContentLink = $tweetContent.find('div:nth-child(3) > div > div > a[role=link]');
@@ -783,13 +785,10 @@
   	  	// Grab the display name
         var display_name = $tweet.find('li > div > div:last > div > div:first > a > div > div:first > div:first > span > span').text();
   	  	// Grab the status text...
-        var textElement = $tweet.find('li').next();
+        var text = $tweet.find('li').next().text();
         // don't display content like link('google.com/test/test') google.com
-        var text = textElement.find(' > span[area-hidden!=true]').text();
-        var textLink = textElement.find('a[title]');
-        var textURL = textLink.attr('title');
-        if (textURL) {
-          text = text + ' ' + textURL;
+        if (text && text.includes('(link:')){
+          text = text.replace(/ *\(link[^)]*\) */g, " ");
         }
         var tweetContentLink = $tweet.find('div:nth-child(4) > div > div > a[role=link]');
         var tweetContentURL = tweetContentLink.attr('href');
