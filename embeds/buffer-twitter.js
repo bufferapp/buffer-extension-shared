@@ -638,7 +638,8 @@
   	  	// Grab the display name
         var display_name = $tweetContent.find('div:first > div:first > div:first > a > div > div:first > div:first > span > span').text();
   	  	// Grab the status text...
-        var text = $tweet.find('[data-testid=tweet] > div:nth-child(2) > div:first > div:nth-child(2)').text();
+        var textElement = $tweet.find('[data-testid=tweet] > div:nth-child(2) > div:first > div:nth-child(2)');
+        var text = textElement.text();
         // If it's a reply to a tweet, check if it contains Replying to, and grab the next div if so
         if (text) {
           if (text.includes('Replying to')) {
@@ -784,10 +785,14 @@
   	  	// Grab the display name
         var display_name = $tweet.find('li > div > div:last > div > div:first > a > div > div:first > div:first > span > span').text();
   	  	// Grab the status text...
+        var textElement = $tweet.find('li').next();
         var text = $tweet.find('li').next().text();
         // don't display content like link('google.com/test/test') google.com
         if (text && text.includes('(link:')){
           text = text.replace(/ *\(link[^)]*\) */g, " ");
+        }
+        if (text.includes('Replying to')) {
+          text = textElement.next().text();
         }
         var tweetContentLink = $tweet.find('div:nth-child(4) > div > div > a[role=link]');
         var tweetContentURL = tweetContentLink.attr('href');
