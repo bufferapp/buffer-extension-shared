@@ -539,6 +539,297 @@
       }
     },
     {
+      // 2019 "New Twitter" Timeline
+      name: "buffer-profile-stream-MAY-2019",
+      text: "Add to Buffer",
+      container:
+        "[data-testid='tweet'] > div:nth-child(2) > div:nth-child(2)"
+      ,
+      after: 'div:first',
+      default: '',
+      selector: '.buffer-action',
+      create: function (btnConfig) {
+        /* Desired DOM structure:
+/*
+        <div class="css-1dbjc4n r-1iusvr4 r-18u37iz r-16y2uox r-1h0z5md">
+           <div aria-haspopup="true" aria-label="18 Retweets. Retweet" role="button" data-focusable="true" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-11cpok1 r-bztko3 r-lrvibr" data-testid="retweet">
+              <div dir="ltr" class="css-901oao r-1awozwy r-1re7ezh r-6koalj r-1qd0xha r-a023e6 r-16dba41 r-1h0z5md r-ad9z0x r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0">
+                 <div class="css-1dbjc4n r-xoduu5">
+                    <div class="css-1dbjc4n r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
+                    <svg viewBox="0 0 24 24" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi">
+                       <g>
+                          <path d="M23.77 15.67c-.292-.293-.767-.293-1.06 0l-2.22 2.22V7.65c0-2.068-1.683-3.75-3.75-3.75h-5.85c-.414 0-.75.336-.75.75s.336.75.75.75h5.85c1.24 0 2.25 1.01 2.25 2.25v10.24l-2.22-2.22c-.293-.293-.768-.293-1.06 0s-.294.768 0 1.06l3.5 3.5c.145.147.337.22.53.22s.383-.072.53-.22l3.5-3.5c.294-.292.294-.767 0-1.06zm-10.66 3.28H7.26c-1.24 0-2.25-1.01-2.25-2.25V6.46l2.22 2.22c.148.147.34.22.532.22s.384-.073.53-.22c.293-.293.293-.768 0-1.06l-3.5-3.5c-.293-.294-.768-.294-1.06 0l-3.5 3.5c-.294.292-.294.767 0 1.06s.767.293 1.06 0l2.22-2.22V16.7c0 2.068 1.683 3.75 3.75 3.75h5.85c.414 0 .75-.336.75-.75s-.337-.75-.75-.75z"></path>
+                       </g>
+                    </svg>
+                 </div>
+                 <div class="css-1dbjc4n r-xoduu5 r-1udh08x"><span dir="auto" class="css-901oao css-16my406 r-1qd0xha r-ad9z0x r-1n0xq6e r-bcqeeo r-d3hbe1 r-1wgg2b2 r-axxi2z r-qvutc0"><span dir="auto" class="css-901oao css-16my406 r-1qd0xha r-ad9z0x r-bcqeeo r-qvutc0">18</span></span></div>
+              </div>
+           </div>
+        </div>
+*/
+        var action = document.createElement('div');
+        action.className = 'ProfileTweet-action ProfileTweet-action--buffer js-toggleState';
+
+        var button = document.createElement('button');
+        button.style.backgroundColor = 'none';
+        button.style.background = "none";
+        button.style.border = "none";
+        button.style.marginTop = "3px";
+        button.style.marginRight = "40px";
+        button.style.cursor = "pointer";
+        button.className = 'ProfileTweet-actionButton js-actionButton';
+        button.type = 'button';
+
+        var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        setAttributes(svg, {
+          "viewBox" : "0 0 22 22",
+          "height": "22px",
+          "version": "1.1",
+          "fill": "none",
+        });
+
+        var ellipseAttr = {
+          "stroke-miterlimit": "20",
+          "stroke-linecap": "round",
+          "stroke-linejoin": "round",
+          "stroke": "#657786",
+        };
+
+        var ellipse = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        ellipseAttr.d = "M1.28205 5.33333L9.84615 9.46154C9.94872 9.51282 10.0513 9.51282 10.1538 9.46154L18.7179 5.33333C19 5.20513 19 4.82051 18.7179 4.69231L10.1538 0.538462C10.0513 0.487179 9.94872 0.487179 9.84615 0.538462L1.28205 4.66667C1 4.79487 1 5.20513 1.28205 5.33333Z";
+        setAttributes(ellipse, ellipseAttr);
+        svg.appendChild(ellipse);
+
+        var ellipse2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        ellipseAttr.d = "M1.28205 10.3333L9.84615 14.4615C9.94872 14.5128 10.0513 14.5128 10.1538 14.4615L18.7179 10.3333C19 10.2051 19 9.82051 18.7179 9.6923L16.9231 8.82051L11.1795 11.5641C10.8205 11.7436 10.4103 11.8205 10 11.8205C9.58974 11.8205 9.17949 11.7179 8.82051 11.5641L3.07692 8.79487L1.28205 9.66666C1 9.79487 1 10.2051 1.28205 10.3333Z";
+        setAttributes(ellipse2, ellipseAttr);
+        svg.appendChild(ellipse2);
+
+        var ellipse3 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        ellipseAttr.d = "M18.7179 14.6667L16.9231 13.7949L11.1795 16.5641C10.8205 16.7436 10.4103 16.8205 10 16.8205C9.58974 16.8205 9.17949 16.7179 8.82051 16.5641L3.07692 13.7949L1.28205 14.6667C1 14.7949 1 15.1795 1.28205 15.3077L9.84615 19.4359C9.94872 19.4872 10.0513 19.4872 10.1538 19.4359L18.7179 15.3333C19 15.2051 19 14.7949 18.7179 14.6667Z";
+        setAttributes(ellipse3, ellipseAttr)
+        svg.appendChild(ellipse3);
+
+        button.appendChild(svg);
+        action.appendChild(button);
+
+        return action;
+      },
+      data: function (elem) {
+
+	  	// Find the Tweet container
+  	  	var $tweet = $(elem).closest('article');
+        var $tweetContent = $tweet.find("[data-testid=tweet] > div:nth-child(2) > div:first");
+
+  	  	// Fetch the single time element, from there we can grab the href from the parent to get the screen name and status id.
+  	  	var $link = $tweet.find('time').parent();
+  	  	var tweetStatusURL = $link.attr('href');
+  	  	// result : /mjtsai/status/1131268140887883779
+
+  	  	var statusID = tweetStatusURL.split(/\//)[3];
+  	  	var screenname = tweetStatusURL.split(/\//)[1];
+
+  	  	// Fetch the avatar src which gives us the user id...
+  	  	var avatarURL = $tweet.find('img').first().attr('src');
+  	  	// result: https://pbs.twimg.com/profile_images/1107099224699740160/hvMb9LQF_bigger.jpg
+        var userID = avatarURL.split(/\//)[4];
+
+  	  	// Not depending on dynamic classes, but dom structure may change often...
+  	  	// Grab the display name
+        var display_name = $tweetContent.find('div:first > div:first > div:first > a > div > div:first > div:first > span > span').text();
+  	  	// Grab the status text...
+        var textElement = $tweet.find('[data-testid=tweet] > div:nth-child(2) > div:first > div:nth-child(2)');
+        var text = textElement.text();
+        // If it's a reply to a tweet, check if it contains Replying to, and grab the next div if so
+        if (text) {
+          if (text.includes('Replying to')) {
+            text = $tweet.find('[data-testid=tweet] > div:nth-child(2) > div:first > div:nth-child(3)').text();
+          }
+          if (text.includes('(link:')){
+            //removes the twitter link data that is hidden in the dom on twitter but still gets picked up in selector
+            // (link:google.com) google.com
+            text = text.replace(/ *\(link[^)]*\) */g, " ");
+          }
+        }
+
+        var tweetContentLink = $tweetContent.find('div:nth-child(3) > div > div > a[role=link]');
+        var tweetContentURL = tweetContentLink.attr('href');
+        //if not undefined, add a space before the url. If undefined, return empty string
+        if (tweetContentURL && !tweetContentURL.startsWith('/')) {
+          tweetContentURL = ' ' + tweetContentURL;
+        } else {
+          tweetContentURL = '';
+        }
+  	  	// Construct the text...
+        var formattedText = 'RT @' + screenname + ': ' + text.trim() + tweetContentURL;
+        // Send back the data
+        return {
+          text: formattedText,
+          placement: 'twitter-feed',
+          retweeted_tweet_id:          statusID,
+          retweeted_user_id:           userID,
+          retweeted_user_name:         screenname,
+          retweeted_user_display_name: display_name
+        };
+      },
+      clear: function (elem) {
+      },
+      activator: function (elem, btnConfig) {
+        var $btn = $(elem);
+
+        // Remove extra margin on the last item in the list to prevent overflow
+        var moreActions = $btn.siblings('.js-more-tweet-actions').get(0);
+        if (moreActions) {
+          moreActions.style.marginRight = '0px';
+        }
+
+        if( $btn.closest('.in-reply-to').length > 0 ) {
+          $btn.find('i').css({'background-position-y': '-21px'});
+        }
+      }
+    },
+    {
+      // 2019 "New Twitter" Individual Tweet
+      name: "buffer-profile-tweet-MAY-2019",
+      text: "Add to Buffer",
+      container: "article[data-testid='tweetDetail'] > div:last",
+      after: 'div:nth-child(2)',
+      default: '',
+      selector: '.buffer-action',
+      create: function (btnConfig) {
+        /* Desired DOM structure:
+/*
+        <div class="css-1dbjc4n r-1iusvr4 r-18u37iz r-16y2uox r-1h0z5md">
+           <div aria-haspopup="true" aria-label="18 Retweets. Retweet" role="button" data-focusable="true" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-11cpok1 r-bztko3 r-lrvibr" data-testid="retweet">
+              <div dir="ltr" class="css-901oao r-1awozwy r-1re7ezh r-6koalj r-1qd0xha r-a023e6 r-16dba41 r-1h0z5md r-ad9z0x r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0">
+                 <div class="css-1dbjc4n r-xoduu5">
+                    <div class="css-1dbjc4n r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
+                    <svg viewBox="0 0 24 24" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi">
+                       <g>
+                          <path d="M23.77 15.67c-.292-.293-.767-.293-1.06 0l-2.22 2.22V7.65c0-2.068-1.683-3.75-3.75-3.75h-5.85c-.414 0-.75.336-.75.75s.336.75.75.75h5.85c1.24 0 2.25 1.01 2.25 2.25v10.24l-2.22-2.22c-.293-.293-.768-.293-1.06 0s-.294.768 0 1.06l3.5 3.5c.145.147.337.22.53.22s.383-.072.53-.22l3.5-3.5c.294-.292.294-.767 0-1.06zm-10.66 3.28H7.26c-1.24 0-2.25-1.01-2.25-2.25V6.46l2.22 2.22c.148.147.34.22.532.22s.384-.073.53-.22c.293-.293.293-.768 0-1.06l-3.5-3.5c-.293-.294-.768-.294-1.06 0l-3.5 3.5c-.294.292-.294.767 0 1.06s.767.293 1.06 0l2.22-2.22V16.7c0 2.068 1.683 3.75 3.75 3.75h5.85c.414 0 .75-.336.75-.75s-.337-.75-.75-.75z"></path>
+                       </g>
+                    </svg>
+                 </div>
+                 <div class="css-1dbjc4n r-xoduu5 r-1udh08x"><span dir="auto" class="css-901oao css-16my406 r-1qd0xha r-ad9z0x r-1n0xq6e r-bcqeeo r-d3hbe1 r-1wgg2b2 r-axxi2z r-qvutc0"><span dir="auto" class="css-901oao css-16my406 r-1qd0xha r-ad9z0x r-bcqeeo r-qvutc0">18</span></span></div>
+              </div>
+           </div>
+        </div>
+*/
+
+        var action = document.createElement('div');
+        action.className = 'ProfileTweet-action ProfileTweet-action--buffer js-toggleState';
+
+        var button = document.createElement('button');
+        button.style.backgroundColor = 'none';
+        button.style.background = "none";
+        button.style.border = "none";
+        button.style.marginTop = "12px";
+        button.style.cursor = "pointer";
+        button.className = 'ProfileTweet-actionButton js-actionButton';
+        button.type = 'button';
+
+        var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        setAttributes(svg, {
+          "viewBox" : "0 0 22 22",
+          "height": "22px",
+          "version": "1.1",
+          "fill": "none",
+        });
+
+        var ellipseAttr = {
+          "stroke-miterlimit": "20",
+          "stroke-linecap": "round",
+          "stroke-linejoin": "round",
+          "stroke": "#657786",
+        };
+
+        var ellipse = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        ellipseAttr.d = "M1.28205 5.33333L9.84615 9.46154C9.94872 9.51282 10.0513 9.51282 10.1538 9.46154L18.7179 5.33333C19 5.20513 19 4.82051 18.7179 4.69231L10.1538 0.538462C10.0513 0.487179 9.94872 0.487179 9.84615 0.538462L1.28205 4.66667C1 4.79487 1 5.20513 1.28205 5.33333Z";
+        setAttributes(ellipse, ellipseAttr);
+        svg.appendChild(ellipse);
+
+        var ellipse2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        ellipseAttr.d = "M1.28205 10.3333L9.84615 14.4615C9.94872 14.5128 10.0513 14.5128 10.1538 14.4615L18.7179 10.3333C19 10.2051 19 9.82051 18.7179 9.6923L16.9231 8.82051L11.1795 11.5641C10.8205 11.7436 10.4103 11.8205 10 11.8205C9.58974 11.8205 9.17949 11.7179 8.82051 11.5641L3.07692 8.79487L1.28205 9.66666C1 9.79487 1 10.2051 1.28205 10.3333Z";
+        setAttributes(ellipse2, ellipseAttr);
+        svg.appendChild(ellipse2);
+
+        var ellipse3 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        ellipseAttr.d = "M18.7179 14.6667L16.9231 13.7949L11.1795 16.5641C10.8205 16.7436 10.4103 16.8205 10 16.8205C9.58974 16.8205 9.17949 16.7179 8.82051 16.5641L3.07692 13.7949L1.28205 14.6667C1 14.7949 1 15.1795 1.28205 15.3077L9.84615 19.4359C9.94872 19.4872 10.0513 19.4872 10.1538 19.4359L18.7179 15.3333C19 15.2051 19 14.7949 18.7179 14.6667Z";
+        setAttributes(ellipse3, ellipseAttr)
+        svg.appendChild(ellipse3);
+
+        button.appendChild(svg);
+        action.appendChild(button);
+
+        return action;
+      },
+      data: function (elem) {
+
+	  	// Find the Tweet container
+  	  	var $tweet = $(elem).closest('article');
+
+  	  	// Fetch the single time element, from there we can grab the href from the parent to get the screen name and status id.
+  	  	var $link = $tweet.find('time').parent();
+  	  	var tweetURL = document.URL;
+  	  	// result : /mjtsai/status/1131268140887883779
+
+  	  	var statusID = tweetURL.split(/\//)[5];
+  	  	var screenname = tweetURL.split(/\//)[3];
+
+  	  	// Fetch the avatar src which gives us the user id...
+  	  	var avatarURL = $tweet.find('img').first().attr('src');
+  	  	// result: https://pbs.twimg.com/profile_images/1107099224699740160/hvMb9LQF_bigger.jpg
+  	  	var userID = avatarURL.split(/\//)[4];
+
+  	  	// Not relying on dynamic classes, only DOM hierarchy. Still may likely change often...
+  	  	// Grab the display name
+        var display_name = $tweet.find('li > div > div:last > div > div:first > a > div > div:first > div:first > span > span').text();
+  	  	// Grab the status text...
+        var textElement = $tweet.find('li').next();
+        var text = $tweet.find('li').next().text();
+        // don't display content like link('google.com/test/test') google.com
+        if (text && text.includes('(link:')){
+          text = text.replace(/ *\(link[^)]*\) */g, " ");
+        }
+        if (text.includes('Replying to')) {
+          text = textElement.next().text();
+        }
+        var tweetContentLink = $tweet.find('div:nth-child(4) > div > div > a[role=link]');
+        var tweetContentURL = tweetContentLink.attr('href');
+        if (tweetContentURL && !tweetContentURL.startsWith('/')) {
+          tweetContentURL = ' ' + tweetContentURL;
+        } else {
+          tweetContentURL = '';
+        }
+  	  	// Construct the text...
+        var formattedText = 'RT @' + screenname + ': ' + text.trim() + tweetContentURL;
+        // Send back the data
+        return {
+          text: formattedText,
+          placement: 'twitter-feed',
+          retweeted_tweet_id:          statusID,
+          retweeted_user_id:           userID,
+          retweeted_user_name:         screenname,
+          retweeted_user_display_name: display_name
+        };
+      },
+      clear: function (elem) {
+      },
+      activator: function (elem, btnConfig) {
+        var $btn = $(elem);
+
+        // Remove extra margin on the last item in the list to prevent overflow
+        var moreActions = $btn.siblings('.js-more-tweet-actions').get(0);
+        if (moreActions) {
+          moreActions.style.marginRight = '0px';
+        }
+
+        if( $btn.closest('.in-reply-to').length > 0 ) {
+          $btn.find('i').css({'background-position-y': '-21px'});
+        }
+      }
+    },
+    {
       // Retweet modal window
       name: "retweet",
       text: "Buffer Retweet",
@@ -607,7 +898,6 @@
     }
 
   ];
-
   // Parse a tweet a return text representing it
   // NOTE: some more refactoring can be done here, e.g. taking care of
   // expanding short links in a single place
@@ -628,7 +918,6 @@
     $clone.find('.twitter-timeline-link.u-hidden').each(function() {
       this.textContent = ' ' + this.textContent;
     });
-
     return 'RT @' + screenName + ': ' + $clone.text().trim() + '';
   };
 
@@ -710,6 +999,12 @@
     twitterLoop();
   };
 
+  var setAttributes = function(el, attrs) {
+    for(var key in attrs) {
+      el.setAttribute(key, attrs[key]);
+    }
+  }
+
   // Wait for xt.options to be set
   ;(function check() {
     // If twitter is switched on, start the main loop
@@ -721,6 +1016,4 @@
       setTimeout(check, 2000);
     }
   }());
-
-
 }());
