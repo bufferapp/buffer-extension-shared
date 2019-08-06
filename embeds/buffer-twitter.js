@@ -543,30 +543,12 @@
       name: "buffer-profile-stream-MAY-2019",
       text: "Add to Buffer",
       container:
-        "[data-testid='tweet'] > div:nth-child(2) > div:nth-child(2)"
+        "[data-testid='tweet'] > div:nth-child(2) > [role='group']"
       ,
       after: 'div:first',
       default: '',
       selector: '.buffer-action',
       create: function (btnConfig) {
-        /* Desired DOM structure:
-/*
-        <div class="css-1dbjc4n r-1iusvr4 r-18u37iz r-16y2uox r-1h0z5md">
-           <div aria-haspopup="true" aria-label="18 Retweets. Retweet" role="button" data-focusable="true" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-11cpok1 r-bztko3 r-lrvibr" data-testid="retweet">
-              <div dir="ltr" class="css-901oao r-1awozwy r-1re7ezh r-6koalj r-1qd0xha r-a023e6 r-16dba41 r-1h0z5md r-ad9z0x r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0">
-                 <div class="css-1dbjc4n r-xoduu5">
-                    <div class="css-1dbjc4n r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
-                    <svg viewBox="0 0 24 24" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi">
-                       <g>
-                          <path d="M23.77 15.67c-.292-.293-.767-.293-1.06 0l-2.22 2.22V7.65c0-2.068-1.683-3.75-3.75-3.75h-5.85c-.414 0-.75.336-.75.75s.336.75.75.75h5.85c1.24 0 2.25 1.01 2.25 2.25v10.24l-2.22-2.22c-.293-.293-.768-.293-1.06 0s-.294.768 0 1.06l3.5 3.5c.145.147.337.22.53.22s.383-.072.53-.22l3.5-3.5c.294-.292.294-.767 0-1.06zm-10.66 3.28H7.26c-1.24 0-2.25-1.01-2.25-2.25V6.46l2.22 2.22c.148.147.34.22.532.22s.384-.073.53-.22c.293-.293.293-.768 0-1.06l-3.5-3.5c-.293-.294-.768-.294-1.06 0l-3.5 3.5c-.294.292-.294.767 0 1.06s.767.293 1.06 0l2.22-2.22V16.7c0 2.068 1.683 3.75 3.75 3.75h5.85c.414 0 .75-.336.75-.75s-.337-.75-.75-.75z"></path>
-                       </g>
-                    </svg>
-                 </div>
-                 <div class="css-1dbjc4n r-xoduu5 r-1udh08x"><span dir="auto" class="css-901oao css-16my406 r-1qd0xha r-ad9z0x r-1n0xq6e r-bcqeeo r-d3hbe1 r-1wgg2b2 r-axxi2z r-qvutc0"><span dir="auto" class="css-901oao css-16my406 r-1qd0xha r-ad9z0x r-bcqeeo r-qvutc0">18</span></span></div>
-              </div>
-           </div>
-        </div>
-*/
         var action = document.createElement('div');
         action.className = 'ProfileTweet-action ProfileTweet-action--buffer js-toggleState';
 
@@ -575,7 +557,7 @@
         button.style.background = "none";
         button.style.border = "none";
         button.style.marginTop = "3px";
-        button.style.marginRight = "40px";
+        button.style.marginRight = "47px";
         button.style.cursor = "pointer";
         button.className = 'ProfileTweet-actionButton js-actionButton';
         button.type = 'button';
