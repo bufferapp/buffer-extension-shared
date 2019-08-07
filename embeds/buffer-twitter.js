@@ -598,10 +598,32 @@
         return action;
       },
       data: function (elem) {
-
-	  	// Find the Tweet container
+	  	  // Find the Tweet container
   	  	var $tweet = $(elem).closest('article');
-        var $tweetContent = $tweet.find("[data-testid=tweet] > div:nth-child(2) > div:first");
+        var $tweetContent = $tweet.find("[data-testid=tweet] > div:nth-child(2) > div[dir=auto]").first();
+
+        var text = '';
+
+        // Now Twitter splits tweets into spans text, emojis and hashtags, so we need
+        // to iterate over all of them to grab the full text.
+        $($tweetContent).children('span,a').each(function (e) {
+          if ($(this).is('a')) { // Link, grab the full URL
+            text += $(this).attr('title');
+            return true;
+          }
+
+          if (($(this).attr('dir') === 'auto') && $(this).find('> div').first()) { // Emoji span
+            text += $(this).find('> div').first().attr('aria-label');
+            return true;
+          }
+
+          if ($(this).is('span')) { // Regular text
+            text += $(this).text();
+            return true;
+          }
+        });
+
+        text = text.trim();
 
   	  	// Fetch the single time element, from there we can grab the href from the parent to get the screen name and status id.
   	  	var $link = $tweet.find('time').parent();
@@ -618,23 +640,9 @@
 
   	  	// Not depending on dynamic classes, but dom structure may change often...
   	  	// Grab the display name
-        var display_name = $tweetContent.find('div:first > div:first > div:first > a > div > div:first > div:first > span > span').text();
-  	  	// Grab the status text...
-        var textElement = $tweet.find('[data-testid=tweet] > div:nth-child(2) > div:first > div:nth-child(2)');
-        var text = textElement.text();
-        // If it's a reply to a tweet, check if it contains Replying to, and grab the next div if so
-        if (text) {
-          if (text.includes('Replying to')) {
-            text = $tweet.find('[data-testid=tweet] > div:nth-child(2) > div:first > div:nth-child(3)').text();
-          }
-          if (text.includes('(link:')){
-            //removes the twitter link data that is hidden in the dom on twitter but still gets picked up in selector
-            // (link:google.com) google.com
-            text = text.replace(/ *\(link[^)]*\) */g, " ");
-          }
-        }
+        var displayName = $($tweetContent).siblings('div').first().find('div:first > div:first > a > div > div:first > div:first > span > span').text();
 
-        var tweetContentLink = $tweetContent.find('div:nth-child(3) > div > div > a[role=link]');
+        var tweetContentLink = $($tweetContent).parent().find('div:nth-child(3) > div > div a[role=link]').first();
         var tweetContentURL = tweetContentLink.attr('href');
         //if not undefined, add a space before the url. If undefined, return empty string
         if (tweetContentURL && !tweetContentURL.startsWith('/')) {
@@ -643,7 +651,7 @@
           tweetContentURL = '';
         }
   	  	// Construct the text...
-        var formattedText = 'RT @' + screenname + ': ' + text.trim() + tweetContentURL;
+        var formattedText = 'RT @' + screenname + ': ' + text + tweetContentURL;
         // Send back the data
         return {
           text: formattedText,
@@ -651,7 +659,7 @@
           retweeted_tweet_id:          statusID,
           retweeted_user_id:           userID,
           retweeted_user_name:         screenname,
-          retweeted_user_display_name: display_name
+          retweeted_user_display_name: displayName
         };
       },
       clear: function (elem) {
