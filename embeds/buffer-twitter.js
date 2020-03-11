@@ -543,7 +543,7 @@
       name: "buffer-profile-stream-MAY-2019",
       text: "Add to Buffer",
       container:
-        "[data-testid='tweet'] > div:nth-child(2) > [role='group']"
+        "[data-testid='tweet'] > div:nth-child(2) > div:nth-child(2) > [role='group']"
       ,
       after: 'div:first',
       default: '',
@@ -912,13 +912,12 @@
   };
 
   var insertButtons = function () {
-
     config.buttons.forEach(function(btnConfig){
 
       $(btnConfig.container).each(function () {
 
         var $container = $(this);
-
+        
         if( !! btnConfig.ignore ) {
           if( btnConfig.ignore($container) ) return;
         }
