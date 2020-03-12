@@ -600,8 +600,7 @@
       data: function (elem) {
 	  	  // Find the Tweet container
   	  	var $tweet = $(elem).closest('article');
-        var $tweetContent = $tweet.find("[data-testid=tweet] > div:nth-child(2) > div[dir=auto]").first();
-
+        var $tweetContent = $tweet.find("div[lang]").first();
         var text = '';
 
         // Now Twitter splits tweets into spans text, emojis and hashtags, so we need
@@ -682,7 +681,7 @@
       // 2019 "New Twitter" Individual Tweet
       name: "buffer-profile-tweet-MAY-2019",
       text: "Add to Buffer",
-      container: "article[data-testid='tweetDetail'] > div:last",
+      container: "article > div > div > div:nth-child(3) > div[aria-label]",
       after: 'div:nth-child(2)',
       default: '',
       selector: '.buffer-action',
@@ -775,8 +774,8 @@
   	  	// Grab the display name
         var display_name = $tweet.find('li > div > div:last > div > div:first > a > div > div:first > div:first > span > span').text();
   	  	// Grab the status text...
-        var textElement = $tweet.find('li').next();
-        var text = $tweet.find('li').next().text();
+        var textElement = $tweet.find("div[lang]");
+        var text = textElement.text();
         // don't display content like link('google.com/test/test') google.com
         if (text && text.includes('(link:')){
           text = text.replace(/ *\(link[^)]*\) */g, " ");
