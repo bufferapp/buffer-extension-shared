@@ -202,7 +202,7 @@ var createBtnContainer = function(position) {
 
 var createHelpButton = function() {
   var contactHref = 'https://buffer.com/app#contact-from-extension';
-  var faqHref = 'https://faq.buffer.com/category/567-composer';
+  var faqHref = 'https://support.buffer.com/hc/en-us/articles/360039028273-Installing-and-using-the-Buffer-Browser-Extension';
 
   var button = document.createElement('a');
   button.href = contactHref;
