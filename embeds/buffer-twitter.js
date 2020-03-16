@@ -543,30 +543,12 @@
       name: "buffer-profile-stream-MAY-2019",
       text: "Add to Buffer",
       container:
-        "[data-testid='tweet'] > div:nth-child(2) > div:nth-child(2)"
+        "[data-testid='tweet'] > div:nth-child(2) > div:nth-child(2) > [role='group']"
       ,
       after: 'div:first',
       default: '',
       selector: '.buffer-action',
       create: function (btnConfig) {
-        /* Desired DOM structure:
-/*
-        <div class="css-1dbjc4n r-1iusvr4 r-18u37iz r-16y2uox r-1h0z5md">
-           <div aria-haspopup="true" aria-label="18 Retweets. Retweet" role="button" data-focusable="true" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-11cpok1 r-bztko3 r-lrvibr" data-testid="retweet">
-              <div dir="ltr" class="css-901oao r-1awozwy r-1re7ezh r-6koalj r-1qd0xha r-a023e6 r-16dba41 r-1h0z5md r-ad9z0x r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0">
-                 <div class="css-1dbjc4n r-xoduu5">
-                    <div class="css-1dbjc4n r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
-                    <svg viewBox="0 0 24 24" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi">
-                       <g>
-                          <path d="M23.77 15.67c-.292-.293-.767-.293-1.06 0l-2.22 2.22V7.65c0-2.068-1.683-3.75-3.75-3.75h-5.85c-.414 0-.75.336-.75.75s.336.75.75.75h5.85c1.24 0 2.25 1.01 2.25 2.25v10.24l-2.22-2.22c-.293-.293-.768-.293-1.06 0s-.294.768 0 1.06l3.5 3.5c.145.147.337.22.53.22s.383-.072.53-.22l3.5-3.5c.294-.292.294-.767 0-1.06zm-10.66 3.28H7.26c-1.24 0-2.25-1.01-2.25-2.25V6.46l2.22 2.22c.148.147.34.22.532.22s.384-.073.53-.22c.293-.293.293-.768 0-1.06l-3.5-3.5c-.293-.294-.768-.294-1.06 0l-3.5 3.5c-.294.292-.294.767 0 1.06s.767.293 1.06 0l2.22-2.22V16.7c0 2.068 1.683 3.75 3.75 3.75h5.85c.414 0 .75-.336.75-.75s-.337-.75-.75-.75z"></path>
-                       </g>
-                    </svg>
-                 </div>
-                 <div class="css-1dbjc4n r-xoduu5 r-1udh08x"><span dir="auto" class="css-901oao css-16my406 r-1qd0xha r-ad9z0x r-1n0xq6e r-bcqeeo r-d3hbe1 r-1wgg2b2 r-axxi2z r-qvutc0"><span dir="auto" class="css-901oao css-16my406 r-1qd0xha r-ad9z0x r-bcqeeo r-qvutc0">18</span></span></div>
-              </div>
-           </div>
-        </div>
-*/
         var action = document.createElement('div');
         action.className = 'ProfileTweet-action ProfileTweet-action--buffer js-toggleState';
 
@@ -575,7 +557,7 @@
         button.style.background = "none";
         button.style.border = "none";
         button.style.marginTop = "3px";
-        button.style.marginRight = "40px";
+        button.style.marginRight = "47px";
         button.style.cursor = "pointer";
         button.className = 'ProfileTweet-actionButton js-actionButton';
         button.type = 'button';
@@ -616,10 +598,31 @@
         return action;
       },
       data: function (elem) {
-
-	  	// Find the Tweet container
+	  	  // Find the Tweet container
   	  	var $tweet = $(elem).closest('article');
-        var $tweetContent = $tweet.find("[data-testid=tweet] > div:nth-child(2) > div:first");
+        var $tweetContent = $tweet.find("div[lang]").first();
+        var text = '';
+
+        // Now Twitter splits tweets into spans text, emojis and hashtags, so we need
+        // to iterate over all of them to grab the full text.
+        $($tweetContent).children('span,a').each(function (e) {
+          if ($(this).is('a')) { // Link, grab the full URL
+            text += $(this).attr('title');
+            return true;
+          }
+
+          if (($(this).attr('dir') === 'auto') && $(this).find('> div').first()) { // Emoji span
+            text += $(this).find('> div').first().attr('aria-label');
+            return true;
+          }
+
+          if ($(this).is('span')) { // Regular text
+            text += $(this).text();
+            return true;
+          }
+        });
+
+        text = text.trim();
 
   	  	// Fetch the single time element, from there we can grab the href from the parent to get the screen name and status id.
   	  	var $link = $tweet.find('time').parent();
@@ -636,23 +639,9 @@
 
   	  	// Not depending on dynamic classes, but dom structure may change often...
   	  	// Grab the display name
-        var display_name = $tweetContent.find('div:first > div:first > div:first > a > div > div:first > div:first > span > span').text();
-  	  	// Grab the status text...
-        var textElement = $tweet.find('[data-testid=tweet] > div:nth-child(2) > div:first > div:nth-child(2)');
-        var text = textElement.text();
-        // If it's a reply to a tweet, check if it contains Replying to, and grab the next div if so
-        if (text) {
-          if (text.includes('Replying to')) {
-            text = $tweet.find('[data-testid=tweet] > div:nth-child(2) > div:first > div:nth-child(3)').text();
-          }
-          if (text.includes('(link:')){
-            //removes the twitter link data that is hidden in the dom on twitter but still gets picked up in selector
-            // (link:google.com) google.com
-            text = text.replace(/ *\(link[^)]*\) */g, " ");
-          }
-        }
+        var displayName = $($tweetContent).siblings('div').first().find('div:first > div:first > a > div > div:first > div:first > span > span').text();
 
-        var tweetContentLink = $tweetContent.find('div:nth-child(3) > div > div > a[role=link]');
+        var tweetContentLink = $($tweetContent).parent().find('div:nth-child(3) > div > div a[role=link]').first();
         var tweetContentURL = tweetContentLink.attr('href');
         //if not undefined, add a space before the url. If undefined, return empty string
         if (tweetContentURL && !tweetContentURL.startsWith('/')) {
@@ -661,7 +650,7 @@
           tweetContentURL = '';
         }
   	  	// Construct the text...
-        var formattedText = 'RT @' + screenname + ': ' + text.trim() + tweetContentURL;
+        var formattedText = 'RT @' + screenname + ': ' + text + tweetContentURL;
         // Send back the data
         return {
           text: formattedText,
@@ -669,7 +658,7 @@
           retweeted_tweet_id:          statusID,
           retweeted_user_id:           userID,
           retweeted_user_name:         screenname,
-          retweeted_user_display_name: display_name
+          retweeted_user_display_name: displayName
         };
       },
       clear: function (elem) {
@@ -692,7 +681,7 @@
       // 2019 "New Twitter" Individual Tweet
       name: "buffer-profile-tweet-MAY-2019",
       text: "Add to Buffer",
-      container: "article[data-testid='tweetDetail'] > div:last",
+      container: "article > div > div > div:nth-child(3) > div[aria-label]",
       after: 'div:nth-child(2)',
       default: '',
       selector: '.buffer-action',
@@ -785,8 +774,8 @@
   	  	// Grab the display name
         var display_name = $tweet.find('li > div > div:last > div > div:first > a > div > div:first > div:first > span > span').text();
   	  	// Grab the status text...
-        var textElement = $tweet.find('li').next();
-        var text = $tweet.find('li').next().text();
+        var textElement = $tweet.find("div[lang]");
+        var text = textElement.text();
         // don't display content like link('google.com/test/test') google.com
         if (text && text.includes('(link:')){
           text = text.replace(/ *\(link[^)]*\) */g, " ");
@@ -922,13 +911,12 @@
   };
 
   var insertButtons = function () {
-
     config.buttons.forEach(function(btnConfig){
 
       $(btnConfig.container).each(function () {
 
         var $container = $(this);
-
+        
         if( !! btnConfig.ignore ) {
           if( btnConfig.ignore($container) ) return;
         }
