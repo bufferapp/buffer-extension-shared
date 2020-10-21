@@ -28,6 +28,7 @@
 
     // .userContentWrapper - new FB news feed, 3/2014
     timelineItem: [
+      'div[data-testid="Keycommand_wrapper_feed_story"]',
       '.genericStreamStory',
       '.fbTimelineUnit',
       '.UIStandardFrame_Content',
@@ -37,18 +38,22 @@
       '.tickerDialogContent > .commentable_item', // target the ticker posts' contents - 11/18/15
       '.fbUserContent',
       '.fbUserPost',
-      '.fbUserStory'
+      '.fbUserStory',
+      'div[role="article"]'
     ].join(', '),
 
     via: [
       '.passiveName',
       '.actorName',
       '.unitHeader',
-      '#fbPhotoPageAuthorName a'
+      '#fbPhotoPageAuthorName a',
+      'oajrlxb2',
     ].join(', '),
 
     // .tlTxFe is used on new timeline
     text: [
+      'div[data-ad-comet-preview="message"]',
+      'div[data-ad-preview="message"]',
       '.userContent',
       // photo caption
       '.text_exposed_root',
@@ -66,7 +71,8 @@
       '.uiPhotoThumb img',
       '.photoUnit img',
       '.fbPhotoImage',
-      '.spotlight'
+      '.spotlight',
+      'pmk7jnqg',
     ].join(', '),
 
     videoThumb: 'video ~ div > img',
@@ -172,6 +178,8 @@
       var urlMatches = share.url.match(/u=([^&]+)/i); // Capture url inside the u= param
       if (urlMatches) share.url = decodeURIComponent(urlMatches[1]);
     }
+
+    console.log(share);
 
     return share;
   }
@@ -327,6 +335,94 @@
         share = {};
       }
 
+    },
+    {
+      // Buffer Button under Posts : Like · Comment · Share · Buffer
+      // New Facebook UI (2020)
+      name: 'new-experience-2020-share-buffer',
+      text: 'Buffer',
+      container: 'div[role="article"]',
+      after: function($container) {
+        var shareContainer = $container.find('div[aria-label="Leave a comment"]').parent('span');
+        return shareContainer;
+      },
+      default: [
+      ].join(';'),
+      create: function(btnConfig) {
+        var span = document.createElement('span');
+        var button = document.createElement('div');
+
+        button.setAttribute('style', btnConfig.default);
+        button.setAttribute('class', 'oajrlxb2 g5ia77u1 qu0x051f esr5mh6w e9989ue4 r7d6kgcz rq0escxv n05y2jgg hbms080z p7hjln8o kvgmc6g5 cxmmr5t8 oygrvhab hcukyx3x jb3vyjys rz4wbd8a qt6c0cv9 a8nywdso i1ao9s8h vul9dhcy f1sip0of lzcic4wl l9j0dhe7 abiwlrkh p8dawk7l f49446kz  _666h  _18vj');//_18vk
+        button.setAttribute('role', 'button');
+        button.setAttribute('href', '#');
+
+        // Match the Facebook Style by adding the Buffer Icon...
+        var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.style.marginRight = 5;
+        setAttributes(svg, {
+          "viewBox" : "0 0 22 22",
+          "height": "22px",
+          "version": "1.1",
+          "fill": "none",
+        });
+
+        var ellipseAttr = {
+          "stroke-miterlimit": "40",
+          "stroke-linecap": "round",
+          "stroke-linejoin": "round",
+          "stroke": "#a1a4aa",
+        };
+
+        var ellipse = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        ellipseAttr.d = "M1.28205 5.33333L9.84615 9.46154C9.94872 9.51282 10.0513 9.51282 10.1538 9.46154L18.7179 5.33333C19 5.20513 19 4.82051 18.7179 4.69231L10.1538 0.538462C10.0513 0.487179 9.94872 0.487179 9.84615 0.538462L1.28205 4.66667C1 4.79487 1 5.20513 1.28205 5.33333Z";
+        setAttributes(ellipse, ellipseAttr);
+        svg.appendChild(ellipse);
+
+        var ellipse2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        ellipseAttr.d = "M1.28205 10.3333L9.84615 14.4615C9.94872 14.5128 10.0513 14.5128 10.1538 14.4615L18.7179 10.3333C19 10.2051 19 9.82051 18.7179 9.6923L16.9231 8.82051L11.1795 11.5641C10.8205 11.7436 10.4103 11.8205 10 11.8205C9.58974 11.8205 9.17949 11.7179 8.82051 11.5641L3.07692 8.79487L1.28205 9.66666C1 9.79487 1 10.2051 1.28205 10.3333Z";
+        setAttributes(ellipse2, ellipseAttr);
+        svg.appendChild(ellipse2);
+
+        var ellipse3 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        ellipseAttr.d = "M18.7179 14.6667L16.9231 13.7949L11.1795 16.5641C10.8205 16.7436 10.4103 16.8205 10 16.8205C9.58974 16.8205 9.17949 16.7179 8.82051 16.5641L3.07692 13.7949L1.28205 14.6667C1 14.7949 1 15.1795 1.28205 15.3077L9.84615 19.4359C9.94872 19.4872 10.0513 19.4872 10.1538 19.4359L18.7179 15.3333C19 15.2051 19 14.7949 18.7179 14.6667Z";
+        setAttributes(ellipse3, ellipseAttr)
+        svg.appendChild(ellipse3);
+
+        button.appendChild(svg);
+
+        var title = document.createElement("b");
+        title.innerText = "Buffer";
+        button.appendChild(title);
+
+        span.setAttribute('class', '_18vi');
+
+        span.appendChild(button);
+
+        return span;
+      },
+      data: function (elem) {
+        var $elem = $(elem);
+
+        // There are sometimes "See More" buttons in a post. This was an attempt to tap that button and then share once completed however /add is opened before this is completed and share data is set.
+//         if($elem.parents('div[role="article"]').find('div[data-ad-comet-preview="message"]').find('div[role="button"]').length){
+//           $elem.parents('div[role="article"]').find('div[data-ad-comet-preview="message"]').find('div[role="button"]').click();
+//
+//           $(this).delay(500).queue(function() {
+//             share = getClosestShareData(elem);
+//             return share
+//           });
+//         } else {
+//           share = getClosestShareData(elem);
+//           return share
+//         }
+
+        share = getClosestShareData(elem);
+        return share
+      },
+      clear: function() {
+        share = {};
+      }
     }
   ];
 
@@ -399,6 +495,12 @@
     // "retrigger" load events so have to keep trying to add in the button. :)
     setTimeout(bufferEmbed, config.time.reload);
   };
+
+  var setAttributes = function(el, attrs) {
+    for(var key in attrs) {
+      el.setAttribute(key, attrs[key]);
+    }
+  }
 
   // Wait for xt.options to be set
   ;(function check() {
