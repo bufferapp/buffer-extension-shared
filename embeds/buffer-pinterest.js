@@ -26,7 +26,7 @@
     attrValue = attrValue.replace(/<\/?[^>]+(>|$)/g, '');
 
     // Decode html entities
-    attrValue = he.decode(attrValue);
+    attrValue = decodeURIComponent(attrValue);
 
     return attrValue;
   };
